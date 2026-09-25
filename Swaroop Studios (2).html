@@ -9,11 +9,18 @@
 <meta property="og:site_name" content="Swaroop Studios">
 <meta property="og:title" content="Swaroop Studios | Photography Since 1972">
 <meta property="og:description" content="Photography for life's important moments — weddings, events, corporate and portraits, since 1972.">
-<meta property="og:image" content="" id="ogImageTag">
+<meta property="og:image" content="/assets/images/dsc05478-1800.jpg" id="ogImageTag">
+<meta property="og:image:alt" content="Wedding couple in a cinematic floral portrait">
+<meta property="og:image:width" content="1800">
+<meta property="og:image:height" content="1200">
+<meta property="og:image:type" content="image/jpeg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Swaroop Studios | Photography Since 1972">
 <meta name="twitter:description" content="Photography for life's important moments — weddings, events, corporate and portraits, since 1972.">
-<!-- og:image is set automatically once a hero photograph is uploaded in Studio Admin (see applyContact/setOgImage in the script). It cannot be filled in manually — the asset URL only exists after upload. -->
+<meta name="twitter:image" content="/assets/images/dsc05478-1800.jpg">
+<meta name="twitter:image:alt" content="Wedding couple in a cinematic floral portrait">
+<meta name="author" content="Swaroop Studios">
+<meta name="theme-color" content="#141310">
 <script type="application/ld+json" id="ldjson">{}</script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📷</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,6 +52,9 @@
   .ph::before{content:''; position:absolute; inset:0; background:repeating-linear-gradient(115deg, rgba(20,19,16,0.03) 0 2px, transparent 2px 6px);}
   .ph img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
   .ph img+*{display:none;}
+  .ph picture{display:block; position:absolute; inset:0; width:100%; height:100%;}
+  .ph.has-image::before,.ph.has-image::after{display:none;}
+  .motion-video{width:100%; height:100%;}
 
   header{position:sticky; top:0; z-index:50; background:rgba(250,249,246,.92); backdrop-filter:blur(8px); border-bottom:1px solid rgba(20,19,16,0.08);}
   header .bar{display:flex; align-items:center; justify-content:space-between; padding:18px 0;}
@@ -140,7 +150,7 @@
   @media(max-width:640px){section{padding:52px 0;}}
   .divider{border-top:1px solid rgba(20,19,16,.1);}
 
-  .hero-full{position:relative; width:100%; height:88vh; min-height:480px; overflow:hidden;}
+  .hero-full{position:relative; width:100%; height:88vh; min-height:480px; padding:0; overflow:hidden;}
   .hero-full .ph{height:100%; width:100%;}
   .hero-overlay{position:absolute; inset:0; display:flex; align-items:flex-end; background:linear-gradient(180deg, rgba(20,19,16,0) 45%, rgba(20,19,16,.62) 100%);}
   .hero-overlay .wrap{width:100%; padding-bottom:64px;}
@@ -197,7 +207,7 @@
   .tl h4{font-size:16px; font-weight:600; margin-bottom:8px;}
   .tl p{font-size:13.5px; color:#bab5aa;}
   .tl .step{flex:0 0 260px; scroll-snap-align:start; border-left:1px solid rgba(255,255,255,.18); padding:0 28px 0 20px;}
-  @media(max-width:760px){.heritage-head{gap:14px;} .tl .step{flex:0 0 230px;}}
+  @media(max-width:760px){.heritage-head{gap:14px;} .tl{margin-left:0; margin-right:0; padding-left:20px; padding-right:20px;} .tl .step{flex:0 0 230px;}}
 
   .about-grid{display:grid; grid-template-columns:0.85fr 1.15fr; gap:70px; align-items:center;}
   .about-grid .ph{aspect-ratio:4/5;}
@@ -293,7 +303,6 @@
   .crop-fields input,.crop-fields select{padding:9px 12px; font-size:13px; font-family:var(--sans); border:1px solid #555; background:#111; color:#fff;}
   .crop-hint{color:#bbb; font-size:12px; margin-top:10px;}
 </style>
-<meta name="theme-color" content="#141310">
 </head>
 <body>
 <a href="#" class="skip-link" onclick="event.preventDefault(); const p=document.querySelector('.page.active'); if(p){p.setAttribute('tabindex','-1'); p.focus();}">Skip to content</a>
@@ -325,7 +334,7 @@
 <!-- HOME -->
 <main class="page" id="page-home">
   <section class="hero-full">
-    <div class="ph" data-slot="hero" data-label="Hero photograph"></div>
+    <div class="ph" data-slot="hero" data-local-image="dsc05478" data-local-sizes="100vw" data-local-priority="true" data-label="Hero photograph"></div>
     <div class="hero-overlay">
       <div class="wrap">
         <h1>Stories worth<br>remembering.</h1>
@@ -344,7 +353,7 @@
 
   <section style="padding:0;">
     <div class="intro-bleed">
-      <div class="ph" data-slot="intro" data-label="Studio, 1970s"></div>
+      <div class="ph" data-slot="intro" data-local-image="dsc02541" data-local-sizes="(max-width:900px) 100vw, 60vw" data-label="People, gatherings and celebrations"></div>
       <div class="txt">
         <h2>A studio built around people, stories and moments.</h2>
         <p>Since 1972, Swaroop Studios has documented life's most meaningful moments. What began as a traditional photography studio has evolved across generations, while keeping the same focus at its heart.</p>
@@ -424,7 +433,7 @@
   </div>
   <section style="padding-top:0;">
     <div class="wrap about-grid">
-      <div class="ph" data-slot="photographer" data-label="Portrait of Swaroop"></div>
+      <div class="ph" data-slot="photographer" data-local-image="dsc06933a" data-local-sizes="(max-width:860px) 100vw, 42vw" data-label="Portrait study"></div>
       <div>
         <blockquote>"Photographs should feel like memories, not just pictures."</blockquote>
         <p>Photography has never simply been about taking a picture. For Swaroop, it has always been about being present when something happens — noticing the expression, the gesture, the people and the atmosphere that might otherwise disappear.</p>
@@ -449,7 +458,7 @@
         <p><strong>The Studio</strong> — Photography expanded into portraits, weddings, events, corporate assignments and family photography.</p>
         <p><strong>Today</strong> — The studio combines decades of experience with modern photography.</p>
       </div>
-      <div class="ph" data-slot="about-story" data-label="Studio archive"></div>
+      <div class="ph" data-slot="about-story" data-local-image="dsc03239" data-local-sizes="(max-width:860px) 100vw, 58vw" data-label="Details and atmosphere"></div>
     </div>
   </section>
   <section class="cta" id="about-contact">
@@ -468,11 +477,11 @@
   </div>
   <section style="padding-top:0;">
     <div class="wrap svc-grid">
-      <div class="svc"><div class="ph" data-slot="svc-weddings" data-label="Weddings" style="height:100%"></div><div class="cap"><h3>Weddings</h3><p>Pre-wedding, haldi, mehendi, sangeet, ceremony, reception and candid coverage.</p></div></div>
-      <div class="svc"><div class="ph" data-slot="svc-events" data-label="Events" style="height:100%"></div><div class="cap"><h3>Events</h3><p>Birthdays, anniversaries, engagements, cultural and religious events.</p></div></div>
-      <div class="svc"><div class="ph" data-slot="svc-corporate" data-label="Corporate" style="height:100%"></div><div class="cap"><h3>Corporate</h3><p>Conferences, launches, award ceremonies, brand and team events.</p></div></div>
-      <div class="svc"><div class="ph" data-slot="svc-portraits" data-label="Portraits & Headshots" style="height:100%"></div><div class="cap"><h3>Portraits &amp; Headshots</h3><p>Executive headshots, personal branding, studio portraiture.</p></div></div>
-      <div class="svc"><div class="ph" data-slot="svc-complete" data-label="Complete Coverage" style="height:100%"></div><div class="cap"><h3>Complete Coverage</h3><p>End-to-end documentation, from preparation through completion.</p></div></div>
+      <div class="svc"><div class="ph" data-slot="svc-weddings" data-local-image="dsc05478" data-local-sizes="(max-width:760px) 50vw, 33vw" data-label="Weddings" style="height:100%"></div><div class="cap"><h3>Weddings</h3><p>Pre-wedding, haldi, mehendi, sangeet, ceremony, reception and candid coverage.</p></div></div>
+      <div class="svc"><div class="ph" data-slot="svc-events" data-local-image="111" data-local-sizes="(max-width:760px) 50vw, 33vw" data-label="Events" style="height:100%"></div><div class="cap"><h3>Events</h3><p>Birthdays, anniversaries, engagements, cultural and religious events.</p></div></div>
+      <div class="svc"><div class="ph" data-slot="svc-corporate" data-local-image="2" data-local-sizes="(max-width:760px) 50vw, 33vw" data-label="Corporate &amp; brand" style="height:100%"></div><div class="cap"><h3>Corporate</h3><p>Conferences, launches, award ceremonies, brand and team events.</p></div></div>
+      <div class="svc"><div class="ph" data-slot="svc-portraits" data-local-image="dsc06877a" data-local-sizes="(max-width:760px) 50vw, 33vw" data-label="Portraits &amp; Headshots" style="height:100%"></div><div class="cap"><h3>Portraits &amp; Headshots</h3><p>Executive headshots, personal branding, studio portraiture.</p></div></div>
+      <div class="svc"><div class="ph" data-slot="svc-complete" data-local-image="dsc05436" data-local-sizes="(max-width:760px) 50vw, 33vw" data-label="Complete Coverage" style="height:100%"></div><div class="cap"><h3>Complete Coverage</h3><p>End-to-end documentation, from preparation through completion.</p></div></div>
     </div>
   </section>
 
@@ -709,7 +718,7 @@ function buildLdJson(heroAssetUrl){
     "email": isPlaceholder(CONTACT.email)?undefined:CONTACT.email,
     "address": isPlaceholder(CONTACT.location)?undefined:{"@type":"PostalAddress","addressLocality":CONTACT.location},
     "sameAs": isPlaceholder(CONTACT.instagram)?undefined:[CONTACT.instagram],
-    "image": heroAssetUrl||undefined,
+    "image": heroAssetUrl||"/assets/images/dsc05478-1800.jpg",
     "priceRange": undefined
   };
   Object.keys(data).forEach(k=> data[k]===undefined && delete data[k]);
@@ -740,7 +749,7 @@ function render_route(){
   if(anchor){ setTimeout(()=>{ const el=document.getElementById(anchor); if(el) el.scrollIntoView({behavior:"smooth"}); },50); }
 }
 window.addEventListener("hashchange", render_route);
-window.addEventListener("DOMContentLoaded", ()=>{ initEditorialVideos(); render_route(); applyContact(); buildLdJson(); loadSiteImages(); loadGallery(); loadFilm(); initReveal(); });
+window.addEventListener("DOMContentLoaded", ()=>{ initEditorialVideos(); render_route(); applyContact(); buildLdJson(); renderLocalImages(); loadSiteImages(); loadGallery(); loadFilm(); initReveal(); });
 
 /* ---------- ONE ORCHESTRATED REVEAL: hero load only ---------- */
 function initReveal(){
@@ -864,6 +873,111 @@ async function initCaps(){
   return !!dbCap;
 }
 
+const LOCAL_IMAGES = {
+  "06": {width:3000,height:3750,alt:"Wedding story photograph with three people"},
+  "07": {width:7620,height:9525,alt:"Bride in a sari photographed outdoors beneath greenery"},
+  "09": {width:3000,height:3750,alt:"Wedding ceremony story photograph"},
+  "1": {width:1080,height:1350,alt:"Soundarya and Shreyas wedding portrait"},
+  "111": {width:3000,height:3750,alt:"Wedding party portrait in ceremonial dress"},
+  "12": {width:7620,height:9525,alt:"Wedding story portrait with editorial text"},
+  "14": {width:3000,height:3750,alt:"Wedding story portrait with a couple"},
+  "2": {width:1080,height:1350,alt:"David Morris, the London Jeweller, brand portrait"},
+  "3": {width:1080,height:1350,alt:"Bride photographed beside a curtain"},
+  "4": {width:1080,height:1350,alt:"Editorial portrait beside printed artwork"},
+  "5": {width:1080,height:1350,alt:"Bridal jewellery and ceremonial details"},
+  "6": {width:1080,height:1350,alt:"Bride in a gown beside warm studio light"},
+  "7": {width:1080,height:1350,alt:"Bride outdoors on a garden path"},
+  "8": {width:1080,height:1350,alt:"Couple at a wedding venue"},
+  "9": {width:1080,height:1350,alt:"Couple outdoors by a wedding venue"},
+  dsc02444: {width:9504,height:6336,alt:"Wedding portrait with jewellery and ceremony details"},
+  dsc02541: {width:9504,height:6336,alt:"Wedding celebration with family and friends"},
+  dsc02664: {width:6267,height:9400,alt:"Couple in a wedding portrait"},
+  dsc02737: {width:6336,height:9504,alt:"Couple photographed during a wedding celebration"},
+  dsc02835: {width:4647,height:2525,alt:"Wedding couple in a candid landscape portrait"},
+  dsc03239: {width:3869,height:5278,alt:"Bridal details, henna and ceremony accessories"},
+  dsc05436: {width:4672,height:7008,alt:"Wedding couple in a floral portrait"},
+  dsc05457: {width:4672,height:7008,alt:"Wedding couple photographed beneath chandeliers"},
+  dsc05478: {width:7008,height:4672,alt:"Wedding couple during the ceremony"},
+  dsc06400: {width:4672,height:7008,alt:"Wedding couple beneath an architectural arch"},
+  dsc06432: {width:6643,height:4429,alt:"Wedding couple in a cinematic floral portrait"},
+  dsc06877a: {width:3965,height:5947,alt:"Bride photographed outdoors beside a structure"},
+  dsc06927a: {width:4160,height:6240,alt:"Bride in an editorial portrait with jewellery"},
+  dsc06933a: {width:3987,height:5893,alt:"Bride in a close editorial portrait"}
+};
+const LOCAL_GALLERY = [
+  {id:"06",category:"wedding",title:"A story in three moments",location:"Wedding"},
+  {id:"07",category:"wedding",title:"Connection",location:"Wedding"},
+  {id:"09",category:"wedding",title:"The wedding story",location:"Wedding"},
+  {id:"1",category:"wedding",title:"Soundarya and Shreyas",location:"Wedding"},
+  {id:"12",category:"wedding",title:"A story worth keeping",location:"Wedding"},
+  {id:"14",category:"wedding",title:"True love is the joy of life",location:"Wedding"},
+  {id:"3",category:"portrait",title:"A quiet portrait",location:"Portraiture"},
+  {id:"4",category:"portrait",title:"Editorial portrait",location:"Portraiture"},
+  {id:"5",category:"wedding",title:"The details",location:"Wedding"},
+  {id:"6",category:"portrait",title:"In the light",location:"Portraiture"},
+  {id:"7",category:"portrait",title:"The bride",location:"Portraiture"},
+  {id:"8",category:"wedding",title:"At the venue",location:"Wedding"},
+  {id:"9",category:"wedding",title:"Together",location:"Wedding"},
+  {id:"dsc02444",category:"wedding",title:"Ceremony detail",location:"Wedding"},
+  {id:"dsc02541",category:"event",title:"A room full of stories",location:"Celebration"},
+  {id:"dsc02664",category:"wedding",title:"The couple",location:"Wedding"},
+  {id:"dsc02737",category:"wedding",title:"A shared moment",location:"Wedding"},
+  {id:"dsc02835",category:"wedding",title:"Between the vows",location:"Wedding"},
+  {id:"2",category:"corporate",title:"The London Jeweller",location:"Brand commission"},
+  {id:"dsc05457",category:"wedding",title:"An evening celebration",location:"Wedding"},
+  {id:"dsc06400",category:"wedding",title:"At the venue",location:"Wedding"},
+  {id:"dsc06927a",category:"portrait",title:"Portrait study",location:"Portraiture"},
+  {id:"111",category:"wedding",title:"Wedding party",location:"Wedding"},
+  {id:"dsc05478",category:"wedding",title:"The ceremony",location:"Wedding"},
+  {id:"dsc03239",category:"wedding",title:"The details",location:"Wedding"},
+  {id:"dsc05436",category:"wedding",title:"The couple in bloom",location:"Wedding"},
+  {id:"dsc06877a",category:"portrait",title:"The bride outdoors",location:"Portraiture"},
+  {id:"dsc06933a",category:"portrait",title:"A close portrait",location:"Portraiture"},
+  {id:"dsc06432",category:"wedding",title:"A cinematic portrait",location:"Wedding"}
+];
+function localImageWidths(image){
+  const widths = [480,768,1200,1800,2400].filter(width=>width<=image.width);
+  if(image.width<2400 && widths[widths.length-1]!==image.width) widths.push(image.width);
+  return Array.from(new Set(widths)).sort((a,b)=>a-b);
+}
+function localImageMarkup(image, options){
+  const settings = options || {};
+  const sizes = settings.sizes || "100vw";
+  const widths = localImageWidths(image);
+  const srcset = widths.map(width=>`/assets/images/${image.id || ""}-${width}.avif ${width}w`).join(", ");
+  const fallbackWidth = Math.min(1800,image.width);
+  const loading = settings.priority ? "eager" : "lazy";
+  const priority = settings.priority ? ` fetchpriority="high"` : "";
+  return `<picture><source type="image/avif" srcset="${srcset}" sizes="${sizes}"><img src="/assets/images/${image.id}-${fallbackWidth}.jpg" alt="${image.alt}" width="${image.width}" height="${image.height}" loading="${loading}" decoding="async"${priority}></picture>`;
+}
+function localGalleryImageId(doc){
+  const id = doc.imageId || (!doc.assetId ? doc.id : "");
+  return id && LOCAL_IMAGES[id] ? id : "";
+}
+function localLightboxSrc(doc){
+  const id = localGalleryImageId(doc);
+  if(!id) return "";
+  const image = LOCAL_IMAGES[id];
+  return `/assets/images/${id}-${Math.min(1800,image.width)}.jpg`;
+}
+function galleryItemImage(doc, sizes){
+  const id = localGalleryImageId(doc);
+  if(id){
+    const image = {...LOCAL_IMAGES[id],id};
+    return localImageMarkup(image,{sizes});
+  }
+  return doc.assetId ? `<img src="/_blob/${doc.assetId}" alt="${doc.title||doc.category||"Swaroop Studios photograph"}" loading="lazy" decoding="async">` : "";
+}
+function renderLocalImages(){
+  document.querySelectorAll("[data-local-image]").forEach(el=>{
+    const id = el.dataset.localImage;
+    const image = LOCAL_IMAGES[id];
+    if(!image) return;
+    el.classList.add("has-image");
+    el.innerHTML = localImageMarkup({...image,id},{sizes:el.dataset.localSizes,priority:el.dataset.localPriority==="true"});
+  });
+}
+
 const SLOTS = [
   {key:"hero", label:"Home — Hero"},
   {key:"intro", label:"Home — Our Story"},
@@ -885,6 +999,7 @@ async function loadSiteImages(){
       const snap = await dbCap.doc("images/"+s.key).get();
       if(snap.exists){
         const d = snap.data();
+        if(!d.assetId) continue;
         paintSlot(s.key, d.assetId, s.key==="hero");
         if(s.key==="hero"){ setOgImage(d.assetId); buildLdJson(location.origin+"/_blob/"+d.assetId); }
       }
@@ -893,16 +1008,23 @@ async function loadSiteImages(){
 }
 function paintSlot(key, assetId, priority){
   document.querySelectorAll('[data-slot="'+key+'"]').forEach(el=>{
+    el.classList.add("has-image");
     el.innerHTML = '<img src="/_blob/'+assetId+'" alt=""'+(priority?' loading="eager" fetchpriority="high"':' loading="lazy" decoding="async"')+'>';
   });
 }
 
 async function loadGallery(){
-  if(!dbCap){ const ok = await initCaps(); if(!ok) return; }
-  try{
-    const q = await dbCap.collection("gallery").orderBy("createdAt","desc").limit(60).get();
-    window.__galleryDocs = q.docs.map(d=>({id:d.id, ...d.data()}));
-  }catch(e){ window.__galleryDocs = []; }
+  let hasDatabase = !!dbCap;
+  if(!dbCap) hasDatabase = await initCaps();
+  if(hasDatabase && dbCap){
+    try{
+      const q = await dbCap.collection("gallery").orderBy("createdAt","desc").limit(60).get();
+      window.__galleryDocs = q.docs.map(d=>({id:d.id, ...d.data()}));
+    }catch(e){ window.__galleryDocs = LOCAL_GALLERY; }
+  }else{
+    window.__galleryDocs = LOCAL_GALLERY;
+  }
+  if(!window.__galleryDocs.length) window.__galleryDocs = LOCAL_GALLERY;
   renderHomePreview();
   renderFullGallery("all");
   renderAdminGallery();
@@ -911,13 +1033,10 @@ async function loadGallery(){
 function renderHomePreview(){
   const el = document.getElementById("homeGalPreview");
   if(!el) return;
-  const docs = (window.__galleryDocs||[]).slice(0,6);
-  if(docs.length===0){
-    el.innerHTML = '<div class="item"><div class="ph" data-label="Wedding · Bangalore" style="height:100%"></div></div><div class="item"><div class="ph" data-label="Corporate" style="height:100%"></div></div><div class="item"><div class="ph" data-label="Portrait" style="height:100%"></div></div>';
-    return;
-  }
+  const docs = (window.__galleryDocs||LOCAL_GALLERY).slice(0,6);
+  if(docs.length===0) return;
   window.__lbHome = docs;
-  el.innerHTML = docs.map((d,i)=>'<div class="item" data-lb="home" data-i="'+i+'"><div class="ph" style="height:100%"><img src="/_blob/'+d.assetId+'" alt="'+(d.title||"")+'" loading="lazy" decoding="async"></div></div>').join("");
+  el.innerHTML = docs.map((d,i)=>'<div class="item" data-lb="home" data-i="'+i+'"><div class="ph" style="height:100%">'+galleryItemImage(d,"(max-width:760px) 50vw, 25vw")+'</div></div>').join("");
   wireLightboxClicks(el);
   revealNew(el);
 }
@@ -925,11 +1044,11 @@ function renderHomePreview(){
 function renderFullGallery(cat){
   const el = document.getElementById("fullGalGrid");
   if(!el) return;
-  let docs = window.__galleryDocs||[];
+  let docs = window.__galleryDocs||LOCAL_GALLERY;
   if(cat!=="all") docs = docs.filter(d=>d.category===cat);
-  if(docs.length===0){ el.innerHTML = '<div class="gal-empty">No images in this category yet. Add some from Studio Admin.</div>'; return; }
+  if(docs.length===0){ el.innerHTML = '<div class="gal-empty">No photographs in this category yet.</div>'; return; }
   window.__lbGallery = docs;
-  el.innerHTML = docs.map((d,i)=>'<div class="item" data-lb="gallery" data-i="'+i+'"><div class="ph" style="height:100%"><img src="/_blob/'+d.assetId+'" alt="'+(d.title||d.category||"")+'" loading="lazy" decoding="async"></div></div>').join("");
+  el.innerHTML = docs.map((d,i)=>'<div class="item" data-lb="gallery" data-i="'+i+'"><div class="ph" style="height:100%">'+galleryItemImage(d,"(max-width:760px) 50vw, 25vw")+'</div></div>').join("");
   wireLightboxClicks(el);
   revealNew(el);
 }
@@ -951,7 +1070,11 @@ function paintLightbox(){
   const d = lbState.set[lbState.i]; if(!d) return;
   const img = document.getElementById("lbImg");
   img.classList.remove("shown");
-  img.src = "/_blob/"+d.assetId;
+  const localSrc = localLightboxSrc(d);
+  if(localSrc) img.src = localSrc;
+  else if(d.assetId) img.src = "/_blob/"+d.assetId;
+  else { img.removeAttribute("src"); return; }
+  img.alt = d.title || d.category || "Swaroop Studios photograph";
   img.onload = ()=> img.classList.add("shown");
   const capParts = [d.category, d.location].filter(Boolean);
   document.getElementById("lbCap").innerHTML = (d.title?'<span style="color:#fff;">'+d.title+'</span>':'') + (capParts.length?'<br>'+capParts.join(", "):'');
@@ -1121,7 +1244,11 @@ function renderAdminGallery(){
   const g = document.getElementById("galAdminGrid");
   if(!g) return;
   const docs = window.__galleryDocs||[];
-  g.innerHTML = docs.map(d=>'<div class="gal-admin-card"><div class="ph"><img src="/_blob/'+d.assetId+'" alt="" loading="lazy" decoding="async"></div>'+(canEdit?'<button class="del" data-del="'+d.id+'">×</button>':'')+'<div class="tag">'+[d.category,d.title].filter(Boolean).join(", ")+'</div></div>').join("");
+  g.innerHTML = docs.map(d=>{
+    const image = d.assetId ? '<img src="/_blob/'+d.assetId+'" alt="" loading="lazy" decoding="async">' : galleryItemImage(d,"(max-width:760px) 50vw, 25vw");
+    const deleteButton = canEdit && d.id ? '<button class="del" data-del="'+d.id+'">×</button>' : '';
+    return '<div class="gal-admin-card"><div class="ph">'+image+'</div>'+deleteButton+'<div class="tag">'+[d.category,d.title].filter(Boolean).join(", ")+'</div></div>';
+  }).join("");
   if(canEdit) g.innerHTML += '<div class="add-tile" id="addGalTile">+ Add image</div>';
   const addTile = document.getElementById("addGalTile");
   if(addTile) addTile.addEventListener("click", ()=>openCropper({mode:"gallery", ar:4/5}));
