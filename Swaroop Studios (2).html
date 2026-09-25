@@ -56,28 +56,25 @@
   .ph.has-image::before,.ph.has-image::after{display:none;}
   .motion-video{width:100%; height:100%;}
 
-  header{position:sticky; top:12px; z-index:100; width:min(980px,calc(100% - 32px)); margin:12px auto 0; background:rgba(250,249,246,.82); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(20,19,16,.1); border-radius:999px; box-shadow:0 10px 30px rgba(20,19,16,.08); transition:transform .3s ease, opacity .3s ease, background .3s ease, border-color .3s ease;}
-  header.home-overlay{position:fixed; top:calc(12px + env(safe-area-inset-top,0px)); left:50%; right:auto; margin:0; transform:translateX(-50%); background:rgba(20,19,16,.28); border-color:rgba(255,255,255,.2); box-shadow:0 10px 30px rgba(20,19,16,.16);}
-  header.nav-hidden{opacity:0; pointer-events:none; transform:translateY(calc(-100% - 24px));}
-  header.home-overlay.nav-hidden{transform:translate(-50%,calc(-100% - 24px));}
-  header.home-overlay .brand,header.home-overlay nav.main a,header.home-overlay .menu-btn{color:#fff; text-shadow:0 1px 12px rgba(20,19,16,.65);}
-  header.home-overlay .brand .since{color:rgba(255,255,255,.8);}
-  header.home-overlay nav.main a:hover,header.home-overlay nav.main a.active{color:var(--orange); border-color:var(--orange); text-shadow:none;}
-  header .bar{display:flex; align-items:center; justify-content:space-between; min-height:52px; padding:10px 18px;}
+  header{position:fixed; top:calc(12px + env(safe-area-inset-top,0px)); left:50%; right:auto; z-index:100; width:min(980px,calc(100% - 32px)); margin:0; transform:translateX(-50%); background:rgba(255,255,255,0.6); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(20,19,16,.12); border-radius:999px; box-shadow:0 10px 30px rgba(20,19,16,.08); transition:transform .3s ease, opacity .3s ease, background .3s ease, border-color .3s ease;}
+  header.home-overlay{background:rgba(255,255,255,0.6); border-color:rgba(20,19,16,.12); box-shadow:0 10px 30px rgba(20,19,16,.08);}
+  header.nav-hidden{opacity:0; pointer-events:none; transform:translate(-50%,calc(-100% - 24px));}
+  header .brand,header nav.main a,header .menu-btn{color:var(--black); text-shadow:none;}
+  header .brand .since{color:var(--grey);}
+  header .bar{display:flex; align-items:center; justify-content:space-between; min-height:48px; padding:8px 16px;}
   .brand{display:flex; flex-direction:column; line-height:1.1;}
-  .brand .name{font-family:var(--serif); font-size:16px; letter-spacing:.02em;}
-  .brand .since{font-size:8.5px; letter-spacing:.14em; color:var(--grey); margin-top:2px;}
-  nav.main{display:flex; gap:24px; font-size:12.5px; letter-spacing:.03em; font-weight:500;}
+  .brand .name{font-family:var(--serif); font-size:15px; letter-spacing:.02em;}
+  .brand .since{font-size:8px; letter-spacing:.14em; color:var(--grey); margin-top:2px;}
+  nav.main{display:flex; gap:22px; font-size:12px; letter-spacing:.03em; font-weight:500;}
   nav.main a{padding:4px 0; border-bottom:1px solid transparent;}
   nav.main a:hover,nav.main a.active{border-color:var(--orange); color:var(--orange);}
-  .menu-btn{display:none; min-height:40px; padding:0 2px; background:none; border:none; font-family:var(--sans); font-size:12px; letter-spacing:.05em; cursor:pointer;}
+  .menu-btn{display:none; min-height:40px; padding:0 2px; background:none; border:none; font-family:var(--sans); font-size:11.5px; letter-spacing:.05em; cursor:pointer;}
   @media(max-width:860px){ nav.main{display:none;} .menu-btn{display:block;} }
   @media(max-width:640px){
-    header{top:10px; width:calc(100% - 24px); margin-top:10px;}
-    header.home-overlay{top:calc(10px + env(safe-area-inset-top,0px));}
-    header .bar{min-height:48px; padding:8px 14px;}
-    .brand .name{font-size:15px;}
-    .brand .since{font-size:8px;}
+    header{top:calc(10px + env(safe-area-inset-top,0px)); width:calc(100% - 24px);}
+    header .bar{min-height:44px; padding:6px 12px;}
+    .brand .name{font-size:14px;}
+    .brand .since{font-size:7.5px;}
     .menu-btn{font-size:11px;}
   }
   #mobileNav{position:fixed; inset:0; top:0; background:var(--white); z-index:150; display:flex; flex-direction:column; justify-content:center; gap:6px; padding:0 32px; opacity:0; pointer-events:none; transform:translateY(-8px); transition:opacity .35s ease, transform .35s ease;}
@@ -168,8 +165,8 @@
   .hero-full .ph{height:100%; width:100%; --hero-image:none; background:#d6d2c8;}
   .hero-full .ph.has-image::before{display:block; inset:-24px; background-image:var(--hero-image); background-size:cover; background-position:center; filter:blur(18px); opacity:.65; transform:scale(1.05); z-index:0;}
   .hero-full .ph picture{z-index:1;}
-  .hero-full .ph img{object-fit:contain; object-position:center;}
-  @media(max-width:760px){.hero-full .ph.has-image::before{display:none;}.hero-full .ph img{object-fit:cover;}}
+  .hero-full .ph img{object-fit:cover; object-position:center;}
+  @media(min-aspect-ratio:3/2){.hero-full .ph img{object-fit:contain;}}
   .hero-overlay{position:absolute; inset:0; z-index:2; display:flex; align-items:flex-end; background:linear-gradient(180deg, rgba(20,19,16,0) 45%, rgba(20,19,16,.62) 100%);}
   .hero-overlay .wrap{width:100%; padding-bottom:64px;}
   .hero-overlay h1{color:#fff; font-size:clamp(36px,6.4vw,76px); line-height:1.0; max-width:840px;}
@@ -289,8 +286,13 @@
   .enquiry-form{display:flex; flex-direction:column; gap:18px;}
   .f-row{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
   .enquiry-form label{display:flex; flex-direction:column; gap:8px; font-size:12.5px; letter-spacing:.03em; color:var(--charcoal); font-weight:500;}
+  .label-text{display:block;}
+  .required-mark{color:var(--orange);}
+  .field-error{display:none; color:#9b3f27; font-size:11.5px; letter-spacing:.02em; margin-top:-2px;}
+  .field-error.shown{display:block;}
   .enquiry-form input, .enquiry-form select, .enquiry-form textarea{font-family:var(--sans); font-size:14.5px; padding:12px 4px; border:none; border-bottom:1px solid rgba(20,19,16,.25); background:transparent; color:var(--black);}
   .enquiry-form input:focus, .enquiry-form select:focus, .enquiry-form textarea:focus{outline:none; border-color:var(--orange);}
+  .enquiry-form input[aria-invalid="true"]{border-color:#9b3f27;}
   .enquiry-form textarea{resize:vertical; font-family:var(--sans);}
   .f-full{width:100%;}
   .enquiry-form button{align-self:flex-start; margin-top:6px;}
@@ -604,16 +606,16 @@
         <a data-contact-link="whatsapp" href="#">WhatsApp</a>
         <p class="contact-loc" id="contactLoc"></p>
       </div>
-      <form id="enquiryForm" class="enquiry-form">
+      <form id="enquiryForm" class="enquiry-form" novalidate>
         <div class="f-row">
-          <label>Name<input type="text" name="name" required></label>
-          <label>Phone<input type="tel" name="phone" required></label>
+          <label for="enquiryName"><span class="label-text">Name <span class="required-mark" aria-hidden="true">*</span></span><input id="enquiryName" type="text" name="name" required aria-required="true" aria-describedby="enquiryNameError"><span class="field-error" id="enquiryNameError" aria-live="polite"></span></label>
+          <label for="enquiryPhone"><span class="label-text">Phone <span class="required-mark" aria-hidden="true">*</span></span><input id="enquiryPhone" type="tel" name="phone" required aria-required="true" aria-describedby="enquiryPhoneError"><span class="field-error" id="enquiryPhoneError" aria-live="polite"></span></label>
         </div>
         <div class="f-row">
-          <label>Email<input type="email" name="email" required></label>
+          <label>Email<input type="email" name="email"></label>
           <label>Event type
             <select name="eventType">
-              <option>Wedding</option><option>Event</option><option>Corporate</option>
+              <option value="">Select event type</option><option>Wedding</option><option>Event</option><option>Corporate</option>
               <option>Portrait / Headshot</option><option>Other</option>
             </select>
           </label>
@@ -1213,11 +1215,44 @@ document.getElementById("galFilters").addEventListener("click",e=>{
 /* ---------- ENQUIRY FORM ---------- */
 const enquiryForm = document.getElementById("enquiryForm");
 if(enquiryForm){
+  const requiredFields = [
+    {input: document.getElementById("enquiryName"), error: document.getElementById("enquiryNameError"), message:"Please enter your name."},
+    {input: document.getElementById("enquiryPhone"), error: document.getElementById("enquiryPhoneError"), message:"Please enter your phone number."}
+  ];
+  const setFieldError = (field, message="") => {
+    field.input.setAttribute("aria-invalid", message ? "true" : "false");
+    field.error.textContent = message;
+    field.error.classList.toggle("shown", Boolean(message));
+  };
+  requiredFields.forEach(field=>{
+    field.input.addEventListener("input", ()=>{
+      if(field.input.getAttribute("aria-invalid") === "true") setFieldError(field, field.input.value.trim() ? "" : field.message);
+    });
+  });
   enquiryForm.addEventListener("submit", async e=>{
     e.preventDefault();
     const btn = document.getElementById("enquirySubmit");
-    const data = Object.fromEntries(new FormData(enquiryForm).entries());
-    btn.textContent = "Sending…"; btn.disabled = true;
+    const data = Object.fromEntries([...new FormData(enquiryForm).entries()].map(([key,value])=>[key, typeof value === "string" ? value.trim() : value]));
+    const missingFields = requiredFields.map(field=>({field, missing:!String(data[field.input.name] || "").trim()}));
+    requiredFields.forEach((field,index)=>setFieldError(field, missingFields[index].missing ? field.message : ""));
+    if(missingFields.some(item=>item.missing)){
+      document.getElementById(missingFields.find(item=>item.missing).field.input.id).focus();
+      return;
+    }
+    const details = [
+      ["Name", data.name],
+      ["Phone", data.phone],
+      ["Email", data.email],
+      ["Event type", data.eventType],
+      ["Event date", data.eventDate],
+      ["Location", data.location],
+      ["Message", data.message]
+    ].filter(([,value])=>value).map(([label,value])=>`${label}: ${value}`).join("\n");
+    const whatsappMessage = `Hello Swaroop Studios,\n\nI'd like to enquire about photography.\n\n${details}`;
+    const whatsappNumber = CONTACT.whatsapp.replace(/\D/g,"");
+    const whatsappUrl = "https://wa.me/"+whatsappNumber+"?text="+encodeURIComponent(whatsappMessage);
+    window.open(whatsappUrl,"_blank","noopener,noreferrer");
+    btn.textContent = "Opening WhatsApp…"; btn.disabled = true;
     try{
       if(!dbCap){ await initCaps(); }
       if(dbCap){
@@ -1225,6 +1260,7 @@ if(enquiryForm){
       }
       document.getElementById("enquirySuccess").classList.add("shown");
       enquiryForm.reset();
+      requiredFields.forEach(field=>setFieldError(field));
     }catch(err){
       alert("Couldn't send that just now — please email us directly instead.");
     }
