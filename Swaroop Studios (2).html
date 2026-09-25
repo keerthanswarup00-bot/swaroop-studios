@@ -876,7 +876,6 @@
     </div>
     <div class="bottom">
       <span>© Swaroop Studios. All rights reserved.</span>
-      <a href="#/admin">Studio Admin</a>
     </div>
   </div>
 </footer>
@@ -975,7 +974,8 @@ function initNavbarScroll(){
   window.addEventListener("scroll",updateNavbar,{passive:true});
 }
 function render_route(){
-  let h = location.hash.replace("#/","").split("#")[0] || "home";
+  const directAdmin = location.pathname === "/admin" || location.pathname === "/admin/";
+  let h = directAdmin ? "admin" : (location.hash.replace("#/","").split("#")[0] || "home");
   if(!routes.includes(h)) h = "home";
   routes.forEach(r=>{
     document.getElementById("page-"+r).classList.toggle("active", r===h);
@@ -1609,8 +1609,7 @@ async function initAdmin(){
     bodyEl.style.display="block";
     document.getElementById("adminLogout").onclick=async()=>{
       await fetch("/api/gallery?action=logout",{method:"POST"});
-      location.hash="#/admin";
-      location.reload();
+      location.href="/admin";
     };
     renderEnquiries();
     renderSlotGrid();
