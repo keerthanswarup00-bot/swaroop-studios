@@ -1710,7 +1710,7 @@ function renderAdminGallery(){
   if(note) note.textContent = count+" photograph"+(count===1?"":"s")+" in "+categoryLabel(adminGalleryCategory);
   g.innerHTML = filtered.map(d=>{
     const image = d.assetId ? '<img src="/_blob/'+d.assetId+'" alt="" loading="lazy" decoding="async">' : galleryItemImage(d,"(max-width:760px) 50vw, 25vw");
-    const deleteButton = canEdit && d.id ? '<button class="del" data-del="'+d.id+'" aria-label="Delete image">×</button>' : '';
+    const deleteButton = canEdit && d.src && d.id ? '<button class="del" data-del="'+d.id+'" aria-label="Delete image">×</button>' : '';
     return '<div class="gal-admin-card"><div class="ph">'+image+'</div>'+deleteButton+'<div class="tag">'+[categoryLabel(d.category),d.title].filter(Boolean).join(", ")+'</div></div>';
   }).join("");
   if(canEdit) g.innerHTML += '<div class="add-tile" id="addGalTile">+ Upload to '+categoryLabel(adminGalleryCategory==="all" ? "wedding" : adminGalleryCategory)+'</div>';
