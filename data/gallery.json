@@ -1,0 +1,9 @@
+{
+  "categories": [
+    {"id":"wedding","label":"Weddings"},
+    {"id":"event","label":"Events"},
+    {"id":"corporate","label":"Corporate"},
+    {"id":"portrait","label":"Portraits"}
+  ],
+  "images": []
+}
