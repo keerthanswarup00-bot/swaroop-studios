@@ -294,10 +294,10 @@
   .filters{display:flex; gap:10px; flex-wrap:wrap;}
   .filter{font-size:12.5px; letter-spacing:.04em; padding:8px 16px; border:1px solid rgba(20,19,16,.25); cursor:pointer; background:none;}
   .filter.active{background:var(--black); color:#fff; border-color:var(--black);}
-  /* Editorial masonry gallery: each photograph keeps its natural aspect ratio, with no crop. */
-  .gal-grid{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); grid-auto-rows:8px; grid-auto-flow:row; gap:14px; align-items:start;}
-  .gal-grid .item{min-width:0; overflow:hidden;}
-  .gal-grid .item .ph{height:auto; aspect-ratio:auto; display:block; overflow:hidden; background:#e9e6df;}
+  /* Clean editorial masonry: natural image ratios, no crop, stretch, or distortion. */
+  .gal-grid{column-count:4; column-gap:14px; display:block;}
+  .gal-grid .item{display:block; width:100%; min-width:0; margin:0 0 14px; break-inside:avoid; -webkit-column-break-inside:avoid;}
+  .gal-grid .item .ph{height:auto !important; aspect-ratio:auto; display:block; overflow:hidden; background:#e9e6df;}
   .gal-grid .item .ph picture{position:static; display:block; width:100%; height:auto;}
   .gal-grid .item .ph img{position:static; display:block; width:100%; height:auto; object-fit:contain; transform:none;}
   .gal-grid .item .ph .local-photo-dsc06933a img{object-fit:contain; background:transparent;}
@@ -322,10 +322,12 @@
   }
   .gal-empty{color:var(--grey); font-size:14px; padding:20px 0;}
   @media(max-width:760px){
-    .gal-grid{grid-template-columns:repeat(2,minmax(0,1fr)); grid-auto-rows:6px; gap:10px;}
+    .gal-grid{column-count:2; column-gap:10px;}
+    .gal-grid .item{margin-bottom:10px;}
   }
   @media(max-width:520px){
-    .gal-grid{grid-template-columns:1fr; grid-auto-rows:auto; gap:14px;}
+    .gal-grid{column-count:1;}
+    .gal-grid .item{margin-bottom:14px;}
   }
 
   .cta{background:var(--orange-dim); text-align:center;}
@@ -1235,7 +1237,7 @@ function renderFullGallery(cat){
   else docs = docs.filter(d=>d.category===cat);
   if(docs.length===0){ el.innerHTML = '<div class="gal-empty">No photographs in this category yet.</div>'; return; }
   window.__lbGallery = docs;
-  el.innerHTML = docs.map((d,i)=>'<div class="item" data-lb="gallery" data-i="'+i+'"><div class="ph" style="height:100%">'+galleryItemImage(d,"(max-width:760px) 50vw, 25vw")+'</div></div>').join("");
+  el.innerHTML = docs.map((d,i)=>'<div class="item" data-lb="gallery" data-i="'+i+'"><div class="ph">'+galleryItemImage(d,"(max-width:760px) 50vw, 25vw")+'</div></div>').join("");
   wireLightboxClicks(el);
   revealNew(el);
 }
