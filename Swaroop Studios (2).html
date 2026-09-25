@@ -405,14 +405,25 @@
   .slot-card .slot-meta{padding:12px 14px;}
   .slot-card .slot-meta h4{font-size:13px; font-weight:600;}
   .slot-card .slot-meta p{font-size:11.5px; color:var(--grey); margin:2px 0 10px;}
-  .gal-admin-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:16px;}
-  .gal-admin-card{border:1px solid rgba(20,19,16,.12); position:relative;}
+  .gallery-admin-toolbar{display:flex; align-items:end; gap:10px; flex-wrap:wrap; padding:18px; margin-bottom:12px; background:#f2f0ea; border:1px solid rgba(20,19,16,.1);}
+  .gallery-admin-select{display:flex; flex-direction:column; gap:6px; min-width:220px; margin-right:auto;}
+  .gallery-admin-select label{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--grey); font-weight:600;}
+  .gallery-admin-toolbar select{height:38px; min-width:220px; padding:0 12px; border:1px solid rgba(20,19,16,.2); background:#fff; color:var(--black); font-size:12.5px;}
+  .gallery-category-note{font-size:12px; color:var(--grey); margin:0 0 18px;}
+  .gal-admin-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:16px;}
+  .gal-admin-card{border:1px solid rgba(20,19,16,.12); position:relative; background:#fff;}
   .gal-admin-card .ph{aspect-ratio:4/5;}
-  .gal-admin-card .del{position:absolute; top:8px; right:8px; background:rgba(20,19,16,.75); color:#fff; border:none; width:26px; height:26px; cursor:pointer; font-size:14px;}
-  .gal-admin-card .tag{padding:8px; font-size:11px; color:var(--grey); text-transform:capitalize;}
+  .gal-admin-card .del{position:absolute; top:8px; right:8px; background:rgba(20,19,16,.75); color:#fff; border:none; width:28px; height:28px; cursor:pointer; font-size:14px; border-radius:50%;}
+  .gal-admin-card .tag{padding:9px 10px; font-size:11px; color:var(--grey); text-transform:capitalize; min-height:38px;}
   .add-tile{border:1px dashed rgba(20,19,16,.3); aspect-ratio:4/5; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:13px; color:var(--grey);}
   .add-tile:hover{border-color:var(--orange); color:var(--orange);}
   .section-title{font-size:13px; letter-spacing:.06em; font-weight:600; margin-bottom:18px; text-transform:uppercase; color:var(--charcoal);}
+  @media(max-width:640px){
+    .gallery-admin-toolbar{align-items:stretch; padding:14px;}
+    .gallery-admin-select{width:100%; min-width:0;}
+    .gallery-admin-toolbar select{width:100%; min-width:0;}
+    .gallery-admin-toolbar .btn{flex:1; justify-content:center;}
+  }
   .enquiries-list{display:flex; flex-direction:column; gap:0;}
   .enq-card{border-top:1px solid rgba(20,19,16,.12); padding:16px 0; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;}
   .enquiries-list .enq-card:last-child{border-bottom:1px solid rgba(20,19,16,.12);}
@@ -781,6 +792,15 @@
         <p class="section-title">Featured Film</p>
         <div class="slot-grid" id="filmAdminGrid" style="margin-bottom:56px;"></div>
         <p class="section-title">Gallery Images</p>
+        <div class="gallery-admin-toolbar" id="galleryAdminToolbar">
+          <div class="gallery-admin-select">
+            <label for="adminGalleryCategory">Organise by category</label>
+            <select id="adminGalleryCategory"></select>
+          </div>
+          <button class="btn btn-sm" id="addGalleryCategory">+ Add category</button>
+          <button class="btn btn-sm btn-solid" id="uploadGalleryImage">Upload image</button>
+        </div>
+        <div class="gallery-category-note" id="galleryCategoryNote"></div>
         <div class="gal-admin-grid" id="galAdminGrid"></div>
       </div>
     </div>
@@ -1209,6 +1229,81 @@ const SLOTS = [
   {key:"svc-complete", label:"Services — Complete Coverage"},
 ];
 
+const DEFAULT_GALLERY_CATEGORIES = [
+  {id:"wedding",label:"Weddings"},
+  {id:"event",label:"Events"},
+  {id:"corporate",label:"Corporate"},
+  {id:"portrait",label:"Portraits"}
+];
+let galleryCategories = DEFAULT_GALLERY_CATEGORIES.slice();
+let adminGalleryCategory = "all";
+
+function categoryLabel(id){
+  const found = galleryCategories.find(c=>c.id===id);
+  return found ? found.label : String(id||"").replace(/[-_]+/g," ").replace(/\b\w/g,m=>m.toUpperCase());
+}
+async function loadGalleryCategories(){
+  galleryCategories = DEFAULT_GALLERY_CATEGORIES.slice();
+  if(!dbCap) return;
+  try{
+    const snap = await dbCap.doc("settings/galleryCategories").get();
+    if(snap.exists && Array.isArray(snap.data().categories)){
+      const cleaned = snap.data().categories
+        .filter(x=>x && x.id && x.label)
+        .map(x=>({id:String(x.id),label:String(x.label)}));
+      if(cleaned.length) galleryCategories = cleaned;
+    }
+  }catch(e){}
+}
+async function saveGalleryCategories(){
+  if(!dbCap) throw new Error("Database is not available.");
+  await dbCap.doc("settings/galleryCategories").set({
+    categories: galleryCategories,
+    updatedAt: new Date().toISOString()
+  });
+}
+function renderGalleryFilters(){
+  const filters = document.getElementById("galFilters");
+  if(!filters) return;
+  filters.innerHTML = '<button class="filter active" data-cat="all" aria-pressed="true">All</button>'
+    + galleryCategories.map(c=>'<button class="filter" data-cat="'+c.id+'" aria-pressed="false">'+c.label+'</button>').join("");
+}
+function renderAdminGalleryCategoryOptions(){
+  const select = document.getElementById("adminGalleryCategory");
+  if(!select) return;
+  select.innerHTML = '<option value="all">All categories</option>'
+    + galleryCategories.map(c=>'<option value="'+c.id+'">'+c.label+'</option>').join("");
+  select.value = galleryCategories.some(c=>c.id===adminGalleryCategory) ? adminGalleryCategory : "all";
+  const cropSelect = document.getElementById("fCat");
+  if(cropSelect){
+    const current = cropSelect.value;
+    cropSelect.innerHTML = galleryCategories.map(c=>'<option value="'+c.id+'">'+c.label+'</option>').join("");
+    cropSelect.value = galleryCategories.some(c=>c.id===current) ? current : (galleryCategories[0]?.id||"wedding");
+  }
+}
+async function addGalleryCategory(){
+  if(!canEdit){ alert("Only editors can add categories."); return; }
+  const label = prompt("New gallery category name");
+  if(!label) return;
+  const cleanLabel = label.trim().replace(/\s+/g," ");
+  if(!cleanLabel) return;
+  const id = cleanLabel.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+  if(!id) return;
+  if(galleryCategories.some(c=>c.id===id)){ alert("That category already exists."); return; }
+  galleryCategories.push({id,label:cleanLabel});
+  try{
+    await saveGalleryCategories();
+    adminGalleryCategory = id;
+    renderGalleryFilters();
+    renderAdminGalleryCategoryOptions();
+    renderAdminGallery();
+  }catch(e){
+    galleryCategories = galleryCategories.filter(c=>c.id!==id);
+    renderAdminGalleryCategoryOptions();
+    alert("Couldn't save the category: "+(e&&e.message?e.message:e));
+  }
+}
+
 /* ---------- LOAD & RENDER SITE IMAGES ---------- */
 async function loadSiteImages(){
   const ok = await initCaps();
@@ -1238,6 +1333,7 @@ async function loadGallery(){
   let hasDatabase = !!dbCap;
   if(!dbCap) hasDatabase = await initCaps();
   if(hasDatabase && dbCap){
+    await loadGalleryCategories();
     try{
       const q = await dbCap.collection("gallery").orderBy("createdAt","desc").limit(60).get();
       window.__galleryDocs = q.docs.map(d=>({id:d.id, ...d.data()}));
@@ -1246,6 +1342,8 @@ async function loadGallery(){
     window.__galleryDocs = LOCAL_GALLERY;
   }
   if(!window.__galleryDocs.length) window.__galleryDocs = LOCAL_GALLERY;
+  renderGalleryFilters();
+  renderAdminGalleryCategoryOptions();
   renderHomePreview();
   setGalleryCategory("all");
   renderAdminGallery();
@@ -1437,6 +1535,21 @@ if(enquiryForm){
   });
 }
 let adminInited = false;
+function initGalleryAdminControls(){
+  const select = document.getElementById("adminGalleryCategory");
+  if(select){
+    select.addEventListener("change", ()=>{
+      adminGalleryCategory = select.value;
+      renderAdminGallery();
+    });
+  }
+  const add = document.getElementById("addGalleryCategory");
+  if(add) add.addEventListener("click", addGalleryCategory);
+  const upload = document.getElementById("uploadGalleryImage");
+  if(upload) upload.addEventListener("click", ()=>{
+    openCropper({mode:"gallery", ar:4/5, category:adminGalleryCategory==="all" ? "wedding" : adminGalleryCategory});
+  });
+}
 async function initAdmin(){
   const note = document.getElementById("adminNote");
   const body = document.getElementById("adminBody");
@@ -1447,6 +1560,8 @@ async function initAdmin(){
   renderEnquiries();
   renderSlotGrid();
   renderFilmAdmin();
+  renderAdminGalleryCategoryOptions();
+  initGalleryAdminControls();
   renderAdminGallery();
   adminInited = true;
 }
@@ -1516,14 +1631,18 @@ function renderAdminGallery(){
   const g = document.getElementById("galAdminGrid");
   if(!g) return;
   const docs = window.__galleryDocs||[];
-  g.innerHTML = docs.map(d=>{
+  const filtered = adminGalleryCategory==="all" ? docs : docs.filter(d=>d.category===adminGalleryCategory);
+  const count = filtered.length;
+  const note = document.getElementById("galleryCategoryNote");
+  if(note) note.textContent = count+" photograph"+(count===1?"":"s")+" in "+categoryLabel(adminGalleryCategory);
+  g.innerHTML = filtered.map(d=>{
     const image = d.assetId ? '<img src="/_blob/'+d.assetId+'" alt="" loading="lazy" decoding="async">' : galleryItemImage(d,"(max-width:760px) 50vw, 25vw");
-    const deleteButton = canEdit && d.id ? '<button class="del" data-del="'+d.id+'">×</button>' : '';
-    return '<div class="gal-admin-card"><div class="ph">'+image+'</div>'+deleteButton+'<div class="tag">'+[d.category,d.title].filter(Boolean).join(", ")+'</div></div>';
+    const deleteButton = canEdit && d.id ? '<button class="del" data-del="'+d.id+'" aria-label="Delete image">×</button>' : '';
+    return '<div class="gal-admin-card"><div class="ph">'+image+'</div>'+deleteButton+'<div class="tag">'+[categoryLabel(d.category),d.title].filter(Boolean).join(", ")+'</div></div>';
   }).join("");
-  if(canEdit) g.innerHTML += '<div class="add-tile" id="addGalTile">+ Add image</div>';
+  if(canEdit) g.innerHTML += '<div class="add-tile" id="addGalTile">+ Upload to '+categoryLabel(adminGalleryCategory==="all" ? "wedding" : adminGalleryCategory)+'</div>';
   const addTile = document.getElementById("addGalTile");
-  if(addTile) addTile.addEventListener("click", ()=>openCropper({mode:"gallery", ar:4/5}));
+  if(addTile) addTile.addEventListener("click", ()=>openCropper({mode:"gallery", ar:4/5, category:adminGalleryCategory==="all" ? "wedding" : adminGalleryCategory}));
   g.querySelectorAll("[data-del]").forEach(b=>{
     b.addEventListener("click", async ()=>{
       if(!confirm("Delete this image?")) return;
@@ -1537,9 +1656,9 @@ function renderAdminGallery(){
 
 /* ---------- CROPPER ---------- */
 let cropState = {};
-function openCropper({mode, slotKey, ar}){
+function openCropper({mode, slotKey, ar, category}){
   if(!canEdit){ alert("Only editors can upload images."); return; }
-  cropState = {mode, slotKey, ar};
+  cropState = {mode, slotKey, ar, category};
   const input = document.getElementById("fileInput");
   input.value = "";
   input.onchange = ()=>{
@@ -1558,9 +1677,12 @@ function openCropper({mode, slotKey, ar}){
 function buildCropFields(mode){
   const f = document.getElementById("cropFields");
   if(mode==="gallery"){
-    f.innerHTML = '<select id="fCat"><option value="wedding">Wedding</option><option value="event">Event</option><option value="corporate">Corporate</option><option value="portrait">Portrait</option></select>'+
+    f.innerHTML = '<select id="fCat"></select>'+
       '<input id="fTitle" placeholder="Title (optional)">'+
       '<input id="fLoc" placeholder="Location (optional)">';
+    renderAdminGalleryCategoryOptions();
+    const cat = document.getElementById("fCat");
+    if(cat && cropState.category && galleryCategories.some(c=>c.id===cropState.category)) cat.value = cropState.category;
   } else {
     f.innerHTML = "";
   }
