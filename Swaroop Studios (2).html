@@ -574,7 +574,19 @@
         <button class="filter" data-cat="corporate" aria-pressed="false">Corporate</button>
         <button class="filter" data-cat="portrait" aria-pressed="false">Portraits</button>
       </div>
-      <figure class="gallery-film" data-video-section data-gallery-video-category="wedding">
+      <figure class="gallery-film" data-video-section data-gallery-video-category="all">
+        <div class="motion-frame">
+          <video id="all-gallery-film-video" class="motion-video" autoplay muted loop playsinline preload="none" width="1920" height="1080" poster="/assets/posters/studio-teaser.jpg" data-desktop-src="/assets/videos/studio-teaser-1080p.mp4" data-mobile-src="/assets/videos/studio-teaser-720p.mp4" data-video-label="studio film" aria-label="Silent studio film" tabindex="-1" disablepictureinpicture disableremoteplayback></video>
+        </div>
+        <figcaption class="gallery-film__caption">
+          <div>
+            <p class="eyebrow">Studio film</p>
+            <h2>All Stories</h2>
+          </div>
+          <button class="motion-toggle motion-toggle--dark" type="button" data-video-toggle aria-controls="all-gallery-film-video" aria-label="Play studio film">Play film</button>
+        </figcaption>
+      </figure>
+      <figure class="gallery-film" data-video-section data-gallery-video-category="wedding" hidden>
         <div class="motion-frame">
           <video id="wedding-film-video" class="motion-video" autoplay muted loop playsinline preload="none" width="1920" height="1080" poster="/assets/posters/wedding-film.jpg" data-desktop-src="/assets/videos/wedding-film-1080p.mp4" data-mobile-src="/assets/videos/wedding-film-720p.mp4" data-video-label="Wedding film" aria-label="Silent wedding film" tabindex="-1" disablepictureinpicture disableremoteplayback></video>
         </div>
@@ -1095,7 +1107,7 @@ async function loadGallery(){
   }
   if(!window.__galleryDocs.length) window.__galleryDocs = LOCAL_GALLERY;
   renderHomePreview();
-  renderFullGallery("all");
+  setGalleryCategory("all");
   renderAdminGallery();
 }
 
@@ -1110,16 +1122,37 @@ function renderHomePreview(){
   revealNew(el);
 }
 
+function mixGalleryDocs(docs){
+  const categoryOrder = ["wedding","portrait","event","corporate"];
+  const groups = categoryOrder.map(category=>docs.filter(doc=>doc.category===category));
+  const remaining = docs.filter(doc=>!categoryOrder.includes(doc.category));
+  const mixed = [];
+  let index = 0;
+  while(groups.some(group=>group.length>index)){
+    groups.forEach(group=>{ if(group[index]) mixed.push(group[index]); });
+    index++;
+  }
+  return mixed.concat(remaining);
+}
 function renderFullGallery(cat){
   const el = document.getElementById("fullGalGrid");
   if(!el) return;
   let docs = window.__galleryDocs||LOCAL_GALLERY;
-  if(cat!=="all") docs = docs.filter(d=>d.category===cat);
+  if(cat==="all") docs = mixGalleryDocs(docs);
+  else docs = docs.filter(d=>d.category===cat);
   if(docs.length===0){ el.innerHTML = '<div class="gal-empty">No photographs in this category yet.</div>'; return; }
   window.__lbGallery = docs;
   el.innerHTML = docs.map((d,i)=>'<div class="item" data-lb="gallery" data-i="'+i+'"><div class="ph" style="height:100%">'+galleryItemImage(d,"(max-width:760px) 50vw, 25vw")+'</div></div>').join("");
   wireLightboxClicks(el);
   revealNew(el);
+}
+function setGalleryCategory(cat){
+  document.querySelectorAll("[data-gallery-video-category]").forEach(item=>{
+    const categories = item.dataset.galleryVideoCategory.split(/\s+/);
+    item.hidden = !categories.includes(cat);
+  });
+  renderFullGallery(cat);
+  syncEditorialVideos();
 }
 function wireLightboxClicks(container){
   container.querySelectorAll("[data-lb]").forEach(el=>{
@@ -1205,11 +1238,7 @@ document.getElementById("galFilters").addEventListener("click",e=>{
   const b = e.target.closest(".filter"); if(!b) return;
   document.querySelectorAll(".filter").forEach(f=>{ f.classList.remove("active"); f.setAttribute("aria-pressed","false"); });
   b.classList.add("active"); b.setAttribute("aria-pressed","true");
-  document.querySelectorAll("[data-gallery-video-category]").forEach(item=>{
-    item.hidden = b.dataset.cat!=="all" && item.dataset.galleryVideoCategory!==b.dataset.cat;
-  });
-  renderFullGallery(b.dataset.cat);
-  syncEditorialVideos();
+  setGalleryCategory(b.dataset.cat);
 });
 
 /* ---------- ENQUIRY FORM ---------- */
