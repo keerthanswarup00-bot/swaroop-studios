@@ -87,6 +87,31 @@
   #lightbox .lb-count{position:absolute; top:24px; left:28px; color:#cfcabe; font-size:12px; letter-spacing:.05em;}
   @media(max-width:640px){#lightbox .lb-nav{display:none;}}
 
+  [hidden]{display:none !important;}
+  .motion-feature{background:var(--black); color:var(--white); padding:88px 0;}
+  .motion-feature__head{display:flex; align-items:flex-end; justify-content:space-between; gap:28px; margin-bottom:32px;}
+  .motion-feature__head .eyebrow{color:#8f8a7e; margin-bottom:12px;}
+  .motion-feature__head h2{font-size:clamp(26px,3.2vw,38px); max-width:16ch;}
+  .motion-toggle{border:1px solid rgba(255,255,255,.45); background:transparent; color:#fff; cursor:pointer; font:600 11.5px/1 var(--sans); letter-spacing:.1em; padding:11px 15px; white-space:nowrap; transition:background .25s ease,color .25s ease,border-color .25s ease;}
+  .motion-toggle:hover,.motion-toggle:focus-visible{background:#fff; color:var(--black); border-color:#fff; outline:none;}
+  .motion-frame{position:relative; width:100%; aspect-ratio:16/9; margin:0; overflow:hidden; background:#090908;}
+  .motion-video{display:block; width:100%; height:100%; object-fit:cover;}
+  .gallery-film{margin:32px 0 0;}
+  .gallery-film__caption{display:flex; align-items:flex-end; justify-content:space-between; gap:24px; padding:20px 0 16px; border-bottom:1px solid rgba(20,19,16,.1);}
+  .gallery-film__caption .eyebrow{margin-bottom:8px;}
+  .gallery-film__caption h2{font-size:clamp(26px,3.2vw,38px);}
+  .motion-toggle--dark{border-color:rgba(20,19,16,.25); color:var(--black);}
+  .motion-toggle--dark:hover,.motion-toggle--dark:focus-visible{background:var(--black); color:#fff; border-color:var(--black);}
+  @media(max-width:640px){
+    .motion-feature{padding:52px 0;}
+    .motion-feature__head{align-items:flex-start; gap:20px; margin-bottom:24px;}
+    .motion-feature__head h2{font-size:28px;}
+    .motion-toggle{padding:10px 12px; font-size:10.5px;}
+    .gallery-film{margin:24px 0 0;}
+    .gallery-film__caption{align-items:flex-start; gap:18px; padding-top:16px;}
+    .gallery-film__caption h2{font-size:28px;}
+  }
+
   /* featured film */
   .film-section{background:var(--black); color:var(--white);}
   .film-frame{position:relative; aspect-ratio:16/9; overflow:hidden; cursor:pointer;}
@@ -366,6 +391,19 @@
     </div>
   </section>
 
+  <section class="motion-feature motion-feature--home" data-video-section>
+    <div class="wrap motion-feature__head">
+      <div>
+        <p class="eyebrow">The studio in motion</p>
+        <h2>Life, as it unfolds.</h2>
+      </div>
+      <button class="motion-toggle" type="button" data-video-toggle aria-controls="reception-film-video" aria-label="Play reception film">Play film</button>
+    </div>
+    <figure class="motion-frame">
+      <video id="reception-film-video" class="motion-video" autoplay muted loop playsinline preload="none" width="1920" height="1080" poster="/assets/posters/reception-film.jpg" data-desktop-src="/assets/videos/reception-film-1080p.mp4" data-mobile-src="/assets/videos/reception-film-720p.mp4" data-video-label="Reception film" aria-label="Silent reception film" tabindex="-1" disablepictureinpicture disableremoteplayback></video>
+    </figure>
+  </section>
+
   <section class="cta" id="contact">
     <div class="wrap">
       <h2>Planning something worth remembering?</h2>
@@ -438,6 +476,19 @@
     </div>
   </section>
 
+  <section class="motion-feature motion-feature--services" data-video-section>
+    <div class="wrap motion-feature__head">
+      <div>
+        <p class="eyebrow">Wedding stories in motion</p>
+        <h2>The moments between.</h2>
+      </div>
+      <button class="motion-toggle" type="button" data-video-toggle aria-controls="studio-teaser-video" aria-label="Play studio teaser">Play film</button>
+    </div>
+    <figure class="motion-frame">
+      <video id="studio-teaser-video" class="motion-video" autoplay muted loop playsinline preload="none" width="1920" height="1080" poster="/assets/posters/studio-teaser.jpg" data-desktop-src="/assets/videos/studio-teaser-1080p.mp4" data-mobile-src="/assets/videos/studio-teaser-720p.mp4" data-video-label="Studio teaser" aria-label="Silent studio teaser" tabindex="-1" disablepictureinpicture disableremoteplayback></video>
+    </figure>
+  </section>
+
   <section class="vip">
     <div class="wrap vip-grid">
       <div class="vip-statement">
@@ -476,6 +527,18 @@
         <button class="filter" data-cat="corporate" aria-pressed="false">Corporate</button>
         <button class="filter" data-cat="portrait" aria-pressed="false">Portraits</button>
       </div>
+      <figure class="gallery-film" data-video-section data-gallery-video-category="wedding">
+        <div class="motion-frame">
+          <video id="wedding-film-video" class="motion-video" autoplay muted loop playsinline preload="none" width="1920" height="1080" poster="/assets/posters/wedding-film.jpg" data-desktop-src="/assets/videos/wedding-film-1080p.mp4" data-mobile-src="/assets/videos/wedding-film-720p.mp4" data-video-label="Wedding film" aria-label="Silent wedding film" tabindex="-1" disablepictureinpicture disableremoteplayback></video>
+        </div>
+        <figcaption class="gallery-film__caption">
+          <div>
+            <p class="eyebrow">Wedding film</p>
+            <h2>Wedding</h2>
+          </div>
+          <button class="motion-toggle motion-toggle--dark" type="button" data-video-toggle aria-controls="wedding-film-video" aria-label="Play wedding film">Play film</button>
+        </figcaption>
+      </figure>
       <div class="gal-grid" id="fullGalGrid" style="margin-top:32px;"></div>
     </div>
   </section>
@@ -671,12 +734,13 @@ function render_route(){
     a.classList.toggle("active", a.dataset.route===h);
   });
   window.scrollTo(0,0);
+  requestAnimationFrame(syncEditorialVideos);
   if(h==="admin") initAdmin();
   const anchor = location.hash.split("#")[2];
   if(anchor){ setTimeout(()=>{ const el=document.getElementById(anchor); if(el) el.scrollIntoView({behavior:"smooth"}); },50); }
 }
 window.addEventListener("hashchange", render_route);
-window.addEventListener("DOMContentLoaded", ()=>{ render_route(); applyContact(); buildLdJson(); loadSiteImages(); loadGallery(); loadFilm(); initReveal(); });
+window.addEventListener("DOMContentLoaded", ()=>{ initEditorialVideos(); render_route(); applyContact(); buildLdJson(); loadSiteImages(); loadGallery(); loadFilm(); initReveal(); });
 
 /* ---------- ONE ORCHESTRATED REVEAL: hero load only ---------- */
 function initReveal(){
@@ -688,6 +752,105 @@ function initReveal(){
   }
 }
 function revealNew(){ /* no-op: per-card scroll reveal intentionally removed — see design notes */ }
+
+let editorialVideoObserver=null;
+let editorialVideosInitialized=false;
+function prefersReducedMotion(){ return window.matchMedia("(prefers-reduced-motion: reduce)").matches; }
+function shouldConserveVideoData(){
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  return !!(connection && (connection.saveData || connection.effectiveType==="slow-2g" || connection.effectiveType==="2g"));
+}
+function editorialSectionIsActive(section){
+  const page = section.closest(".page");
+  return !!(page && page.classList.contains("active"));
+}
+function updateEditorialVideoButton(video){
+  const section = video.closest("[data-video-section]");
+  const button = section && section.querySelector("[data-video-toggle]");
+  if(!button) return;
+  const action = video.paused ? "Play" : "Pause";
+  button.textContent = action+" film";
+  button.setAttribute("aria-label", action+" "+(video.dataset.videoLabel || "video"));
+}
+function loadEditorialVideo(video, force){
+  if(video.dataset.sourceLoaded) return;
+  if(!force && (prefersReducedMotion() || shouldConserveVideoData())) return;
+  const source = document.createElement("source");
+  source.type = "video/mp4";
+  source.src = window.matchMedia("(max-width:860px)").matches ? video.dataset.mobileSrc : video.dataset.desktopSrc;
+  video.muted = true;
+  video.defaultMuted = true;
+  video.preload = "metadata";
+  video.appendChild(source);
+  video.dataset.sourceLoaded = "true";
+  video.load();
+}
+function playEditorialVideo(video, userInitiated){
+  if(!video.dataset.sourceLoaded) return;
+  if(!userInitiated && (video.dataset.userPaused==="true" || document.hidden || prefersReducedMotion() || shouldConserveVideoData() || video.dataset.autoplayBlocked==="true")) return;
+  const section = video.closest("[data-video-section]");
+  if(!userInitiated && (!section || section.hidden || !editorialSectionIsActive(section))) return;
+  delete video.dataset.autoplayBlocked;
+  const playRequest = video.play();
+  if(playRequest) playRequest.catch(()=>{
+    if(!userInitiated) video.dataset.autoplayBlocked = "true";
+    updateEditorialVideoButton(video);
+  });
+}
+function toggleEditorialVideo(video){
+  if(!video.paused){
+    video.dataset.userPaused = "true";
+    video.pause();
+    return;
+  }
+  delete video.dataset.userPaused;
+  delete video.dataset.autoplayBlocked;
+  loadEditorialVideo(video, true);
+  playEditorialVideo(video, true);
+}
+function syncEditorialVideos(){
+  document.querySelectorAll("[data-video-section]").forEach(section=>{
+    const video = section.querySelector(".motion-video");
+    if(!video) return;
+    const canPlay = !section.hidden && editorialSectionIsActive(section) && !document.hidden && !prefersReducedMotion() && !shouldConserveVideoData() && video.dataset.userPaused!=="true";
+    if(canPlay){
+      if(!video.dataset.sourceLoaded && !editorialVideoObserver) loadEditorialVideo(video);
+      playEditorialVideo(video);
+    } else if(!video.paused){
+      video.pause();
+    }
+    updateEditorialVideoButton(video);
+  });
+}
+function initEditorialVideos(){
+  if(editorialVideosInitialized) return;
+  editorialVideosInitialized = true;
+  if("IntersectionObserver" in window){
+    editorialVideoObserver = new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          loadEditorialVideo(entry.target);
+          syncEditorialVideos();
+        } else {
+          entry.target.pause();
+          updateEditorialVideoButton(entry.target);
+        }
+      });
+    },{rootMargin:"360px 0px",threshold:0.01});
+  }
+  document.querySelectorAll("[data-video-section]").forEach(section=>{
+    const video = section.querySelector(".motion-video");
+    const toggle = section.querySelector("[data-video-toggle]");
+    if(!video || !toggle) return;
+    if(editorialVideoObserver) editorialVideoObserver.observe(video);
+    toggle.addEventListener("click", ()=> toggleEditorialVideo(video));
+    video.addEventListener("play", ()=> updateEditorialVideoButton(video));
+    video.addEventListener("pause", ()=> updateEditorialVideoButton(video));
+    updateEditorialVideoButton(video);
+  });
+  document.addEventListener("visibilitychange", syncEditorialVideos);
+  syncEditorialVideos();
+}
 
 /* ---------- CAPABILITIES ---------- */
 let dbCap=null, assetsCap=null, userCap=null, canEdit=false;
@@ -836,6 +999,7 @@ async function loadFilm(){
 }
 function openVideo(assetId){
   const v = document.getElementById("vmVideo");
+  document.querySelectorAll(".motion-video").forEach(video=> video.pause());
   v.src = "/_blob/"+assetId;
   document.getElementById("videoModal").classList.add("open");
 }
@@ -843,12 +1007,17 @@ document.getElementById("vmClose").addEventListener("click", ()=>{
   const v = document.getElementById("vmVideo");
   v.pause(); v.removeAttribute("src"); v.load();
   document.getElementById("videoModal").classList.remove("open");
+  syncEditorialVideos();
 });
 document.getElementById("galFilters").addEventListener("click",e=>{
   const b = e.target.closest(".filter"); if(!b) return;
   document.querySelectorAll(".filter").forEach(f=>{ f.classList.remove("active"); f.setAttribute("aria-pressed","false"); });
   b.classList.add("active"); b.setAttribute("aria-pressed","true");
+  document.querySelectorAll("[data-gallery-video-category]").forEach(item=>{
+    item.hidden = b.dataset.cat!=="all" && item.dataset.galleryVideoCategory!==b.dataset.cat;
+  });
   renderFullGallery(b.dataset.cat);
+  syncEditorialVideos();
 });
 
 /* ---------- ENQUIRY FORM ---------- */
