@@ -62,11 +62,12 @@
   .motion-video{width:100%; height:100%;}
 
   header{position:fixed; top:env(safe-area-inset-top,0px); left:0; right:0; z-index:100; width:100%; margin:0; transform:translate3d(0,0,0); background:rgba(250,249,246,.92); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border:0; border-bottom:1px solid rgba(20,19,16,.1); border-radius:0; box-shadow:none; transition:top .3s ease,left .3s ease,right .3s ease,width .3s ease,transform .3s ease,opacity .3s ease,background-color .3s ease,border-color .3s ease,border-radius .3s ease,box-shadow .3s ease,backdrop-filter .3s ease;}
-  header.home-overlay{background:rgba(20,19,16,.28); border-bottom-color:rgba(255,255,255,.2);}
+  /* Home navigation sits in its own clean band above the hero instead of overlaying the image. */
+  header.home-overlay{background:var(--white); border-bottom-color:rgba(20,19,16,.1);}
   header .brand,header nav.main a,header .menu-btn{color:var(--black); text-shadow:none; transition:color .3s ease,text-shadow .3s ease;}
   header .brand .since{color:var(--grey); transition:color .3s ease;}
-  header.home-overlay .brand,header.home-overlay nav.main a,header.home-overlay .menu-btn{color:#fff; text-shadow:0 1px 12px rgba(20,19,16,.65);}
-  header.home-overlay .brand .since{color:rgba(255,255,255,.8);}
+  header.home-overlay .brand,header.home-overlay nav.main a,header.home-overlay .menu-btn{color:var(--black); text-shadow:none;}
+  header.home-overlay .brand .since{color:var(--grey);}
   header.home-overlay nav.main a:hover,header.home-overlay nav.main a.active{border-color:var(--orange); color:var(--orange); text-shadow:none;}
   header.nav-compact{top:calc(12px + env(safe-area-inset-top,0px)); left:50%; right:auto; width:min(1080px,calc(100% - 48px)); transform:translate3d(-50%,0,0); background:rgba(255,255,255,.72); border:1px solid rgba(20,19,16,.12); border-radius:999px; box-shadow:0 10px 30px rgba(20,19,16,.08);}
   header.nav-compact.home-overlay{background:rgba(255,255,255,.72); border-color:rgba(20,19,16,.12); box-shadow:0 10px 30px rgba(20,19,16,.08);}
@@ -181,8 +182,13 @@
 
   .page{display:none;}
   .page.active{display:block;}
+  /* Reserve a small top band for the fixed navigation so the hero begins cleanly below it. */
+  .page#page-home{padding-top:76px;}
   .page:not(#page-home){padding-top:40px;}
-  @media(max-width:640px){.page:not(#page-home){padding-top:40px;}}
+  @media(max-width:640px){
+    .page#page-home{padding-top:60px;}
+    .page:not(#page-home){padding-top:40px;}
+  }
   .page:focus{outline:none;}
   .skip-link{position:absolute; top:-48px; left:12px; background:var(--black); color:#fff; padding:12px 18px; font-size:13px; z-index:200; transition:top .2s ease;}
   .skip-link:focus{top:12px;}
@@ -198,7 +204,7 @@
   .hero-full .ph{height:100%; width:100%; --hero-image:none; background:#d6d2c8;}
   .hero-full .ph.has-image::before{display:block; inset:-24px; background-image:var(--hero-image); background-size:cover; background-position:center; filter:blur(18px); opacity:.65; transform:scale(1.05); z-index:0;}
   .hero-full .ph picture{z-index:1;}
-  .hero-full .ph img{object-fit:cover; object-position:center;}
+  .hero-full .ph img{object-fit:cover; object-position:center 56%;}
   .hero-overlay{position:absolute; inset:0; z-index:2; display:flex; align-items:flex-end; background:linear-gradient(180deg, rgba(20,19,16,0) 45%, rgba(20,19,16,.62) 100%);}
   .hero-overlay .wrap{width:100%; padding-bottom:64px;}
   .hero-overlay h1{color:#fff; font-size:clamp(36px,6.4vw,76px); line-height:1.0; max-width:840px;}
@@ -207,7 +213,7 @@
   .hero-actions{display:flex; gap:14px; flex-wrap:wrap;}
   @media(max-width:640px){
     .hero-full .ph.has-image::before{inset:-18px; background-size:cover; background-position:center; filter:blur(20px); opacity:.7;}
-    .hero-full .ph img{inset:auto; top:50%; left:-10%; bottom:auto; width:120%; max-width:none; height:auto; min-height:0; object-fit:contain; object-position:center; transform:translateY(-50%);}
+    .hero-full .ph img{inset:auto; top:50%; left:-10%; bottom:auto; width:120%; max-width:none; height:auto; min-height:0; object-fit:contain; object-position:center 56%; transform:translateY(-50%);}
     .hero-overlay .wrap{padding-bottom:48px;}
     .hero-overlay h1{font-size:clamp(36px,10vw,46px); line-height:1.04; letter-spacing:-.015em;}
     .hero-sub{gap:22px; padding:30px 20px 0;}
