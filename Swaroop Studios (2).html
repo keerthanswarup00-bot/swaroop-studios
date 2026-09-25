@@ -294,10 +294,14 @@
   .filters{display:flex; gap:10px; flex-wrap:wrap;}
   .filter{font-size:12.5px; letter-spacing:.04em; padding:8px 16px; border:1px solid rgba(20,19,16,.25); cursor:pointer; background:none;}
   .filter.active{background:var(--black); color:#fff; border-color:var(--black);}
-  .gal-grid{display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:150px; gap:12px;}
-  .gal-grid .item{grid-row:span 2;}
-  .gal-grid .item:nth-child(3n){grid-row:span 3;}
-  .gal-grid .item .ph{height:100%;}
+  /* Editorial masonry gallery: each photograph keeps its natural aspect ratio, with no crop. */
+  .gal-grid{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); grid-auto-rows:8px; grid-auto-flow:row; gap:14px; align-items:start;}
+  .gal-grid .item{min-width:0; overflow:hidden;}
+  .gal-grid .item .ph{height:auto; aspect-ratio:auto; display:block; overflow:hidden; background:#e9e6df;}
+  .gal-grid .item .ph picture{position:static; display:block; width:100%; height:auto;}
+  .gal-grid .item .ph img{position:static; display:block; width:100%; height:auto; object-fit:contain; transform:none;}
+  .gal-grid .item .ph .local-photo-dsc06933a img{object-fit:contain; background:transparent;}
+  @media(hover:hover){#page-gallery .gal-grid .item:hover .ph img{transform:scale(1.012);}}
   .archive-preview{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); grid-auto-rows:clamp(150px,16vw,220px); gap:12px;}
   .archive-preview .item{min-width:0;}
   .archive-preview .item .ph{height:100%;}
@@ -317,7 +321,12 @@
     .archive-preview .item:nth-child(6){grid-column:1 / span 2; grid-row:4;}
   }
   .gal-empty{color:var(--grey); font-size:14px; padding:20px 0;}
-  @media(max-width:760px){.gal-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:760px){
+    .gal-grid{grid-template-columns:repeat(2,minmax(0,1fr)); grid-auto-rows:6px; gap:10px;}
+  }
+  @media(max-width:520px){
+    .gal-grid{grid-template-columns:1fr; grid-auto-rows:auto; gap:14px;}
+  }
 
   .cta{background:var(--orange-dim); text-align:center;}
   .cta h2{font-size:clamp(28px,4vw,46px); max-width:680px; margin:0 auto 16px;}
