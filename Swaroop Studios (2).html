@@ -56,8 +56,8 @@
   .ph.has-image::before,.ph.has-image::after{display:none;}
   .motion-video{width:100%; height:100%;}
 
-  header{position:sticky; top:0; z-index:50; background:rgba(250,249,246,.92); backdrop-filter:blur(8px); border-bottom:1px solid rgba(20,19,16,0.08);}
-  header.home-overlay{position:absolute; left:0; right:0; background:rgba(20,19,16,.28); backdrop-filter:blur(2px); border-bottom-color:rgba(255,255,255,.2);}
+  header{position:sticky; top:0; z-index:100; background:rgba(250,249,246,.92); backdrop-filter:blur(8px); border-bottom:1px solid rgba(20,19,16,0.08);}
+  header.home-overlay{position:absolute; left:0; right:0; z-index:100; background:rgba(20,19,16,.28); backdrop-filter:blur(2px); border-bottom-color:rgba(255,255,255,.2);}
   header.home-overlay .brand,header.home-overlay nav.main a,header.home-overlay .menu-btn{color:#fff; text-shadow:0 1px 12px rgba(20,19,16,.65);}
   header.home-overlay .brand .since{color:rgba(255,255,255,.8);}
   header.home-overlay nav.main a:hover,header.home-overlay nav.main a.active{color:var(--orange); border-color:var(--orange); text-shadow:none;}
@@ -155,8 +155,12 @@
   .divider{border-top:1px solid rgba(20,19,16,.1);}
 
   .hero-full{position:relative; width:100%; height:88vh; min-height:480px; padding:0; overflow:hidden;}
-  .hero-full .ph{height:100%; width:100%;}
-  .hero-overlay{position:absolute; inset:0; display:flex; align-items:flex-end; background:linear-gradient(180deg, rgba(20,19,16,0) 45%, rgba(20,19,16,.62) 100%);}
+  .hero-full .ph{height:100%; width:100%; --hero-image:none; background:#d6d2c8;}
+  .hero-full .ph.has-image::before{display:block; inset:-24px; background-image:var(--hero-image); background-size:cover; background-position:center; filter:blur(18px); opacity:.65; transform:scale(1.05); z-index:0;}
+  .hero-full .ph picture{z-index:1;}
+  .hero-full .ph img{object-fit:contain; object-position:center;}
+  @media(max-width:760px){.hero-full .ph.has-image::before{display:none;}.hero-full .ph img{object-fit:cover;}}
+  .hero-overlay{position:absolute; inset:0; z-index:2; display:flex; align-items:flex-end; background:linear-gradient(180deg, rgba(20,19,16,0) 45%, rgba(20,19,16,.62) 100%);}
   .hero-overlay .wrap{width:100%; padding-bottom:64px;}
   .hero-overlay h1{color:#fff; font-size:clamp(36px,6.4vw,76px); line-height:1.0; max-width:840px;}
   .hero-sub{display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:28px; padding:36px 0 0;}
@@ -229,6 +233,24 @@
   .gal-grid .item{grid-row:span 2;}
   .gal-grid .item:nth-child(3n){grid-row:span 3;}
   .gal-grid .item .ph{height:100%;}
+  .archive-preview{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); grid-auto-rows:clamp(150px,16vw,220px); gap:12px;}
+  .archive-preview .item{min-width:0;}
+  .archive-preview .item .ph{height:100%;}
+  .archive-preview .item:nth-child(1){grid-column:1; grid-row:1 / span 2;}
+  .archive-preview .item:nth-child(2){grid-column:2; grid-row:1;}
+  .archive-preview .item:nth-child(3){grid-column:3; grid-row:1;}
+  .archive-preview .item:nth-child(4){grid-column:4; grid-row:1;}
+  .archive-preview .item:nth-child(5){grid-column:2; grid-row:2;}
+  .archive-preview .item:nth-child(6){grid-column:3 / span 2; grid-row:2;}
+  @media(max-width:760px){
+    .archive-preview{grid-template-columns:repeat(2,minmax(0,1fr)); grid-auto-rows:clamp(160px,42vw,230px);}
+    .archive-preview .item:nth-child(1){grid-column:1; grid-row:1 / span 2;}
+    .archive-preview .item:nth-child(2){grid-column:2; grid-row:1;}
+    .archive-preview .item:nth-child(3){grid-column:2; grid-row:2;}
+    .archive-preview .item:nth-child(4){grid-column:1; grid-row:3;}
+    .archive-preview .item:nth-child(5){grid-column:2; grid-row:3;}
+    .archive-preview .item:nth-child(6){grid-column:1 / span 2; grid-row:4;}
+  }
   .gal-empty{color:var(--grey); font-size:14px; padding:20px 0;}
   @media(max-width:760px){.gal-grid{grid-template-columns:repeat(2,1fr);}}
 
@@ -388,7 +410,7 @@
       </div>
       <a class="btn" href="#/gallery">Full Gallery</a>
     </div>
-    <div class="wrap gal-grid" id="homeGalPreview"></div>
+    <div class="wrap archive-preview" id="homeGalPreview"></div>
   </section>
 
   <section class="film-section" id="filmSection" style="display:none;">
@@ -925,11 +947,11 @@ const LOCAL_GALLERY = [
   {id:"8",category:"wedding",title:"At the venue",location:"Wedding"},
   {id:"9",category:"wedding",title:"Together",location:"Wedding"},
   {id:"dsc02444",category:"wedding",title:"Ceremony detail",location:"Wedding"},
-  {id:"dsc02541",category:"event",title:"A room full of stories",location:"Celebration"},
+  {id:"dsc02541",category:"unassigned",title:"A room full of stories",location:"Celebration"},
   {id:"dsc02664",category:"wedding",title:"The couple",location:"Wedding"},
   {id:"dsc02737",category:"wedding",title:"A shared moment",location:"Wedding"},
   {id:"dsc02835",category:"wedding",title:"Between the vows",location:"Wedding"},
-  {id:"2",category:"corporate",title:"The London Jeweller",location:"Brand commission"},
+  {id:"2",category:"unassigned",title:"The London Jeweller",location:"Brand commission"},
   {id:"dsc05457",category:"wedding",title:"An evening celebration",location:"Wedding"},
   {id:"dsc06400",category:"wedding",title:"At the venue",location:"Wedding"},
   {id:"dsc06927a",category:"portrait",title:"Portrait study",location:"Portraiture"},
@@ -980,6 +1002,7 @@ function renderLocalImages(){
     const image = LOCAL_IMAGES[id];
     if(!image) return;
     el.classList.add("has-image");
+    if(el.dataset.slot==="hero") el.style.setProperty("--hero-image",`url("/assets/images/${id}-${Math.min(1800,image.width)}.jpg")`);
     el.innerHTML = localImageMarkup({...image,id},{sizes:el.dataset.localSizes,priority:el.dataset.localPriority==="true"});
   });
 }
@@ -1014,8 +1037,10 @@ async function loadSiteImages(){
 }
 function paintSlot(key, assetId, priority){
   document.querySelectorAll('[data-slot="'+key+'"]').forEach(el=>{
+    const src = "/_blob/"+assetId;
     el.classList.add("has-image");
-    el.innerHTML = '<img src="/_blob/'+assetId+'" alt=""'+(priority?' loading="eager" fetchpriority="high"':' loading="lazy" decoding="async"')+'>';
+    if(key==="hero") el.style.setProperty("--hero-image",`url("${src}")`);
+    el.innerHTML = '<img src="'+src+'" alt=""'+(priority?' loading="eager" fetchpriority="high"':' loading="lazy" decoding="async"')+'>';
   });
 }
 
