@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Swaroop Studios | Photography Since 1972</title>
+<meta name="description" content="Swaroop Studios is a photography studio established in 1972, documenting weddings, events, corporate assignments, portraits and life's important moments.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Swaroop Studios">
+<meta property="og:title" content="Swaroop Studios | Photography Since 1972">
+<meta property="og:description" content="Photography for life's important moments — weddings, events, corporate and portraits, since 1972.">
+<meta property="og:image" content="" id="ogImageTag">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Swaroop Studios | Photography Since 1972">
+<meta name="twitter:description" content="Photography for life's important moments — weddings, events, corporate and portraits, since 1972.">
+<!-- og:image is set automatically once a hero photograph is uploaded in Studio Admin (see applyContact/setOgImage in the script). It cannot be filled in manually — the asset URL only exists after upload. -->
+<script type="application/ld+json" id="ldjson">{}</script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📷</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,450;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --white:#FAF9F6; --black:#141310; --charcoal:#2B2A26; --grey:#8C887F;
+    --orange:#AE4E2C; --orange-dim: rgba(174,78,44,0.12);
+    --serif:'Fraunces', serif; --sans:'Inter', sans-serif;
+    padding-top: env(safe-area-inset-top,0px); padding-bottom: env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth; scroll-padding-top:80px;}
+  body{background:var(--white); color:var(--black); font-family:var(--sans); font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased; overflow-x:hidden;}
+  img,svg{max-width:100%; display:block;}
+  a{color:inherit; text-decoration:none;}
+  .wrap{max-width:1240px; margin:0 auto; padding:0 32px;}
+  @media(max-width:640px){.wrap{padding:0 20px;}}
+  h1,h2,h3{font-family:var(--serif); font-weight:450; letter-spacing:-0.01em;}
+  .eyebrow{font-size:12.5px; letter-spacing:0.14em; color:var(--grey); font-weight:500;}
+  .btn{display:inline-flex; align-items:center; gap:10px; font-family:var(--sans); font-size:14px; font-weight:600; letter-spacing:0.02em; padding:14px 26px; border:1px solid var(--black); background:transparent; color:var(--black); cursor:pointer; transition:all .25s ease;}
+  .btn:hover{background:var(--black); color:var(--white);}
+  .btn-solid{background:var(--orange); border-color:var(--orange); color:#fff;}
+  .btn-solid:hover{background:#8f3f22; border-color:#8f3f22;}
+  .btn-sm{padding:9px 16px; font-size:12.5px;}
+  .ph{background:linear-gradient(155deg,#e9e6df,#d6d2c8 60%,#cac5b9); position:relative; overflow:hidden; display:flex; align-items:flex-end;}
+  .ph::after{content:attr(data-label); font-family:var(--sans); font-size:11px; letter-spacing:.08em; color:var(--charcoal); background:rgba(250,249,246,.85); padding:6px 10px; margin:12px;}
+  .ph::before{content:''; position:absolute; inset:0; background:repeating-linear-gradient(115deg, rgba(20,19,16,0.03) 0 2px, transparent 2px 6px);}
+  .ph img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+  .ph img+*{display:none;}
+
+  header{position:sticky; top:0; z-index:50; background:rgba(250,249,246,.92); backdrop-filter:blur(8px); border-bottom:1px solid rgba(20,19,16,0.08);}
+  header .bar{display:flex; align-items:center; justify-content:space-between; padding:18px 0;}
+  .brand{display:flex; flex-direction:column; line-height:1.1;}
+  .brand .name{font-family:var(--serif); font-size:19px; letter-spacing:.02em;}
+  .brand .since{font-size:10px; letter-spacing:.14em; color:var(--grey); margin-top:2px;}
+  nav.main{display:flex; gap:34px; font-size:13.5px; letter-spacing:.03em; font-weight:500;}
+  nav.main a{padding:4px 0; border-bottom:1px solid transparent;}
+  nav.main a:hover,nav.main a.active{border-color:var(--orange); color:var(--orange);}
+  .menu-btn{display:none; background:none; border:none; font-family:var(--sans); font-size:13px; letter-spacing:.05em; cursor:pointer;}
+  @media(max-width:860px){ nav.main{display:none;} .menu-btn{display:block;} }
+  #mobileNav{position:fixed; inset:0; top:0; background:var(--white); z-index:60; display:flex; flex-direction:column; justify-content:center; gap:6px; padding:0 32px; opacity:0; pointer-events:none; transform:translateY(-8px); transition:opacity .35s ease, transform .35s ease;}
+  #mobileNav.open{opacity:1; pointer-events:auto; transform:none;}
+  #mobileNav a{padding:16px 0; border-bottom:1px solid rgba(20,19,16,.08); font-size:22px; font-family:var(--serif);}
+  #mobileNav .close-nav{position:absolute; top:18px; right:20px; background:none; border:none; font-size:13px; letter-spacing:.05em; cursor:pointer;}
+
+  /* one orchestrated reveal: hero text on load */
+  .hero-reveal{opacity:0; transform:translateY(14px); transition:opacity .8s ease, transform .8s ease;}
+  .hero-reveal.shown{opacity:1; transform:none;}
+
+  /* image hover — Gallery page only, the one deliberate interactive moment */
+  #page-gallery .gal-grid .item .ph{cursor:pointer;}
+  #page-gallery .gal-grid .item .ph img{transition:transform .7s cubic-bezier(.2,.7,.2,1);}
+  @media(hover:hover){
+    #page-gallery .gal-grid .item:hover .ph img{transform:scale(1.045);}
+  }
+  .gal-grid .item .ph, .svc .ph{cursor:pointer;}
+
+  /* lightbox */
+  #lightbox{position:fixed; inset:0; background:rgba(10,10,9,.97); z-index:180; display:none; align-items:center; justify-content:center; flex-direction:column;}
+  #lightbox.open{display:flex;}
+  #lightbox .lb-stage{max-width:88vw; max-height:78vh; display:flex; align-items:center; justify-content:center; position:relative;}
+  #lightbox img{max-width:88vw; max-height:78vh; object-fit:contain; opacity:0; transform:scale(.98); transition:opacity .35s ease, transform .35s ease;}
+  #lightbox img.shown{opacity:1; transform:none;}
+  #lightbox .lb-cap{color:#cfcabe; font-size:12.5px; letter-spacing:.05em; margin-top:18px; text-align:center;}
+  #lightbox .lb-close{position:absolute; top:22px; right:26px; background:none; border:none; color:#fff; font-size:26px; cursor:pointer; line-height:1;}
+  #lightbox .lb-nav{position:absolute; top:50%; transform:translateY(-50%); background:none; border:none; color:#fff; font-size:30px; cursor:pointer; padding:14px; opacity:.75;}
+  #lightbox .lb-nav:hover{opacity:1;}
+  #lightbox .lb-prev{left:6px;} #lightbox .lb-next{right:6px;}
+  #lightbox .lb-count{position:absolute; top:24px; left:28px; color:#cfcabe; font-size:12px; letter-spacing:.05em;}
+  @media(max-width:640px){#lightbox .lb-nav{display:none;}}
+
+  /* featured film */
+  .film-section{background:var(--black); color:var(--white);}
+  .film-frame{position:relative; aspect-ratio:16/9; overflow:hidden; cursor:pointer;}
+  .film-frame .ph{height:100%; filter:brightness(.55);}
+  .film-frame .play-btn{position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:74px; height:74px; border-radius:50%; border:1px solid rgba(255,255,255,.7); display:flex; align-items:center; justify-content:center; transition:transform .3s ease, background .3s ease;}
+  .film-frame .play-btn::after{content:''; width:0; height:0; border-top:9px solid transparent; border-bottom:9px solid transparent; border-left:15px solid #fff; margin-left:4px;}
+  @media(hover:hover){.film-frame:hover .play-btn{transform:translate(-50%,-50%) scale(1.08); background:rgba(255,255,255,.12);}}
+  .film-cap{position:absolute; left:28px; bottom:26px; z-index:2;}
+  .film-tag{display:inline-block; font-size:11px; letter-spacing:.04em; color:#fff; border:1px solid rgba(255,255,255,.45); padding:5px 12px; margin-bottom:12px;}
+  .film-cap h3{font-size:clamp(22px,3vw,32px); color:#fff;}
+  #videoModal{position:fixed; inset:0; background:#000; z-index:190; display:none; align-items:center; justify-content:center;}
+  #videoModal.open{display:flex;}
+  #videoModal video{max-width:92vw; max-height:86vh;}
+  #videoModal .lb-close{position:absolute; top:22px; right:26px; background:none; border:none; color:#fff; font-size:26px; cursor:pointer;}
+
+  .page{display:none;}
+  .page.active{display:block;}
+  .page:focus{outline:none;}
+  .skip-link{position:absolute; top:-48px; left:12px; background:var(--black); color:#fff; padding:12px 18px; font-size:13px; z-index:200; transition:top .2s ease;}
+  .skip-link:focus{top:12px;}
+  .page-hero{padding:56px 0 40px;}
+  .page-hero h1{font-size:clamp(30px,4.6vw,50px); line-height:1.08; max-width:760px;}
+  .page-hero p.lede{max-width:520px; color:var(--charcoal); margin-top:16px;}
+
+  section{padding:88px 0;}
+  @media(max-width:640px){section{padding:52px 0;}}
+  .divider{border-top:1px solid rgba(20,19,16,.1);}
+
+  .hero-full{position:relative; width:100%; height:88vh; min-height:480px; overflow:hidden;}
+  .hero-full .ph{height:100%; width:100%;}
+  .hero-overlay{position:absolute; inset:0; display:flex; align-items:flex-end; background:linear-gradient(180deg, rgba(20,19,16,0) 45%, rgba(20,19,16,.62) 100%);}
+  .hero-overlay .wrap{width:100%; padding-bottom:64px;}
+  .hero-overlay h1{color:#fff; font-size:clamp(36px,6.4vw,76px); line-height:1.0; max-width:840px;}
+  .hero-sub{display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:28px; padding:36px 0 0;}
+  .hero-sub .lede{max-width:480px; color:var(--charcoal); font-size:16px;}
+  .hero-actions{display:flex; gap:14px; flex-wrap:wrap;}
+
+  .intro-bleed{display:grid; grid-template-columns:60% 40%; align-items:stretch;}
+  .intro-bleed .ph{aspect-ratio:auto; height:100%; min-height:460px;}
+  .intro-bleed .txt{display:flex; flex-direction:column; justify-content:center; padding:0 56px 0 48px;}
+  .intro-bleed h2{font-size:clamp(26px,3vw,36px); line-height:1.18; margin-bottom:22px; max-width:16ch;}
+  .intro-bleed p{color:var(--charcoal); max-width:38ch;}
+  @media(max-width:900px){.intro-bleed{grid-template-columns:1fr;} .intro-bleed .ph{min-height:340px;} .intro-bleed .txt{padding:40px 24px;}}
+
+  .intro-grid{display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center;}
+  .intro-grid .ph{aspect-ratio:4/5;}
+  .intro-grid h2{font-size:clamp(26px,3.2vw,38px); line-height:1.18; margin-bottom:22px;}
+  .intro-grid p{color:var(--charcoal); max-width:46ch;}
+  .link-arrow{display:inline-block; margin-top:26px; font-size:13.5px; font-weight:600; letter-spacing:.03em; border-bottom:1px solid var(--orange); color:var(--orange); padding-bottom:2px; cursor:pointer;}
+  @media(max-width:860px){.intro-grid{grid-template-columns:1fr; gap:32px;}}
+
+  .svc-head{max-width:640px; margin-bottom:48px;}
+  .svc-grid{display:grid; grid-template-columns:repeat(6,1fr); gap:14px;}
+  .svc{grid-column:span 2; aspect-ratio:3/3.6; position:relative;}
+  .svc:nth-child(1){grid-column:span 3;}
+  .svc:nth-child(2){grid-column:span 3;}
+  .svc:nth-child(4){grid-column:span 4;}
+  .svc:nth-child(5){grid-column:span 2;}
+  .svc .cap{position:absolute; left:0; bottom:0; padding:18px; color:#fff; z-index:2;}
+  .svc .cap h3{font-family:var(--sans); font-weight:600; font-size:16px; margin-bottom:5px;}
+  .svc .cap p{font-size:12.5px; opacity:.85; max-width:30ch;}
+  .svc .ph{height:100%; filter:brightness(.7);}
+  @media(max-width:760px){.svc-grid{grid-template-columns:repeat(2,1fr);} .svc, .svc:nth-child(1), .svc:nth-child(2), .svc:nth-child(4){grid-column:span 1;} }
+
+  .vip{background:var(--black); color:var(--white);}
+  .vip-grid{display:grid; grid-template-columns:0.9fr 1.1fr; gap:64px;}
+  .vip-statement h2{font-size:clamp(26px,3.2vw,38px); margin-bottom:18px; max-width:14ch;}
+  .vip-statement p{color:#bab5aa; max-width:40ch; font-size:15px;}
+  .vip-list{list-style:none; display:flex; flex-direction:column;}
+  .vip-list li{border-top:1px solid rgba(255,255,255,.16); padding:22px 0;}
+  .vip-list li:last-child{border-bottom:1px solid rgba(255,255,255,.16);}
+  .vip-list h4{font-family:var(--sans); font-weight:600; font-size:15px; margin-bottom:6px; color:#fff;}
+  .vip-list p{font-size:13.5px; color:#a9a49a; max-width:42ch;}
+  @media(max-width:860px){.vip-grid{grid-template-columns:1fr; gap:36px;}}
+
+  .heritage{background:var(--black); color:var(--white);}
+  .heritage-head{display:flex; align-items:flex-end; gap:28px; margin-bottom:60px; flex-wrap:wrap;}
+  .big-year{font-family:var(--serif); font-weight:300; font-size:clamp(64px,10vw,140px); line-height:0.8; color:var(--charcoal-light,#3a3833); -webkit-text-stroke:1px rgba(255,255,255,.35); color:transparent;}
+  .heritage-head h2{font-size:clamp(24px,3vw,34px); max-width:520px; margin:0; padding-bottom:10px;}
+  .tl{display:flex; gap:0; overflow-x:auto; scroll-snap-type:x proximity; margin:0 -32px; padding:0 32px 6px; -webkit-overflow-scrolling:touch;}
+  .tl::-webkit-scrollbar{height:3px;} .tl::-webkit-scrollbar-thumb{background:rgba(255,255,255,.25);}
+  .tl .yr{font-family:var(--serif); font-size:15px; color:#9a958a; margin-bottom:10px;}
+  .tl h4{font-size:16px; font-weight:600; margin-bottom:8px;}
+  .tl p{font-size:13.5px; color:#bab5aa;}
+  .tl .step{flex:0 0 260px; scroll-snap-align:start; border-left:1px solid rgba(255,255,255,.18); padding:0 28px 0 20px;}
+  @media(max-width:760px){.heritage-head{gap:14px;} .tl .step{flex:0 0 230px;}}
+
+  .about-grid{display:grid; grid-template-columns:0.85fr 1.15fr; gap:70px; align-items:center;}
+  .about-grid .ph{aspect-ratio:4/5;}
+  .about-grid blockquote{font-family:var(--serif); font-size:clamp(20px,2.4vw,27px); line-height:1.35; font-weight:450; margin-bottom:22px;}
+  .about-grid p{color:var(--charcoal); max-width:52ch; margin-bottom:14px;}
+  .tag-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:22px;}
+  .tag-chip{font-size:12px; letter-spacing:.02em; color:var(--charcoal); border:1px solid rgba(20,19,16,.2); padding:6px 12px;}
+  @media(max-width:860px){.about-grid{grid-template-columns:1fr; gap:32px;}}
+
+  .gal-head{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:40px; flex-wrap:wrap; gap:20px;}
+  .filters{display:flex; gap:10px; flex-wrap:wrap;}
+  .filter{font-size:12.5px; letter-spacing:.04em; padding:8px 16px; border:1px solid rgba(20,19,16,.25); cursor:pointer; background:none;}
+  .filter.active{background:var(--black); color:#fff; border-color:var(--black);}
+  .gal-grid{display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:150px; gap:12px;}
+  .gal-grid .item{grid-row:span 2;}
+  .gal-grid .item:nth-child(3n){grid-row:span 3;}
+  .gal-grid .item .ph{height:100%;}
+  .gal-empty{color:var(--grey); font-size:14px; padding:20px 0;}
+  @media(max-width:760px){.gal-grid{grid-template-columns:repeat(2,1fr);}}
+
+  .cta{background:var(--orange-dim); text-align:center;}
+  .cta h2{font-size:clamp(28px,4vw,46px); max-width:680px; margin:0 auto 16px;}
+  .cta p{color:var(--charcoal); max-width:460px; margin:0 auto 34px;}
+  .cta-actions{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+
+  footer{background:var(--black); color:#cfcabe; padding:64px 0 28px;}
+  .f-grid{display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:40px; margin-bottom:48px;}
+  footer .name{font-family:var(--serif); color:var(--white); font-size:20px;}
+  footer .since{font-size:11px; letter-spacing:.12em; color:#8f8a7e; margin-top:4px;}
+  footer h5{font-size:11.5px; letter-spacing:.1em; color:#8f8a7e; margin-bottom:16px; font-weight:500;}
+  footer ul{list-style:none; display:flex; flex-direction:column; gap:10px; font-size:14px;}
+  footer a:hover{color:var(--orange);}
+  footer .bottom{border-top:1px solid rgba(255,255,255,.12); padding-top:22px; font-size:12px; color:#8f8a7e; display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;}
+  @media(max-width:760px){.f-grid{grid-template-columns:1fr 1fr; row-gap:32px;}}
+
+  /* CONTACT PAGE */
+  .contact-grid{display:grid; grid-template-columns:0.8fr 1.2fr; gap:70px; align-items:start;}
+  .contact-direct{display:flex; flex-direction:column; gap:16px; padding-top:6px;}
+  .contact-direct h4{font-size:11.5px; letter-spacing:.1em; color:var(--grey); text-transform:uppercase; font-weight:500; margin-bottom:4px;}
+  .contact-direct a{font-family:var(--serif); font-size:20px; padding-bottom:6px; border-bottom:1px solid rgba(20,19,16,.15); width:fit-content;}
+  .contact-direct a:hover{color:var(--orange); border-color:var(--orange);}
+  .contact-loc{font-size:13.5px; color:var(--grey); margin-top:8px;}
+  .enquiry-form{display:flex; flex-direction:column; gap:18px;}
+  .f-row{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  .enquiry-form label{display:flex; flex-direction:column; gap:8px; font-size:12.5px; letter-spacing:.03em; color:var(--charcoal); font-weight:500;}
+  .enquiry-form input, .enquiry-form select, .enquiry-form textarea{font-family:var(--sans); font-size:14.5px; padding:12px 4px; border:none; border-bottom:1px solid rgba(20,19,16,.25); background:transparent; color:var(--black);}
+  .enquiry-form input:focus, .enquiry-form select:focus, .enquiry-form textarea:focus{outline:none; border-color:var(--orange);}
+  .enquiry-form textarea{resize:vertical; font-family:var(--sans);}
+  .f-full{width:100%;}
+  .enquiry-form button{align-self:flex-start; margin-top:6px;}
+  .f-note{font-size:12.5px; color:var(--grey); margin-top:-6px;}
+  .f-note span{color:var(--charcoal); border-bottom:1px solid rgba(20,19,16,.25);}
+  .f-success{display:none; font-size:14px; padding:16px 18px; border:1px solid rgba(20,19,16,.15); background:var(--orange-dim); color:var(--charcoal); margin-top:4px;}
+  .f-success.shown{display:block;}
+  @media(max-width:860px){.contact-grid{grid-template-columns:1fr; gap:40px;} .f-row{grid-template-columns:1fr;}}
+  .admin-wrap{max-width:960px;}
+  .admin-note{background:#fff3ea; border:1px solid rgba(174,78,44,.3); padding:14px 18px; font-size:13.5px; margin-bottom:36px; color:var(--charcoal);}
+  .slot-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:20px; margin-bottom:56px;}
+  .slot-card{border:1px solid rgba(20,19,16,.12);}
+  .slot-card .ph{aspect-ratio:4/5;}
+  .slot-card .slot-meta{padding:12px 14px;}
+  .slot-card .slot-meta h4{font-size:13px; font-weight:600;}
+  .slot-card .slot-meta p{font-size:11.5px; color:var(--grey); margin:2px 0 10px;}
+  .gal-admin-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:16px;}
+  .gal-admin-card{border:1px solid rgba(20,19,16,.12); position:relative;}
+  .gal-admin-card .ph{aspect-ratio:4/5;}
+  .gal-admin-card .del{position:absolute; top:8px; right:8px; background:rgba(20,19,16,.75); color:#fff; border:none; width:26px; height:26px; cursor:pointer; font-size:14px;}
+  .gal-admin-card .tag{padding:8px; font-size:11px; color:var(--grey); text-transform:capitalize;}
+  .add-tile{border:1px dashed rgba(20,19,16,.3); aspect-ratio:4/5; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:13px; color:var(--grey);}
+  .add-tile:hover{border-color:var(--orange); color:var(--orange);}
+  .section-title{font-size:13px; letter-spacing:.06em; font-weight:600; margin-bottom:18px; text-transform:uppercase; color:var(--charcoal);}
+  .enquiries-list{display:flex; flex-direction:column; gap:0;}
+  .enq-card{border-top:1px solid rgba(20,19,16,.12); padding:16px 0; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+  .enquiries-list .enq-card:last-child{border-bottom:1px solid rgba(20,19,16,.12);}
+  .enq-main{font-size:14px;}
+  .enq-main strong{font-family:var(--serif); font-size:16px; font-weight:450;}
+  .enq-main .enq-meta{color:var(--grey); font-size:12.5px; margin-top:4px;}
+  .enq-msg{color:var(--charcoal); font-size:13.5px; margin-top:6px; max-width:52ch;}
+  .enq-when{font-size:11.5px; color:var(--grey); white-space:nowrap;}
+  .enq-empty{color:var(--grey); font-size:13.5px; padding:14px 0;}
+
+  /* CROP MODAL */
+  #cropModal{position:fixed; inset:0; background:rgba(20,19,16,.92); z-index:200; display:none; align-items:center; justify-content:center; flex-direction:column; padding:24px;}
+  #cropModal.open{display:flex;}
+  .crop-box{position:relative; overflow:hidden; background:#000; touch-action:none; cursor:grab;}
+  .crop-box img{position:absolute; top:0; left:0; transform-origin:0 0; max-width:none; user-select:none; -webkit-user-drag:none;}
+  .crop-controls{display:flex; align-items:center; gap:16px; margin-top:20px; color:#fff; width:100%; max-width:420px;}
+  .crop-controls input[type=range]{flex:1;}
+  .crop-actions{display:flex; gap:12px; margin-top:22px;}
+  .crop-actions .btn{border-color:#fff; color:#fff;}
+  .crop-actions .btn-solid{border-color:var(--orange);}
+  .crop-fields{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; justify-content:center;}
+  .crop-fields input,.crop-fields select{padding:9px 12px; font-size:13px; font-family:var(--sans); border:1px solid #555; background:#111; color:#fff;}
+  .crop-hint{color:#bbb; font-size:12px; margin-top:10px;}
+</style>
+<meta name="theme-color" content="#141310">
+</head>
+<body>
+<a href="#" class="skip-link" onclick="event.preventDefault(); const p=document.querySelector('.page.active'); if(p){p.setAttribute('tabindex','-1'); p.focus();}">Skip to content</a>
+
+<header>
+  <div class="wrap bar">
+    <a href="#/home" class="brand">
+      <span class="name">SWAROOP STUDIOS</span>
+      <span class="since">SINCE 1972</span>
+    </a>
+    <nav class="main" id="navMain">
+      <a href="#/about" data-route="about">About</a>
+      <a href="#/services" data-route="services">Services</a>
+      <a href="#/gallery" data-route="gallery">Gallery</a>
+      <a href="#/contact" data-route="contact">Contact</a>
+    </nav>
+    <button class="menu-btn" onclick="document.getElementById('mobileNav').classList.add('open')">MENU</button>
+  </div>
+  <div id="mobileNav">
+    <button class="close-nav" onclick="document.getElementById('mobileNav').classList.remove('open')">CLOSE ✕</button>
+    <a href="#/home" onclick="document.getElementById('mobileNav').classList.remove('open')">Home</a>
+    <a href="#/about" onclick="document.getElementById('mobileNav').classList.remove('open')">About</a>
+    <a href="#/services" onclick="document.getElementById('mobileNav').classList.remove('open')">Services</a>
+    <a href="#/gallery" onclick="document.getElementById('mobileNav').classList.remove('open')">Gallery</a>
+    <a href="#/contact" onclick="document.getElementById('mobileNav').classList.remove('open')">Contact</a>
+  </div>
+</header>
+
+<!-- HOME -->
+<main class="page" id="page-home">
+  <section class="hero-full">
+    <div class="ph" data-slot="hero" data-label="Hero photograph"></div>
+    <div class="hero-overlay">
+      <div class="wrap">
+        <h1>Stories worth<br>remembering.</h1>
+      </div>
+    </div>
+  </section>
+  <div class="wrap hero-sub">
+    <p class="lede">From intimate portraits to grand celebrations — weddings, corporate events and everything between — Swaroop Studios has documented people and stories since 1972.</p>
+    <div class="hero-actions">
+      <a class="btn btn-solid" href="#/gallery">View Our Work</a>
+      <a class="btn" href="#/contact">Contact Us</a>
+    </div>
+  </div>
+
+  <div class="wrap divider" style="margin-top:56px;"></div>
+
+  <section style="padding:0;">
+    <div class="intro-bleed">
+      <div class="ph" data-slot="intro" data-label="Studio, 1970s"></div>
+      <div class="txt">
+        <h2>A studio built around people, stories and moments.</h2>
+        <p>Since 1972, Swaroop Studios has documented life's most meaningful moments. What began as a traditional photography studio has evolved across generations, while keeping the same focus at its heart.</p>
+        <a class="link-arrow" href="#/about">More about Swaroop Studios</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="heritage">
+    <div class="wrap">
+      <div class="heritage-head">
+        <span class="big-year">1972</span>
+        <h2>More than five decades of photographs, people and stories.</h2>
+      </div>
+      <div class="tl">
+        <div class="step"><div class="yr">1972</div><h4>The beginning</h4><p>Swaroop Studios opens its doors.</p></div>
+        <div class="step"><div class="yr">Early years</div><h4>The press years</h4><p>Traditional studio portraits and press assignments.</p></div>
+        <div class="step"><div class="yr">Through the years</div><h4>Expansion</h4><p>Weddings, celebrations, corporate photography and portraits.</p></div>
+        <div class="step"><div class="yr">Today</div><h4>A modern studio</h4><p>Decades of experience, carried forward with modern photography.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap gal-head">
+      <div>
+        <h2 style="font-size:clamp(26px,3.2vw,38px);">A glimpse of the archive.</h2>
+      </div>
+      <a class="btn" href="#/gallery">Full Gallery</a>
+    </div>
+    <div class="wrap gal-grid" id="homeGalPreview"></div>
+  </section>
+
+  <section class="film-section" id="filmSection" style="display:none;">
+    <div class="wrap">
+      <div class="film-frame" id="filmFrame">
+        <div class="ph" data-slot="film-poster" data-label="Film poster"></div>
+        <div class="play-btn"></div>
+        <div class="film-cap">
+          <span class="film-tag">Wedding Films</span>
+          <h3>Stories that stay with you.</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta" id="contact">
+    <div class="wrap">
+      <h2>Planning something worth remembering?</h2>
+      <p>Tell us a little about what you're planning and we'll get back to you.</p>
+      <div class="cta-actions">
+        <a class="btn btn-solid" href="#/contact">Get in Touch</a>
+        <a class="btn" data-contact-link="whatsapp" href="#">WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ABOUT -->
+<main class="page" id="page-about">
+  <div class="wrap page-hero">
+    <h1>A lifetime behind the camera.</h1>
+    <p class="lede">Swaroop Studios — since 1972.</p>
+  </div>
+  <section style="padding-top:0;">
+    <div class="wrap about-grid">
+      <div class="ph" data-slot="photographer" data-label="Portrait of Swaroop"></div>
+      <div>
+        <blockquote>"Photographs should feel like memories, not just pictures."</blockquote>
+        <p>Photography has never simply been about taking a picture. For Swaroop, it has always been about being present when something happens — noticing the expression, the gesture, the people and the atmosphere that might otherwise disappear.</p>
+        <p>With years of experience across press and professional photography, Swaroop brings an observational approach to every assignment. <em>[Add exact years / press experience details]</em></p>
+        <div class="tag-row">
+          <span class="tag-chip">Press Photography</span>
+          <span class="tag-chip">Event Photography</span>
+          <span class="tag-chip">Wedding Photography</span>
+          <span class="tag-chip">Portraiture</span>
+          <span class="tag-chip">Corporate Photography</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="wrap divider"></div>
+  <section>
+    <div class="wrap intro-grid">
+      <div>
+        <h2>1972 to today.</h2>
+        <p><strong>1972</strong> — The beginning of Swaroop Studios. <em>[Add exact year / founding details]</em></p>
+        <p><strong>The Press Years</strong> — Press photography developed the ability to observe quickly, work under pressure, and capture unscripted moments.</p>
+        <p><strong>The Studio</strong> — Photography expanded into portraits, weddings, events, corporate assignments and family photography.</p>
+        <p><strong>Today</strong> — The studio combines decades of experience with modern photography.</p>
+      </div>
+      <div class="ph" data-slot="about-story" data-label="Studio archive"></div>
+    </div>
+  </section>
+  <section class="cta" id="about-contact">
+    <div class="wrap">
+      <h2>Authentic moments, not posed pictures.</h2>
+      <p>Photographs should feel like memories, not just pictures. Natural expressions, attention to detail, professional service, reliable delivery — and respect for the people being photographed.</p>
+      <div class="cta-actions"><a class="btn btn-solid" href="#/contact">Talk to the studio</a></div>
+    </div>
+  </section>
+</main>
+
+<!-- SERVICES -->
+<main class="page" id="page-services">
+  <div class="wrap page-hero">
+    <h1>Photography for every kind of occasion.</h1>
+  </div>
+  <section style="padding-top:0;">
+    <div class="wrap svc-grid">
+      <div class="svc"><div class="ph" data-slot="svc-weddings" data-label="Weddings" style="height:100%"></div><div class="cap"><h3>Weddings</h3><p>Pre-wedding, haldi, mehendi, sangeet, ceremony, reception and candid coverage.</p></div></div>
+      <div class="svc"><div class="ph" data-slot="svc-events" data-label="Events" style="height:100%"></div><div class="cap"><h3>Events</h3><p>Birthdays, anniversaries, engagements, cultural and religious events.</p></div></div>
+      <div class="svc"><div class="ph" data-slot="svc-corporate" data-label="Corporate" style="height:100%"></div><div class="cap"><h3>Corporate</h3><p>Conferences, launches, award ceremonies, brand and team events.</p></div></div>
+      <div class="svc"><div class="ph" data-slot="svc-portraits" data-label="Portraits & Headshots" style="height:100%"></div><div class="cap"><h3>Portraits &amp; Headshots</h3><p>Executive headshots, personal branding, studio portraiture.</p></div></div>
+      <div class="svc"><div class="ph" data-slot="svc-complete" data-label="Complete Coverage" style="height:100%"></div><div class="cap"><h3>Complete Coverage</h3><p>End-to-end documentation, from preparation through completion.</p></div></div>
+    </div>
+  </section>
+
+  <section class="vip">
+    <div class="wrap vip-grid">
+      <div class="vip-statement">
+        <h2>Private &amp; VIP engagements.</h2>
+        <p>Some assignments call for more than a photographer — they call for discretion. We work with high-profile individuals, public figures and organisations who need their events handled quietly, securely and on their terms.</p>
+      </div>
+      <ul class="vip-list">
+        <li><h4>Confidentiality</h4><p>NDAs signed on request. Images are never shared or published without written approval.</p></li>
+        <li><h4>Security-aware scheduling</h4><p>Coordinated around venue security, protocol teams and last-minute changes.</p></li>
+        <li><h4>Small, vetted team</h4><p>A fixed, briefed crew — no unfamiliar faces on site.</p></li>
+        <li><h4>Private delivery</h4><p>Password-protected galleries, delivered directly to a single point of contact.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="wrap">
+      <h2>Every assignment is different.</h2>
+      <p>Tell us what you're planning and we'll build the coverage around it. Request a quote — no fixed pricing shown here.</p>
+      <div class="cta-actions"><a class="btn btn-solid" href="#/contact">Talk to us</a></div>
+    </div>
+  </section>
+</main>
+
+<!-- GALLERY -->
+<main class="page" id="page-gallery">
+  <div class="wrap page-hero">
+    <h1>Selected stories from the archive.</h1>
+  </div>
+  <section style="padding-top:0;">
+    <div class="wrap">
+      <div class="filters" id="galFilters">
+        <button class="filter active" data-cat="all" aria-pressed="true">All</button>
+        <button class="filter" data-cat="wedding" aria-pressed="false">Weddings</button>
+        <button class="filter" data-cat="event" aria-pressed="false">Events</button>
+        <button class="filter" data-cat="corporate" aria-pressed="false">Corporate</button>
+        <button class="filter" data-cat="portrait" aria-pressed="false">Portraits</button>
+      </div>
+      <div class="gal-grid" id="fullGalGrid" style="margin-top:32px;"></div>
+    </div>
+  </section>
+</main>
+
+<!-- CONTACT -->
+<main class="page" id="page-contact">
+  <div class="wrap page-hero">
+    <h1>Let's talk about what you're planning.</h1>
+    <p class="lede">Share a few details and we'll get back to you — or reach us directly below.</p>
+  </div>
+  <section style="padding-top:0;">
+    <div class="wrap contact-grid">
+      <div class="contact-direct">
+        <h4>Direct</h4>
+        <a data-contact-link="phone" href="#">[PHONE NUMBER]</a>
+        <a data-contact-link="email" href="#">[EMAIL ADDRESS]</a>
+        <a data-contact-link="whatsapp" href="#">WhatsApp</a>
+        <p class="contact-loc" id="contactLoc"></p>
+      </div>
+      <form id="enquiryForm" class="enquiry-form">
+        <div class="f-row">
+          <label>Name<input type="text" name="name" required></label>
+          <label>Phone<input type="tel" name="phone" required></label>
+        </div>
+        <div class="f-row">
+          <label>Email<input type="email" name="email" required></label>
+          <label>Event type
+            <select name="eventType">
+              <option>Wedding</option><option>Event</option><option>Corporate</option>
+              <option>Portrait / Headshot</option><option>Other</option>
+            </select>
+          </label>
+        </div>
+        <div class="f-row">
+          <label>Event date<input type="date" name="eventDate"></label>
+          <label>Location<input type="text" name="location" placeholder="City, venue"></label>
+        </div>
+        <label class="f-full">Message<textarea name="message" rows="4" placeholder="Tell us a little about what you're planning"></textarea></label>
+        <button type="submit" class="btn btn-solid" id="enquirySubmit">Send Enquiry</button>
+        <p class="f-note">Prefer email? Write to us directly at <span data-contact-link="email-text">[EMAIL ADDRESS]</span> instead.</p>
+        <div id="enquirySuccess" class="f-success">Thank you — your enquiry has been received. We'll be in touch shortly.</div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<!-- ADMIN -->
+<main class="page" id="page-admin">
+  <div class="wrap page-hero">
+    <p class="eyebrow" style="margin-bottom:14px;">STUDIO ADMIN</p>
+    <h1>Manage site images.</h1>
+  </div>
+  <section style="padding-top:0;">
+    <div class="wrap admin-wrap">
+      <div class="admin-note" id="adminNote">Checking access…</div>
+      <div id="adminBody" style="display:none;">
+        <p class="section-title">Enquiries</p>
+        <div id="enquiriesList" class="enquiries-list" style="margin-bottom:56px;"></div>
+        <p class="section-title">Site Photographs</p>
+        <div class="slot-grid" id="slotGrid"></div>
+        <p class="section-title">Featured Film</p>
+        <div class="slot-grid" id="filmAdminGrid" style="margin-bottom:56px;"></div>
+        <p class="section-title">Gallery Images</p>
+        <div class="gal-admin-grid" id="galAdminGrid"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- CROP MODAL -->
+<div id="cropModal">
+  <div class="crop-box" id="cropBox"><img id="cropImg" alt=""></div>
+  <div class="crop-controls">
+    <span style="font-size:12px;">Zoom</span>
+    <input type="range" id="zoomRange" min="1" max="3" step="0.01" value="1">
+  </div>
+  <div class="crop-fields" id="cropFields"></div>
+  <div class="crop-actions">
+    <button class="btn" id="cropCancel">Cancel</button>
+    <button class="btn btn-solid" id="cropSave">Save Image</button>
+  </div>
+  <div class="crop-hint">Drag to reposition · scroll or use the slider to zoom</div>
+</div>
+<input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" style="display:none;">
+<input type="file" id="videoInput" accept="video/mp4,video/webm" style="display:none;">
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+  <span class="lb-count" id="lbCount"></span>
+  <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous image">‹</button>
+  <div class="lb-stage"><img id="lbImg" alt=""></div>
+  <button class="lb-nav lb-next" id="lbNext" aria-label="Next image">›</button>
+  <div class="lb-cap" id="lbCap"></div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div id="videoModal">
+  <button class="lb-close" id="vmClose" aria-label="Close video">✕</button>
+  <video id="vmVideo" controls playsinline></video>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="f-grid">
+      <div>
+        <div class="name">SWAROOP STUDIOS</div>
+        <div class="since">SINCE 1972</div>
+      </div>
+      <div>
+        <h5>NAVIGATE</h5>
+        <ul><li><a href="#/home">Home</a></li><li><a href="#/about">About</a></li><li><a href="#/services">Services</a></li><li><a href="#/gallery">Gallery</a></li><li><a href="#/contact">Contact</a></li></ul>
+      </div>
+      <div>
+        <h5>CONTACT</h5>
+        <ul><li id="fPhone"></li><li id="fEmail"></li><li id="fLocation"></li><li><a href="#" id="fInstagram"></a></li></ul>
+      </div>
+    </div>
+    <div class="bottom">
+      <span>© Swaroop Studios. All rights reserved.</span>
+      <a href="#/admin">Studio Admin</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* =========================================================
+   CONTACT INFO — edit these 5 values, everything else updates itself
+   ========================================================= */
+const CONTACT = {
+  phone: "+91 99004 86574",
+  email: "swaroopstudios@gmail.com",
+  whatsapp: "+91 90360 55099",
+  location: "Bengaluru, India",
+  instagram: "https://www.instagram.com/swaroop_studios"
+};
+function isPlaceholder(v){ return !v || v.trim().startsWith("["); }
+function applyContact(){
+  document.querySelectorAll('[data-contact-link="email"]').forEach(el=>{
+    el.href = isPlaceholder(CONTACT.email) ? "#/contact" : "mailto:"+CONTACT.email;
+  });
+  document.querySelectorAll('[data-contact-link="phone"]').forEach(el=>{
+    el.href = isPlaceholder(CONTACT.phone) ? "#/contact" : "tel:"+CONTACT.phone.replace(/[^\d+]/g,"");
+  });
+  document.querySelectorAll('[data-contact-link="whatsapp"]').forEach(el=>{
+    el.href = isPlaceholder(CONTACT.whatsapp) ? "#/contact" : "https://wa.me/"+CONTACT.whatsapp.replace(/[^\d]/g,"");
+  });
+  document.querySelectorAll('#page-contact [data-contact-link="phone"]').forEach(el=> el.textContent = CONTACT.phone);
+  document.querySelectorAll('#page-contact [data-contact-link="email"]').forEach(el=> el.textContent = CONTACT.email);
+  document.querySelectorAll('[data-contact-link="email-text"]').forEach(el=> el.textContent = CONTACT.email);
+  const contactLoc = document.getElementById("contactLoc");
+  if(contactLoc) contactLoc.textContent = CONTACT.location;
+  const fPhone = document.getElementById("fPhone"); if(fPhone) fPhone.textContent = CONTACT.phone;
+  const fEmail = document.getElementById("fEmail"); if(fEmail) fEmail.textContent = CONTACT.email;
+  const fLoc = document.getElementById("fLocation"); if(fLoc) fLoc.textContent = CONTACT.location;
+  const fInsta = document.getElementById("fInstagram");
+  if(fInsta){ fInsta.textContent = isPlaceholder(CONTACT.instagram) ? CONTACT.instagram : "Instagram"; fInsta.href = isPlaceholder(CONTACT.instagram) ? "#" : CONTACT.instagram; }
+}
+function buildLdJson(heroAssetUrl){
+  const data = {
+    "@context":"https://schema.org",
+    "@type":"ProfessionalService",
+    "name":"Swaroop Studios",
+    "description":"Photography studio established in 1972, documenting weddings, events, corporate assignments and portraits.",
+    "foundingDate":"1972",
+    "telephone": isPlaceholder(CONTACT.phone)?undefined:CONTACT.phone,
+    "email": isPlaceholder(CONTACT.email)?undefined:CONTACT.email,
+    "address": isPlaceholder(CONTACT.location)?undefined:{"@type":"PostalAddress","addressLocality":CONTACT.location},
+    "sameAs": isPlaceholder(CONTACT.instagram)?undefined:[CONTACT.instagram],
+    "image": heroAssetUrl||undefined,
+    "priceRange": undefined
+  };
+  Object.keys(data).forEach(k=> data[k]===undefined && delete data[k]);
+  const tag = document.getElementById("ldjson");
+  if(tag) tag.textContent = JSON.stringify(data);
+}
+function setOgImage(assetId){
+  const og = document.getElementById("ogImageTag");
+  if(og && assetId){ og.setAttribute("content", location.origin+"/_blob/"+assetId); }
+}
+</script>
+<script>
+/* ---------- ROUTER ---------- */
+const routes = ["home","about","services","gallery","contact","admin"];
+function render_route(){
+  let h = location.hash.replace("#/","").split("#")[0] || "home";
+  if(!routes.includes(h)) h = "home";
+  routes.forEach(r=>{
+    document.getElementById("page-"+r).classList.toggle("active", r===h);
+  });
+  document.querySelectorAll("#navMain a").forEach(a=>{
+    a.classList.toggle("active", a.dataset.route===h);
+  });
+  window.scrollTo(0,0);
+  if(h==="admin") initAdmin();
+  const anchor = location.hash.split("#")[2];
+  if(anchor){ setTimeout(()=>{ const el=document.getElementById(anchor); if(el) el.scrollIntoView({behavior:"smooth"}); },50); }
+}
+window.addEventListener("hashchange", render_route);
+window.addEventListener("DOMContentLoaded", ()=>{ render_route(); applyContact(); buildLdJson(); loadSiteImages(); loadGallery(); loadFilm(); initReveal(); });
+
+/* ---------- ONE ORCHESTRATED REVEAL: hero load only ---------- */
+function initReveal(){
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const heroText = document.querySelector(".hero-overlay h1");
+  if(heroText && !reduce){
+    heroText.classList.add("hero-reveal");
+    requestAnimationFrame(()=> requestAnimationFrame(()=> heroText.classList.add("shown")));
+  }
+}
+function revealNew(){ /* no-op: per-card scroll reveal intentionally removed — see design notes */ }
+
+/* ---------- CAPABILITIES ---------- */
+let dbCap=null, assetsCap=null, userCap=null, canEdit=false;
+
+async function initCaps(){
+  if(!window.claude || !window.claude.use) return false;
+  dbCap = await window.claude.use("db");
+  assetsCap = await window.claude.use("assets");
+  userCap = await window.claude.use("user");
+  if(userCap){ try{ canEdit = await userCap.canEdit(); }catch(e){ canEdit=false; } }
+  return !!dbCap;
+}
+
+const SLOTS = [
+  {key:"hero", label:"Home — Hero"},
+  {key:"intro", label:"Home — Our Story"},
+  {key:"photographer", label:"About — Portrait"},
+  {key:"about-story", label:"About — Archive"},
+  {key:"svc-weddings", label:"Services — Weddings"},
+  {key:"svc-events", label:"Services — Events"},
+  {key:"svc-corporate", label:"Services — Corporate"},
+  {key:"svc-portraits", label:"Services — Portraits"},
+  {key:"svc-complete", label:"Services — Complete Coverage"},
+];
+
+/* ---------- LOAD & RENDER SITE IMAGES ---------- */
+async function loadSiteImages(){
+  const ok = await initCaps();
+  if(!ok) return;
+  for(const s of SLOTS){
+    try{
+      const snap = await dbCap.doc("images/"+s.key).get();
+      if(snap.exists){
+        const d = snap.data();
+        paintSlot(s.key, d.assetId, s.key==="hero");
+        if(s.key==="hero"){ setOgImage(d.assetId); buildLdJson(location.origin+"/_blob/"+d.assetId); }
+      }
+    }catch(e){}
+  }
+}
+function paintSlot(key, assetId, priority){
+  document.querySelectorAll('[data-slot="'+key+'"]').forEach(el=>{
+    el.innerHTML = '<img src="/_blob/'+assetId+'" alt=""'+(priority?' loading="eager" fetchpriority="high"':' loading="lazy" decoding="async"')+'>';
+  });
+}
+
+async function loadGallery(){
+  if(!dbCap){ const ok = await initCaps(); if(!ok) return; }
+  try{
+    const q = await dbCap.collection("gallery").orderBy("createdAt","desc").limit(60).get();
+    window.__galleryDocs = q.docs.map(d=>({id:d.id, ...d.data()}));
+  }catch(e){ window.__galleryDocs = []; }
+  renderHomePreview();
+  renderFullGallery("all");
+  renderAdminGallery();
+}
+
+function renderHomePreview(){
+  const el = document.getElementById("homeGalPreview");
+  if(!el) return;
+  const docs = (window.__galleryDocs||[]).slice(0,6);
+  if(docs.length===0){
+    el.innerHTML = '<div class="item"><div class="ph" data-label="Wedding · Bangalore" style="height:100%"></div></div><div class="item"><div class="ph" data-label="Corporate" style="height:100%"></div></div><div class="item"><div class="ph" data-label="Portrait" style="height:100%"></div></div>';
+    return;
+  }
+  window.__lbHome = docs;
+  el.innerHTML = docs.map((d,i)=>'<div class="item" data-lb="home" data-i="'+i+'"><div class="ph" style="height:100%"><img src="/_blob/'+d.assetId+'" alt="'+(d.title||"")+'" loading="lazy" decoding="async"></div></div>').join("");
+  wireLightboxClicks(el);
+  revealNew(el);
+}
+
+function renderFullGallery(cat){
+  const el = document.getElementById("fullGalGrid");
+  if(!el) return;
+  let docs = window.__galleryDocs||[];
+  if(cat!=="all") docs = docs.filter(d=>d.category===cat);
+  if(docs.length===0){ el.innerHTML = '<div class="gal-empty">No images in this category yet. Add some from Studio Admin.</div>'; return; }
+  window.__lbGallery = docs;
+  el.innerHTML = docs.map((d,i)=>'<div class="item" data-lb="gallery" data-i="'+i+'"><div class="ph" style="height:100%"><img src="/_blob/'+d.assetId+'" alt="'+(d.title||d.category||"")+'" loading="lazy" decoding="async"></div></div>').join("");
+  wireLightboxClicks(el);
+  revealNew(el);
+}
+function wireLightboxClicks(container){
+  container.querySelectorAll("[data-lb]").forEach(el=>{
+    el.addEventListener("click", ()=> openLightbox(el.dataset.lb, parseInt(el.dataset.i)));
+  });
+}
+
+/* ---------- LIGHTBOX ---------- */
+let lbState = {set:[], i:0};
+function openLightbox(which, i){
+  lbState.set = which==="home" ? (window.__lbHome||[]) : (window.__lbGallery||[]);
+  lbState.i = i;
+  document.getElementById("lightbox").classList.add("open");
+  paintLightbox();
+}
+function paintLightbox(){
+  const d = lbState.set[lbState.i]; if(!d) return;
+  const img = document.getElementById("lbImg");
+  img.classList.remove("shown");
+  img.src = "/_blob/"+d.assetId;
+  img.onload = ()=> img.classList.add("shown");
+  const capParts = [d.category, d.location].filter(Boolean);
+  document.getElementById("lbCap").innerHTML = (d.title?'<span style="color:#fff;">'+d.title+'</span>':'') + (capParts.length?'<br>'+capParts.join(", "):'');
+  document.getElementById("lbCount").textContent = (lbState.i+1)+" / "+lbState.set.length;
+}
+function lbStep(dir){
+  if(!lbState.set.length) return;
+  lbState.i = (lbState.i + dir + lbState.set.length) % lbState.set.length;
+  paintLightbox();
+}
+document.getElementById("lbClose").addEventListener("click", ()=> document.getElementById("lightbox").classList.remove("open"));
+document.getElementById("lbPrev").addEventListener("click", ()=> lbStep(-1));
+document.getElementById("lbNext").addEventListener("click", ()=> lbStep(1));
+document.addEventListener("keydown", e=>{
+  if(document.getElementById("lightbox").classList.contains("open")){
+    if(e.key==="Escape") document.getElementById("lightbox").classList.remove("open");
+    if(e.key==="ArrowLeft") lbStep(-1);
+    if(e.key==="ArrowRight") lbStep(1);
+  }
+  if(e.key==="Escape") document.getElementById("videoModal").classList.remove("open");
+});
+let lbTouchX=null;
+document.getElementById("lightbox").addEventListener("touchstart", e=> lbTouchX=e.touches[0].clientX);
+document.getElementById("lightbox").addEventListener("touchend", e=>{
+  if(lbTouchX===null) return;
+  const dx = e.changedTouches[0].clientX - lbTouchX;
+  if(Math.abs(dx)>40) lbStep(dx<0?1:-1);
+  lbTouchX=null;
+});
+
+/* ---------- FEATURED FILM ---------- */
+async function loadFilm(){
+  if(!dbCap){ const ok = await initCaps(); if(!ok) return; }
+  try{
+    const snap = await dbCap.doc("images/film").get();
+    if(snap.exists){
+      const d = snap.data();
+      if(d.posterAssetId) paintSlot("film-poster", d.posterAssetId);
+      if(d.videoAssetId){
+        document.getElementById("filmSection").style.display = "block";
+        document.getElementById("filmFrame").onclick = ()=> openVideo(d.videoAssetId);
+      }
+    }
+  }catch(e){}
+}
+function openVideo(assetId){
+  const v = document.getElementById("vmVideo");
+  v.src = "/_blob/"+assetId;
+  document.getElementById("videoModal").classList.add("open");
+}
+document.getElementById("vmClose").addEventListener("click", ()=>{
+  const v = document.getElementById("vmVideo");
+  v.pause(); v.removeAttribute("src"); v.load();
+  document.getElementById("videoModal").classList.remove("open");
+});
+document.getElementById("galFilters").addEventListener("click",e=>{
+  const b = e.target.closest(".filter"); if(!b) return;
+  document.querySelectorAll(".filter").forEach(f=>{ f.classList.remove("active"); f.setAttribute("aria-pressed","false"); });
+  b.classList.add("active"); b.setAttribute("aria-pressed","true");
+  renderFullGallery(b.dataset.cat);
+});
+
+/* ---------- ENQUIRY FORM ---------- */
+const enquiryForm = document.getElementById("enquiryForm");
+if(enquiryForm){
+  enquiryForm.addEventListener("submit", async e=>{
+    e.preventDefault();
+    const btn = document.getElementById("enquirySubmit");
+    const data = Object.fromEntries(new FormData(enquiryForm).entries());
+    btn.textContent = "Sending…"; btn.disabled = true;
+    try{
+      if(!dbCap){ await initCaps(); }
+      if(dbCap){
+        await dbCap.collection("enquiries").add({...data, createdAt: new Date().toISOString(), read:false});
+      }
+      document.getElementById("enquirySuccess").classList.add("shown");
+      enquiryForm.reset();
+    }catch(err){
+      alert("Couldn't send that just now — please email us directly instead.");
+    }
+    btn.textContent = "Send Enquiry"; btn.disabled = false;
+  });
+}
+let adminInited = false;
+async function initAdmin(){
+  const note = document.getElementById("adminNote");
+  const body = document.getElementById("adminBody");
+  if(!dbCap){ const ok = await initCaps(); if(!ok){ note.textContent = "Admin tools aren't available in this view."; return; } }
+  if(!canEdit){ note.textContent = "You're viewing Studio Admin in read-only mode — only editors can upload or change images."; }
+  else { note.textContent = "Uploads here update the live site for everyone. Click any tile to replace or add a photograph."; }
+  body.style.display = "block";
+  renderEnquiries();
+  renderSlotGrid();
+  renderFilmAdmin();
+  renderAdminGallery();
+  adminInited = true;
+}
+async function renderEnquiries(){
+  const el = document.getElementById("enquiriesList");
+  if(!el) return;
+  el.innerHTML = '<p class="enq-empty">Loading…</p>';
+  try{
+    const q = await dbCap.collection("enquiries").orderBy("createdAt","desc").limit(50).get();
+    const docs = q.docs.map(d=>d.data());
+    if(docs.length===0){ el.innerHTML = '<p class="enq-empty">No enquiries yet.</p>'; return; }
+    el.innerHTML = docs.map(d=>{
+      const when = d.createdAt ? new Date(d.createdAt).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"}) : "";
+      const details = [d.eventType, d.eventDate, d.location].filter(Boolean).join(" · ");
+      return '<div class="enq-card"><div class="enq-main"><strong>'+(d.name||"—")+'</strong>'
+        +'<div class="enq-meta">'+[d.phone,d.email].filter(Boolean).join(" · ")+(details?'<br>'+details:'')+'</div>'
+        +(d.message?'<div class="enq-msg">'+d.message+'</div>':'')+'</div><div class="enq-when">'+when+'</div></div>';
+    }).join("");
+  }catch(e){ el.innerHTML = '<p class="enq-empty">Couldn\'t load enquiries.</p>'; }
+}
+async function renderFilmAdmin(){
+  const g = document.getElementById("filmAdminGrid");
+  let film = {};
+  try{ const snap = await dbCap.doc("images/film").get(); if(snap.exists) film = snap.data(); }catch(e){}
+  g.innerHTML =
+    '<div class="slot-card"><div class="ph" data-label="Film poster (16:9)"></div><div class="slot-meta"><h4>Poster image</h4><p>16:9 wide</p>'+(canEdit?'<button class="btn btn-sm" id="filmPosterBtn">Replace</button>':'')+'</div></div>'+
+    '<div class="slot-card"><div class="ph" data-label="'+(film.videoAssetId?"Film uploaded":"No film yet")+'" style="align-items:center; justify-content:center;"></div><div class="slot-meta"><h4>Video file</h4><p>MP4 or WebM</p>'+(canEdit?'<button class="btn btn-sm" id="filmVideoBtn">Upload Film</button>':'')+'</div></div>';
+  if(film.posterAssetId) g.querySelector(".slot-card .ph").innerHTML = '<img src="/_blob/'+film.posterAssetId+'" alt="" loading="lazy" decoding="async">';
+  const pb = document.getElementById("filmPosterBtn");
+  if(pb) pb.addEventListener("click", ()=> openCropper({mode:"film-poster", ar:16/9}));
+  const vb = document.getElementById("filmVideoBtn");
+  if(vb) vb.addEventListener("click", ()=>{
+    const input = document.getElementById("videoInput");
+    input.value = "";
+    input.onchange = async ()=>{
+      const file = input.files[0];
+      if(!file) return;
+      vb.textContent = "Uploading…"; vb.disabled = true;
+      try{
+        const up = await assetsCap.upload(file, {type:file.type||"video/mp4"});
+        await dbCap.doc("images/film").set({posterAssetId: film.posterAssetId||null, videoAssetId: up.id, updatedAt: new Date().toISOString()});
+        await loadFilm(); await renderFilmAdmin();
+      }catch(e){ alert("Couldn't upload video: "+(e&&e.message?e.message:e)); }
+      vb.textContent = "Upload Film"; vb.disabled = false;
+    };
+    input.click();
+  });
+}
+function renderSlotGrid(){
+  const g = document.getElementById("slotGrid");
+  g.innerHTML = "";
+  SLOTS.forEach(async s=>{
+    const card = document.createElement("div");
+    card.className = "slot-card";
+    card.innerHTML = '<div class="ph" data-label="'+s.label+'"></div><div class="slot-meta"><h4>'+s.label+'</h4><p>4:5 portrait</p>'+(canEdit?'<button class="btn btn-sm" data-slot-key="'+s.key+'">Replace</button>':'')+'</div>';
+    g.appendChild(card);
+    try{
+      const snap = await dbCap.doc("images/"+s.key).get();
+      if(snap.exists) card.querySelector(".ph").innerHTML = '<img src="/_blob/'+snap.data().assetId+'" alt="" loading="lazy" decoding="async">';
+    }catch(e){}
+  });
+  g.querySelectorAll("[data-slot-key]").forEach(b=>{
+    b.addEventListener("click", ()=>openCropper({mode:"slot", slotKey:b.dataset.slotKey, ar:4/5}));
+  });
+}
+function renderAdminGallery(){
+  const g = document.getElementById("galAdminGrid");
+  if(!g) return;
+  const docs = window.__galleryDocs||[];
+  g.innerHTML = docs.map(d=>'<div class="gal-admin-card"><div class="ph"><img src="/_blob/'+d.assetId+'" alt="" loading="lazy" decoding="async"></div>'+(canEdit?'<button class="del" data-del="'+d.id+'">×</button>':'')+'<div class="tag">'+[d.category,d.title].filter(Boolean).join(", ")+'</div></div>').join("");
+  if(canEdit) g.innerHTML += '<div class="add-tile" id="addGalTile">+ Add image</div>';
+  const addTile = document.getElementById("addGalTile");
+  if(addTile) addTile.addEventListener("click", ()=>openCropper({mode:"gallery", ar:4/5}));
+  g.querySelectorAll("[data-del]").forEach(b=>{
+    b.addEventListener("click", async ()=>{
+      if(!confirm("Delete this image?")) return;
+      const id = b.dataset.del;
+      const doc = (window.__galleryDocs||[]).find(x=>x.id===id);
+      try{ await dbCap.doc("gallery/"+id).delete(); if(doc && assetsCap) await assetsCap.delete(doc.assetId); }catch(e){}
+      await loadGallery();
+    });
+  });
+}
+
+/* ---------- CROPPER ---------- */
+let cropState = {};
+function openCropper({mode, slotKey, ar}){
+  if(!canEdit){ alert("Only editors can upload images."); return; }
+  cropState = {mode, slotKey, ar};
+  const input = document.getElementById("fileInput");
+  input.value = "";
+  input.onchange = ()=>{
+    const file = input.files[0];
+    if(!file) return;
+    const url = URL.createObjectURL(file);
+    const img = document.getElementById("cropImg");
+    img.onload = ()=> setupCropBox(img, ar);
+    img.src = url;
+    cropState.file = file;
+    buildCropFields(mode);
+    document.getElementById("cropModal").classList.add("open");
+  };
+  input.click();
+}
+function buildCropFields(mode){
+  const f = document.getElementById("cropFields");
+  if(mode==="gallery"){
+    f.innerHTML = '<select id="fCat"><option value="wedding">Wedding</option><option value="event">Event</option><option value="corporate">Corporate</option><option value="portrait">Portrait</option></select>'+
+      '<input id="fTitle" placeholder="Title (optional)">'+
+      '<input id="fLoc" placeholder="Location (optional)">';
+  } else {
+    f.innerHTML = "";
+  }
+}
+let cb; // crop box element state
+function setupCropBox(img, ar){
+  const box = document.getElementById("cropBox");
+  const maxW = Math.min(window.innerWidth*0.86, 420);
+  const w = maxW, h = maxW/ar;
+  box.style.width = w+"px"; box.style.height = h+"px";
+  const baseScale = Math.max(w/img.naturalWidth, h/img.naturalHeight);
+  cb = {box, img, w, h, baseScale, zoom:1, tx:(w-img.naturalWidth*baseScale)/2, ty:(h-img.naturalHeight*baseScale)/2, dragging:false};
+  clampAndPaint();
+  document.getElementById("zoomRange").value = 1;
+}
+function clampAndPaint(){
+  const scale = cb.baseScale*cb.zoom;
+  const dw = cb.img.naturalWidth*scale, dh = cb.img.naturalHeight*scale;
+  cb.tx = Math.min(0, Math.max(cb.w-dw, cb.tx));
+  cb.ty = Math.min(0, Math.max(cb.h-dh, cb.ty));
+  cb.img.style.transform = "translate("+cb.tx+"px,"+cb.ty+"px) scale("+scale+")";
+}
+document.getElementById("zoomRange").addEventListener("input", e=>{
+  if(!cb) return;
+  cb.zoom = parseFloat(e.target.value);
+  clampAndPaint();
+});
+const cropBoxEl = document.getElementById("cropBox");
+let dragStart=null;
+cropBoxEl.addEventListener("pointerdown", e=>{
+  if(!cb) return;
+  dragStart = {x:e.clientX, y:e.clientY, tx:cb.tx, ty:cb.ty};
+  cropBoxEl.setPointerCapture(e.pointerId);
+});
+cropBoxEl.addEventListener("pointermove", e=>{
+  if(!dragStart || !cb) return;
+  cb.tx = dragStart.tx + (e.clientX-dragStart.x);
+  cb.ty = dragStart.ty + (e.clientY-dragStart.y);
+  clampAndPaint();
+});
+cropBoxEl.addEventListener("pointerup", ()=> dragStart=null);
+cropBoxEl.addEventListener("wheel", e=>{
+  if(!cb) return;
+  e.preventDefault();
+  const r = document.getElementById("zoomRange");
+  let z = cb.zoom + (e.deltaY<0?0.05:-0.05);
+  z = Math.max(1, Math.min(3, z));
+  cb.zoom = z; r.value = z;
+  clampAndPaint();
+}, {passive:false});
+
+document.getElementById("cropCancel").addEventListener("click", ()=>{
+  document.getElementById("cropModal").classList.remove("open");
+  cb = null;
+});
+document.getElementById("cropSave").addEventListener("click", async ()=>{
+  if(!cb) return;
+  const btn = document.getElementById("cropSave");
+  btn.textContent = "Saving…"; btn.disabled = true;
+  try{
+    const scale = cb.baseScale*cb.zoom;
+    const sx = -cb.tx/scale, sy = -cb.ty/scale, sw = cb.w/scale, sh = cb.h/scale;
+    const outW = 1000, outH = Math.round(1000/cropState.ar);
+    const canvas = document.createElement("canvas");
+    canvas.width = outW; canvas.height = outH;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(cb.img, sx, sy, sw, sh, 0, 0, outW, outH);
+    const blob = await new Promise(res=> canvas.toBlob(res, "image/jpeg", 0.9));
+    const up = await assetsCap.upload(blob, {type:"image/jpeg"});
+    if(cropState.mode==="slot"){
+      await dbCap.doc("images/"+cropState.slotKey).set({assetId: up.id, updatedAt: new Date().toISOString()});
+      paintSlot(cropState.slotKey, up.id);
+      renderSlotGrid();
+    } else if(cropState.mode==="film-poster"){
+      let existing = {};
+      try{ const snap = await dbCap.doc("images/film").get(); if(snap.exists) existing = snap.data(); }catch(e){}
+      await dbCap.doc("images/film").set({posterAssetId: up.id, videoAssetId: existing.videoAssetId||null, updatedAt: new Date().toISOString()});
+      await loadFilm(); await renderFilmAdmin();
+    } else {
+      const cat = document.getElementById("fCat").value;
+      const title = document.getElementById("fTitle").value;
+      const loc = document.getElementById("fLoc").value;
+      await dbCap.collection("gallery").add({assetId: up.id, category:cat, title, location:loc, createdAt: new Date().toISOString()});
+      await loadGallery();
+    }
+    document.getElementById("cropModal").classList.remove("open");
+    cb = null;
+  }catch(e){
+    alert("Couldn't save image: "+(e && e.message ? e.message : e));
+  }
+  btn.textContent = "Save Image"; btn.disabled = false;
+});
+</script>
+</body>
+</html>
