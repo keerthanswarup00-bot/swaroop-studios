@@ -121,6 +121,8 @@
   /* image hover — Gallery page only, the one deliberate interactive moment */
   #page-gallery .gal-grid .item .ph{cursor:pointer;}
   #page-gallery .gal-grid .item .ph img{transition:transform .7s cubic-bezier(.2,.7,.2,1);}
+  /* Preserve the full frame of this unusually tall portrait instead of cropping it inside the gallery tile. */
+  #page-gallery .gal-grid .item .ph .local-photo-dsc06933a img{object-fit:contain; object-position:center; background:#e9e6df;}
   @media(hover:hover){
     #page-gallery .gal-grid .item:hover .ph img{transform:scale(1.045);}
   }
@@ -1108,7 +1110,7 @@ function localImageMarkup(image, options){
   const fallbackWidth = Math.min(1800,image.width);
   const loading = settings.priority ? "eager" : "lazy";
   const priority = settings.priority ? ` fetchpriority="high"` : "";
-  return `<picture><source type="image/avif" srcset="${srcset}" sizes="${sizes}"><img src="/assets/images/${image.id}-${fallbackWidth}.jpg" alt="${image.alt}" width="${image.width}" height="${image.height}" loading="${loading}" decoding="async"${priority}></picture>`;
+  return `<picture class="local-photo local-photo-${image.id}"><source type="image/avif" srcset="${srcset}" sizes="${sizes}"><img src="/assets/images/${image.id}-${fallbackWidth}.jpg" alt="${image.alt}" width="${image.width}" height="${image.height}" loading="${loading}" decoding="async"${priority}></picture>`;
 }
 function localGalleryImageId(doc){
   const id = doc.imageId || (!doc.assetId ? doc.id : "");
