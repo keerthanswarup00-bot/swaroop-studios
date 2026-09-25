@@ -57,6 +57,10 @@
   .motion-video{width:100%; height:100%;}
 
   header{position:sticky; top:0; z-index:50; background:rgba(250,249,246,.92); backdrop-filter:blur(8px); border-bottom:1px solid rgba(20,19,16,0.08);}
+  header.home-overlay{position:absolute; left:0; right:0; background:rgba(20,19,16,.28); backdrop-filter:blur(2px); border-bottom-color:rgba(255,255,255,.2);}
+  header.home-overlay .brand,header.home-overlay nav.main a,header.home-overlay .menu-btn{color:#fff; text-shadow:0 1px 12px rgba(20,19,16,.65);}
+  header.home-overlay .brand .since{color:rgba(255,255,255,.8);}
+  header.home-overlay nav.main a:hover,header.home-overlay nav.main a.active{color:var(--orange); border-color:var(--orange); text-shadow:none;}
   header .bar{display:flex; align-items:center; justify-content:space-between; padding:18px 0;}
   .brand{display:flex; flex-direction:column; line-height:1.1;}
   .brand .name{font-family:var(--serif); font-size:19px; letter-spacing:.02em;}
@@ -307,7 +311,7 @@
 <body>
 <a href="#" class="skip-link" onclick="event.preventDefault(); const p=document.querySelector('.page.active'); if(p){p.setAttribute('tabindex','-1'); p.focus();}">Skip to content</a>
 
-<header>
+<header class="home-overlay">
   <div class="wrap bar">
     <a href="#/home" class="brand">
       <span class="name">SWAROOP STUDIOS</span>
@@ -739,6 +743,8 @@ function render_route(){
   routes.forEach(r=>{
     document.getElementById("page-"+r).classList.toggle("active", r===h);
   });
+  const header = document.querySelector("header");
+  if(header) header.classList.toggle("home-overlay", h==="home");
   document.querySelectorAll("#navMain a").forEach(a=>{
     a.classList.toggle("active", a.dataset.route===h);
   });
