@@ -199,7 +199,6 @@
   .hero-full .ph.has-image::before{display:block; inset:-24px; background-image:var(--hero-image); background-size:cover; background-position:center; filter:blur(18px); opacity:.65; transform:scale(1.05); z-index:0;}
   .hero-full .ph picture{z-index:1;}
   .hero-full .ph img{object-fit:cover; object-position:center;}
-  @media(min-aspect-ratio:3/2){.hero-full .ph img{object-fit:contain;}}
   .hero-overlay{position:absolute; inset:0; z-index:2; display:flex; align-items:flex-end; background:linear-gradient(180deg, rgba(20,19,16,0) 45%, rgba(20,19,16,.62) 100%);}
   .hero-overlay .wrap{width:100%; padding-bottom:64px;}
   .hero-overlay h1{color:#fff; font-size:clamp(36px,6.4vw,76px); line-height:1.0; max-width:840px;}
@@ -545,7 +544,7 @@
         <p><strong>The Studio</strong> — Photography expanded into portraits, weddings, events, corporate assignments and family photography.</p>
         <p><strong>Today</strong> — The studio combines decades of experience with modern photography.</p>
       </div>
-      <div class="ph" data-slot="about-story" data-local-image="dsc03239" data-local-sizes="(max-width:860px) 100vw, 58vw" data-label="Details and atmosphere"></div>
+      <div class="ph" data-slot="about-story" data-local-image="dsc03239" data-local-sizes="(max-width:860px) 100vw, 58vw" data-local-priority="true" data-label="Details and atmosphere"></div>
     </div>
   </section>
   <section class="cta" id="about-contact">
