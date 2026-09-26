@@ -30,6 +30,9 @@
   :root{
     --white:#FAF9F6; --black:#141310; --charcoal:#2B2A26; --grey:#8C887F;
     --orange:#AE4E2C; --orange-dim: rgba(174,78,44,0.12);
+    /* Paper tones for the editorial chapters: the same warm neutral family, one step apart, so
+       "The studio" and "1972" read as facing pages of one book rather than separate blocks. */
+    --paper-warm:#F2EEE6; --paper-stone:#E8E2D6; --stone-ink:#4A463E;
     --serif:'Fraunces', serif; --sans:'Inter', sans-serif;
     /* Height of the band reserved for the fixed navigation; the hero is measured against it. */
     --hero-top:76px;
@@ -222,53 +225,59 @@
     .hero-actions .btn{flex:1 1 145px; justify-content:center; padding:13px 18px;}
   }
 
-  /* Second section — "The studio": one editorial composition. The copy takes 42% of the band, the
-     photograph takes the remaining 58% and bleeds off the right edge. The photograph sets the
-     height of the band, so the dark ground only ever sits behind the copy and the image never
-     reads as a card floating in black. */
+  /* Second section — "The studio": an editorial spread on warm paper. The eyebrow and headline sit
+     in the page margin, the supporting copy in a second column, and the photograph becomes a
+     full-height plate that bleeds off the right edge. The plate's left edge lands on the page
+     gutter, so the copy, the image and the white strip above share one alignment.
+     Nothing here is boxed: no ground of its own, no border, no shadow, no radius. */
   .intro-cinematic{
     position:relative;
-    --studio-gutter:clamp(24px,6vw,110px);
-    --studio-pad:clamp(40px,7vh,88px);
-    background-color:var(--black);
-    background-image:radial-gradient(132% 118% at 10% 34%, #1d1b16 0%, #181611 46%, #141310 100%);
-    padding:0 var(--studio-gutter);
+    background:var(--paper-warm);
+    /* padding resets the global section padding: the plate bleeds to all three edges, and the left
+       pad mirrors .wrap (max-width 1240 + 32px gutters) so the copy starts on the page grid. */
+    padding:0 0 0 max(32px, calc((100% - 1240px) / 2 + 32px));
   }
   .intro-cinematic__inner{
     display:grid;
-    grid-template-columns:minmax(0,clamp(300px,42%,660px)) minmax(0,1fr);
-    align-items:stretch;
-    column-gap:clamp(40px,5vw,96px);
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;
+    column-gap:clamp(36px,5vw,96px);
+    align-items:center;
+    min-height:clamp(520px,76vh,820px);
   }
-  .intro-cinematic__content{
-    position:relative; z-index:1;
-    display:flex; flex-direction:column; justify-content:center; align-items:flex-start;
-    /* Symmetric air with a 26px optical lift (13px each side) so the copy sits just above the
-       mathematical centre without crowding the band at short viewport heights. */
-    padding:max(0px, calc(var(--studio-pad) - 13px)) 0 calc(var(--studio-pad) + 13px);
-    color:var(--white);
+  .intro-cinematic__head{min-width:0;}
+  .intro-cinematic__head .eyebrow{color:var(--orange); font-size:11px; letter-spacing:.2em; margin-bottom:22px;}
+  .intro-cinematic__head h2{font-size:clamp(30px,3.1vw,44px); line-height:1.08; letter-spacing:-.015em; max-width:12.5ch; color:var(--black);}
+  .intro-cinematic__body{min-width:0; display:flex; flex-direction:column; align-items:flex-start;}
+  .intro-cinematic__copy{max-width:400px; color:rgba(43,42,38,.78); font-size:15px; line-height:1.74; margin-bottom:28px;}
+  .intro-cinematic__body .link-arrow{margin-top:0;}
+  /* The plate is sized by the band, so it always reads as part of the page rather than a tile. */
+  .intro-cinematic__media{align-self:stretch; aspect-ratio:0.641; overflow:hidden; background:#17150f;}
+  /* Hard crop of the negative, verified against the pixels of the file rather than guessed. The frame
+     is 3:2 and very low key: its left 45% and top 24% are empty black, and the lit couple stands in
+     a vertical band at source x 51%–83%. So the <picture> window is pulled up 31.6% to drop the black
+     sky (source y 24%–100%) and object-position 75.5% keeps the couple centred (source x 51%–83.5%).
+     Sampled result: 65% of the plate is lit, 17% is black, and no edge is a black bar — the negative
+     is cropped to its subject instead of floating inside a dark rectangle. */
+  .intro-cinematic__media picture{top:-31.58%; height:131.58%; bottom:auto;}
+  .intro-cinematic__media img{object-position:75.5% 50%;}
+  /* Below 1100px, and on portrait viewports of any width, the spread becomes a vertical page:
+     copy first, then the photograph running off the right edge (phones: edge to edge). */
+  @media(max-width:1099px),(max-aspect-ratio:11/10){
+    .intro-cinematic{padding:clamp(48px,6.5vh,92px) 0 clamp(40px,5.5vh,76px) 0;}
+    .intro-cinematic__inner{grid-template-columns:1fr; row-gap:clamp(30px,4vh,48px); align-items:start; min-height:0;}
+    .intro-cinematic__head,.intro-cinematic__body{padding:0 32px;}
+    .intro-cinematic__head h2{font-size:clamp(30px,4.6vw,42px); max-width:14ch;}
+    /* Capping the height lets the plate widen instead: the browser simply reveals more of the
+       negative's dark sides, so the crop never breaks and the page never runs away. */
+    .intro-cinematic__media{align-self:auto; width:min(100%,460px); max-height:min(70vh,700px); aspect-ratio:0.641; margin-left:auto;}
   }
-  .intro-cinematic__content .eyebrow{color:#e8a26f; font-size:11.5px; letter-spacing:.18em; margin-bottom:22px;}
-  .intro-cinematic__content h2{font-size:clamp(34px,4.2vw,60px); line-height:.99; letter-spacing:-.022em; max-width:11.5ch; margin-bottom:30px;}
-  .intro-cinematic__copy{max-width:min(100%,440px); color:rgba(255,255,255,.72); font-size:15px; line-height:1.72; margin-bottom:34px;}
-  .intro-cinematic__content .link-arrow{color:var(--white); border-color:#e8a26f;}
-  .intro-cinematic__media{min-height:clamp(460px,76vh,820px); margin-right:calc(-1 * var(--studio-gutter)); overflow:hidden; background:#100f0d;}
-  /* The frame's left half is empty black and the couple sits right of centre, so the crop is
-     anchored to the right edge: the subject stays whole and the dark edge melts into the ground.
-     No max-height here: the photo must stretch to the full height of the band, and the min-height
-     ceiling already keeps the frame close enough to 3:2 for the right anchor to stay safe. */
-  .intro-cinematic__media img{object-position:100% 88%;}
-  @media(min-width:1000px) and (max-width:1199px) and (min-aspect-ratio:11/10){.intro-cinematic__media{min-height:clamp(420px,64vh,700px);}}
-  /* Ultrawide: the frame is far wider than 3:2, so let the band grow back toward 75vh */
-  @media(min-width:1800px) and (min-aspect-ratio:11/10){.intro-cinematic__media{min-height:clamp(460px,76vh,1080px);}}
-  /* Below 1000px, and on portrait viewports of any width (a 42/58 split needs a landscape frame),
-     the composition stacks: copy first, then the photograph edge to edge. */
-  @media(max-width:999px),(max-aspect-ratio:11/10){
-    .intro-cinematic{padding:0; background-image:radial-gradient(130% 52% at 50% 0%, #1c1a15 0%, #141310 72%);}
-    .intro-cinematic__inner{grid-template-columns:1fr; row-gap:clamp(40px,6vh,64px);}
-    .intro-cinematic__content{padding:clamp(60px,9vh,100px) clamp(20px,6vw,44px) 0;}
-    .intro-cinematic__content h2{font-size:clamp(30px,8.6vw,44px); max-width:min(100%,17ch);}
-    .intro-cinematic__media{min-height:clamp(300px,52vh,480px); max-height:none; margin-right:0;}
+  @media(max-width:640px){
+    .intro-cinematic__head h2{font-size:clamp(30px,8.4vw,40px); max-width:13ch;}
+    .intro-cinematic__head,.intro-cinematic__body{padding:0 20px;}
+    .intro-cinematic__media{width:100%; max-height:62vh;}
+    /* A full-bleed phone plate is wider than the desktop crop, so it slides right a touch to keep
+       the couple centred rather than drifting toward the negative's empty left. */
+    .intro-cinematic__media img{object-position:79% 50%;}
   }
 
   .intro-grid{display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center;}
@@ -316,17 +325,31 @@
   @media(max-width:860px){.vip-grid{grid-template-columns:1fr; gap:48px;} .vip-visual{width:100%; max-width:620px;}}
   @media(max-width:640px){.vip-grid{gap:40px;} .vip-visual{padding:0 0 16px 16px;} .vip-list{margin-top:34px;} .vip-list li{grid-template-columns:1fr; gap:6px; padding:20px 0;}}
 
-  .heritage{background:var(--black); color:var(--white);}
-  .heritage-head{display:flex; align-items:flex-end; gap:28px; margin-bottom:60px; flex-wrap:wrap;}
-  .big-year{font-family:var(--serif); font-weight:300; font-size:clamp(64px,10vw,140px); line-height:0.8; color:var(--charcoal-light,#3a3833); -webkit-text-stroke:1px rgba(255,255,255,.35); color:transparent;}
-  .heritage-head h2{font-size:clamp(24px,3vw,34px); max-width:520px; margin:0; padding-bottom:10px;}
-  .tl{display:flex; gap:0; overflow-x:auto; scroll-snap-type:x proximity; margin:0 -32px; padding:0 32px 6px; -webkit-overflow-scrolling:touch;}
-  .tl::-webkit-scrollbar{height:3px;} .tl::-webkit-scrollbar-thumb{background:rgba(255,255,255,.25);}
-  .tl .yr{font-family:var(--serif); font-size:15px; color:#9a958a; margin-bottom:10px;}
-  .tl h4{font-size:16px; font-weight:600; margin-bottom:8px;}
-  .tl p{font-size:13.5px; color:#bab5aa;}
-  .tl .step{flex:0 0 260px; scroll-snap-align:start; border-left:1px solid rgba(255,255,255,.18); padding:0 28px 0 20px;}
-  @media(max-width:760px){.heritage-head{gap:14px;} .tl{margin-left:0; margin-right:0; padding-left:20px; padding-right:20px;} .tl .step{flex:0 0 230px;}}
+  /* Third section — the 1972 chapter. Same paper family, different voice: the year is a chapter
+     marker set solid in the margin beside the statement, the archive photograph sits opposite it
+     on the same top line, and the timeline is a static four-column hairline list rather than a
+     scroll strip, so nothing here behaves like a carousel or a UI panel. */
+  .heritage{background:var(--paper-stone); color:var(--black); padding:clamp(60px,8vh,104px) 0 clamp(56px,7vh,92px);}
+  .heritage__eyebrow{color:var(--orange); font-size:11px; letter-spacing:.2em; margin-bottom:clamp(20px,2.6vh,32px);}
+  .heritage__grid{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.05fr); column-gap:clamp(40px,6vw,104px); align-items:start;}
+  .heritage__lead{min-width:0;}
+  .heritage__year{font-family:var(--serif); font-weight:300; font-size:clamp(50px,6vw,88px); line-height:.86; letter-spacing:-.02em; color:var(--stone-ink); margin-bottom:clamp(20px,2.6vh,30px);}
+  .heritage__lead h2{font-size:clamp(21px,1.95vw,29px); line-height:1.3; letter-spacing:-.005em; max-width:19ch; color:var(--charcoal);}
+  /* 16:9 keeps the plate wide and quiet, and its top edge sits on the same line as the year. The
+     frame is 3:2, so the crop also trims the dark strip along the top of the negative. */
+  .heritage__media{width:100%; aspect-ratio:16/9; overflow:hidden; background:#e9e6df;}
+  .heritage__media img{object-position:50% 46%;}
+  .tl{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:clamp(18px,2.4vw,40px); margin:clamp(40px,5.5vh,68px) 0 0; border-top:1px solid rgba(20,19,16,.2); padding-top:clamp(20px,2.6vh,30px);}
+  .tl .step{min-width:0; padding-right:clamp(6px,1.2vw,18px);}
+  .tl .yr{font-family:var(--serif); font-size:14.5px; color:var(--stone-ink); margin-bottom:8px;}
+  .tl h4{font-size:15px; font-weight:600; margin-bottom:7px; color:var(--black);}
+  .tl p{font-size:13.5px; line-height:1.6; color:rgba(43,42,38,.72); max-width:34ch;}
+  @media(max-width:980px){
+    .heritage__grid{grid-template-columns:1fr; row-gap:clamp(30px,4vh,44px);}
+    .heritage__lead h2{max-width:24ch;}
+    .tl{grid-template-columns:repeat(2,minmax(0,1fr)); row-gap:clamp(22px,3vh,32px);}
+  }
+  @media(max-width:359px){.tl{grid-template-columns:1fr; row-gap:22px;}}
 
   .about-grid{display:grid; grid-template-columns:0.85fr 1.15fr; gap:70px; align-items:center;}
   .about-grid .ph{aspect-ratio:4/5;}
@@ -565,21 +588,27 @@
 
   <section class="intro-cinematic">
     <div class="intro-cinematic__inner">
-      <div class="intro-cinematic__content wrap">
+      <div class="intro-cinematic__head">
         <p class="eyebrow">The studio</p>
         <h2>A studio built around people, stories and moments.</h2>
+      </div>
+      <div class="intro-cinematic__body">
         <p class="intro-cinematic__copy">Since 1972, Swaroop Studios has documented life's most meaningful moments. Across generations, the craft has changed, but the attention to people and the moments that matter has stayed the same.</p>
         <a class="link-arrow" href="#/about">More about Swaroop Studios</a>
       </div>
-      <div class="intro-cinematic__media ph" data-slot="intro" data-local-image="intro-story" data-local-sizes="(max-width:999px) 100vw, (max-aspect-ratio:11/10) 100vw, 58vw" data-label="A cinematic wedding portrait"></div>
+      <div class="intro-cinematic__media ph" data-slot="intro" data-local-image="intro-story" data-local-sizes="(max-width:640px) 100vw, (max-width:1099px) min(100vw, 460px), (max-aspect-ratio:11/10) min(100vw, 460px), 30vw" data-label="A cinematic wedding portrait"></div>
     </div>
   </section>
 
   <section class="heritage">
     <div class="wrap">
-      <div class="heritage-head">
-        <span class="big-year">1972</span>
-        <h2>More than five decades of photographs, people and stories.</h2>
+      <p class="eyebrow heritage__eyebrow">Our history</p>
+      <div class="heritage__grid">
+        <div class="heritage__lead">
+          <p class="heritage__year">1972</p>
+          <h2>More than five decades of photographs, people and stories.</h2>
+        </div>
+        <div class="heritage__media ph" data-slot="heritage" data-local-image="dsc02541" data-local-sizes="(max-width:980px) 100vw, 46vw" data-label="A celebration photographed across generations"></div>
       </div>
       <div class="tl">
         <div class="step"><div class="yr">1972</div><h4>The beginning</h4><p>Swaroop Studios opens its doors.</p></div>
@@ -1304,6 +1333,7 @@ function renderLocalImages(){
 const SLOTS = [
   {key:"hero", label:"Home — Hero"},
   {key:"intro", label:"Home — Our Story"},
+  {key:"heritage", label:"Home — Heritage"},
   {key:"photographer", label:"About — Portrait"},
   {key:"about-story", label:"About — Archive"},
   {key:"svc-weddings", label:"Services — Weddings"},
