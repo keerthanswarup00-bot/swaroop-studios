@@ -202,7 +202,7 @@
   @media(max-width:640px){section{padding:52px 0;}}
   .divider{border-top:1px solid rgba(20,19,16,.1);}
 
-  /* Preserve the hero photograph's full 3:2 frame on desktop instead of cropping it to the viewport. */
+  /* Preserve the hero photograph's full 3:2 frame on desktop instead of cropping it to the viewport; phones use the portrait hero at its own 1664/2214 ratio. */
   .hero-full{position:relative; width:100%; aspect-ratio:3 / 2; height:auto; min-height:0; padding:0; overflow:hidden;}
   .hero-full .ph{height:100%; width:100%; --hero-image:none; background:#d6d2c8;}
   .hero-full .ph.has-image::before{display:none;}
@@ -215,10 +215,10 @@
   .hero-sub .lede{max-width:480px; color:var(--charcoal); font-size:16px;}
   .hero-actions{display:flex; gap:14px; flex-wrap:wrap;}
   @media(max-width:640px){
-    .hero-full{aspect-ratio:3 / 2; min-height:0;}
+    .hero-full{aspect-ratio:1664 / 2214; min-height:0;}
     .hero-full .ph.has-image::before{display:none;}
     .hero-full .ph{overflow:hidden;}
-    .hero-full .ph img{position:static; width:100%; height:125%; object-fit:cover; object-position:center top; transform:none;}
+    .hero-full .ph img{position:static; width:100%; height:100%; object-fit:cover; object-position:center; transform:none;}
     .hero-overlay .wrap{padding-bottom:82px;}
     .hero-overlay h1{font-size:clamp(36px,10vw,46px); line-height:1.04; letter-spacing:-.015em;}
     .hero-sub{gap:22px; padding:30px 20px 0;}
@@ -503,7 +503,7 @@
 <!-- HOME -->
 <main class="page" id="page-home">
   <section class="hero-full">
-    <div class="ph" data-slot="hero" data-local-image="dsc05478" data-local-sizes="100vw" data-local-priority="true" data-label="Hero photograph"></div>
+    <div class="ph" data-slot="hero" data-local-image="dsc05478" data-local-image-mobile="hero-mobile" data-local-sizes="100vw" data-local-priority="true" data-label="Hero photograph"></div>
     <div class="hero-overlay">
       <div class="wrap">
         <h1>Stories worth<br>remembering.</h1>
@@ -1158,6 +1158,7 @@ const LOCAL_IMAGES = {
   dsc05436: {width:4672,height:7008,alt:"Wedding couple in a floral portrait"},
   dsc05457: {width:4672,height:7008,alt:"Wedding couple photographed beneath chandeliers"},
   dsc05478: {width:7008,height:4672,alt:"Wedding couple during the ceremony"},
+  "hero-mobile": {width:1664,height:2214,alt:"Wedding couple during the ceremony"},
   dsc06400: {width:4672,height:7008,alt:"Wedding couple beneath an architectural arch"},
   dsc06432: {width:6643,height:4429,alt:"Wedding couple in a cinematic floral portrait"},
   dsc06877a: {width:3965,height:5947,alt:"Bride photographed outdoors beside a structure"},
@@ -1205,20 +1206,24 @@ const LOCAL_GALLERY = [
   {id:"dsc06933a",category:"portrait",title:"A close portrait",location:"Portraiture"},
   {id:"dsc06432",category:"wedding",title:"A cinematic portrait",location:"Wedding"},
 ];
+const MOBILE_SOURCE_MEDIA = "(max-width:640px)";
 function localImageWidths(image){
   const widths = [480,768,1200,1800,2400].filter(width=>width<=image.width);
   if(image.width<2400 && widths[widths.length-1]!==image.width) widths.push(image.width);
   return Array.from(new Set(widths)).sort((a,b)=>a-b);
 }
+function localAvifSrcset(image){
+  return localImageWidths(image).map(width=>`/assets/images/${image.id || ""}-${width}.avif ${width}w`).join(", ");
+}
 function localImageMarkup(image, options){
   const settings = options || {};
   const sizes = settings.sizes || "100vw";
-  const widths = localImageWidths(image);
-  const srcset = widths.map(width=>`/assets/images/${image.id || ""}-${width}.avif ${width}w`).join(", ");
   const fallbackWidth = Math.min(1800,image.width);
   const loading = settings.priority ? "eager" : "lazy";
   const priority = settings.priority ? ` fetchpriority="high"` : "";
-  return `<picture class="local-photo local-photo-${image.id}"><source type="image/avif" srcset="${srcset}" sizes="${sizes}"><img src="/assets/images/${image.id}-${fallbackWidth}.jpg" alt="${image.alt}" width="${image.width}" height="${image.height}" loading="${loading}" decoding="async"${priority}></picture>`;
+  const mobile = settings.mobile;
+  const mobileSource = mobile ? `<source media="${MOBILE_SOURCE_MEDIA}" type="image/avif" srcset="${localAvifSrcset(mobile)}" sizes="${mobile.sizes || sizes}">` : "";
+  return `<picture class="local-photo local-photo-${image.id}">${mobileSource}<source type="image/avif" srcset="${localAvifSrcset(image)}" sizes="${sizes}"><img src="/assets/images/${image.id}-${fallbackWidth}.jpg" alt="${image.alt}" width="${image.width}" height="${image.height}" loading="${loading}" decoding="async"${priority}></picture>`;
 }
 function localGalleryImageId(doc){
   const id = doc.imageId || (!doc.assetId ? doc.id : "");
@@ -1246,7 +1251,9 @@ function renderLocalImages(){
     if(!image) return;
     el.classList.add("has-image");
     if(el.dataset.slot==="hero") el.style.setProperty("--hero-image",`url("/assets/images/${id}-${Math.min(1800,image.width)}.jpg")`);
-    el.innerHTML = localImageMarkup({...image,id},{sizes:el.dataset.localSizes,priority:el.dataset.localPriority==="true"});
+    const mobileId = el.dataset.localImageMobile;
+    const mobileImage = mobileId && LOCAL_IMAGES[mobileId] ? {...LOCAL_IMAGES[mobileId],id:mobileId} : null;
+    el.innerHTML = localImageMarkup({...image,id},{sizes:el.dataset.localSizes,priority:el.dataset.localPriority==="true",mobile:mobileImage});
   });
 }
 
