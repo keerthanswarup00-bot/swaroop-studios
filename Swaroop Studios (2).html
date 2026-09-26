@@ -227,12 +227,26 @@
     .hero-actions .btn{flex:1 1 145px; justify-content:center; padding:13px 18px;}
   }
 
-  .intro-bleed{display:grid; grid-template-columns:60% 40%; align-items:stretch;}
-  .intro-bleed .ph{aspect-ratio:auto; height:100%; min-height:460px;}
-  .intro-bleed .txt{display:flex; flex-direction:column; justify-content:center; padding:0 56px 0 48px;}
-  .intro-bleed h2{font-size:clamp(26px,3vw,36px); line-height:1.18; margin-bottom:22px; max-width:16ch;}
-  .intro-bleed p{color:var(--charcoal); max-width:38ch;}
-  @media(max-width:900px){.intro-bleed{grid-template-columns:1fr;} .intro-bleed .ph{min-height:340px;} .intro-bleed .txt{padding:40px 24px;}}
+  .intro-cinematic{position:relative; min-height:clamp(560px,48vw,720px); overflow:hidden; background:#141310;}
+  .intro-cinematic__media{position:absolute; inset:0;}
+  .intro-cinematic__media img{display:block; width:100%; height:100%; object-fit:cover; object-position:center;}
+  .intro-cinematic::after{content:""; position:absolute; inset:0; background:linear-gradient(90deg,rgba(12,11,9,.9) 0%,rgba(12,11,9,.68) 34%,rgba(12,11,9,.12) 68%,rgba(12,11,9,.04) 100%);}
+  .intro-cinematic__content{position:relative; z-index:1; min-height:inherit; display:flex; flex-direction:column; justify-content:center; padding-top:72px; padding-bottom:72px; color:#fff;}
+  .intro-cinematic__content .eyebrow{color:#e8a26f; margin-bottom:18px;}
+  .intro-cinematic__content h2{font-size:clamp(34px,4.5vw,62px); line-height:1.02; letter-spacing:-.025em; max-width:10ch; margin-bottom:26px;}
+  .intro-cinematic__copy{max-width:42ch; color:rgba(255,255,255,.78); font-size:15px; line-height:1.7; margin-bottom:28px;}
+  .intro-cinematic__content .link-arrow{color:#fff; border-color:#e8a26f;}
+  @media(max-width:760px){
+    .intro-cinematic{min-height:0; display:flex; flex-direction:column;}
+    .intro-cinematic__media{position:relative; inset:auto; height:auto; aspect-ratio:3/2;}
+    .intro-cinematic__media img{height:100%; object-fit:cover;}
+    .intro-cinematic::after{display:none;}
+    .intro-cinematic__content{min-height:0; padding-top:44px; padding-bottom:48px; color:var(--ink); background:var(--paper);}
+    .intro-cinematic__content .eyebrow{color:var(--orange);}
+    .intro-cinematic__content h2{font-size:clamp(32px,9vw,44px); max-width:11ch;}
+    .intro-cinematic__copy{color:var(--charcoal);}
+    .intro-cinematic__content .link-arrow{color:var(--orange); border-color:var(--orange);}
+  }
 
   .intro-grid{display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center;}
   .intro-grid .ph{aspect-ratio:4/5;}
@@ -506,14 +520,15 @@
 
   <div class="wrap divider" style="margin-top:56px;"></div>
 
-  <section style="padding:0;">
-    <div class="intro-bleed">
-      <div class="ph" data-slot="intro" data-local-image="dsc02541" data-local-sizes="(max-width:900px) 100vw, 60vw" data-label="People, gatherings and celebrations"></div>
-      <div class="txt">
-        <h2>A studio built around people, stories and moments.</h2>
-        <p>Since 1972, Swaroop Studios has documented life's most meaningful moments. What began as a traditional photography studio has evolved across generations, while keeping the same focus at its heart.</p>
-        <a class="link-arrow" href="#/about">More about Swaroop Studios</a>
-      </div>
+  <section class="intro-cinematic">
+    <div class="intro-cinematic__media">
+      <img src="/assets/images/studio-story-replacement.svg" alt="A cinematic wedding portrait" loading="lazy">
+    </div>
+    <div class="intro-cinematic__content wrap">
+      <p class="eyebrow">The studio</p>
+      <h2>A studio built around people, stories and moments.</h2>
+      <p class="intro-cinematic__copy">Since 1972, Swaroop Studios has documented life's most meaningful moments. Across generations, the craft has changed, but the attention to people and the moments that matter has stayed the same.</p>
+      <a class="link-arrow" href="#/about">More about Swaroop Studios</a>
     </div>
   </section>
 
