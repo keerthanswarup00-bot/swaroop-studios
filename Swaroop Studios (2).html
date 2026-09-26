@@ -229,9 +229,9 @@
 
   .intro-cinematic{position:relative; min-height:clamp(560px,48vw,720px); overflow:hidden; background:#141310;}
   .intro-cinematic__media{position:absolute; inset:0;}
-  .intro-cinematic__media img{display:block; width:100%; height:100%; object-fit:cover; object-position:center;}
+  .intro-cinematic__media img{display:block; width:100%; height:125%; object-fit:cover; object-position:center top;}
   .intro-cinematic::after{content:""; position:absolute; inset:0; background:linear-gradient(90deg,rgba(12,11,9,.9) 0%,rgba(12,11,9,.68) 34%,rgba(12,11,9,.12) 68%,rgba(12,11,9,.04) 100%);}
-  .intro-cinematic__content{position:relative; z-index:1; min-height:inherit; display:flex; flex-direction:column; justify-content:center; padding-top:72px; padding-bottom:72px; color:#fff;}
+  .intro-cinematic__content{position:relative; z-index:1; min-height:inherit; display:flex; flex-direction:column; justify-content:center; padding-top:72px; padding-bottom:140px; color:#fff; transform:translateY(-56px);}
   .intro-cinematic__content .eyebrow{color:#e8a26f; margin-bottom:18px;}
   .intro-cinematic__content h2{font-size:clamp(34px,4.5vw,62px); line-height:1.02; letter-spacing:-.025em; max-width:10ch; margin-bottom:26px;}
   .intro-cinematic__copy{max-width:42ch; color:rgba(255,255,255,.78); font-size:15px; line-height:1.7; margin-bottom:28px;}
@@ -241,7 +241,7 @@
     .intro-cinematic__media{position:relative; inset:auto; height:auto; aspect-ratio:3/2;}
     .intro-cinematic__media img{height:100%; object-fit:cover;}
     .intro-cinematic::after{display:none;}
-    .intro-cinematic__content{min-height:0; padding-top:44px; padding-bottom:48px; color:var(--ink); background:var(--paper);}
+    .intro-cinematic__content{min-height:0; padding-top:44px; padding-bottom:48px; color:var(--ink); background:var(--paper); transform:none;}
     .intro-cinematic__content .eyebrow{color:var(--orange);}
     .intro-cinematic__content h2{font-size:clamp(32px,9vw,44px); max-width:11ch;}
     .intro-cinematic__copy{color:var(--charcoal);}
