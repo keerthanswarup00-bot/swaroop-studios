@@ -265,7 +265,7 @@
   .vip-grid{display:grid; grid-template-columns:minmax(0,1.05fr) minmax(380px,.95fr); gap:clamp(56px,7vw,96px); align-items:center;}
   .vip-visual{position:relative; min-width:0; padding:0 0 22px 22px;}
   .vip-visual::before{content:''; position:absolute; left:0; bottom:0; width:38%; height:42%; border-left:1px solid rgba(174,78,44,.72); border-bottom:1px solid rgba(174,78,44,.72);}
-  .vip-image{position:relative; z-index:1; width:100%; aspect-ratio:4/5; background:#090908; box-shadow:0 30px 90px rgba(0,0,0,.34);}
+  .vip-image{position:relative; z-index:1; width:100%; aspect-ratio:2/3; background:#090908; box-shadow:0 30px 90px rgba(0,0,0,.34);}
   .vip-image img{object-fit:cover; object-position:center;}
   .vip-content{min-width:0;}
   .vip-statement h2{font-size:clamp(26px,3.2vw,38px); margin-bottom:18px; max-width:14ch;}
@@ -660,7 +660,7 @@
   <section class="vip">
     <div class="wrap vip-grid">
       <figure class="vip-visual">
-        <div class="ph vip-image" data-local-image="vip-engagement" data-local-sizes="(max-width:860px) min(620px, calc(100vw - 40px)), 48vw" data-label="Private event"></div>
+        <div class="ph vip-image" data-local-image="img_8913a" data-local-sizes="(max-width:860px) min(620px, calc(100vw - 40px)), 48vw" data-label="Private event"></div>
       </figure>
       <div class="vip-content">
         <div class="vip-statement">
@@ -1156,8 +1156,7 @@ const LOCAL_IMAGES = {
   img_8913a: {width:3976,height:6093,alt:"Couple in formal wedding attire"},
   sdv08607a: {width:4600,height:5663,alt:"Two guests photographed at a wedding celebration"},
   sdv08628a: {width:4672,height:7008,alt:"Wedding couple posed beside floral décor"},
-  sdv09208a: {width:3177,height:4416,alt:"Guest posed amid wedding flowers and décor"},
-  "vip-engagement": {width:4288,height:5439,alt:"Two guests at a private celebration"}
+  sdv09208a: {width:3177,height:4416,alt:"Guest posed amid wedding flowers and décor"}
 };
 const LOCAL_GALLERY = [
   {id:"06",category:"wedding",title:"A story in three moments",location:"Wedding"},
@@ -1189,7 +1188,6 @@ const LOCAL_GALLERY = [
   {id:"dsc06877a",category:"portrait",title:"The bride outdoors",location:"Portraiture"},
   {id:"dsc06933a",category:"portrait",title:"A close portrait",location:"Portraiture"},
   {id:"dsc06432",category:"wedding",title:"A cinematic portrait",location:"Wedding"},
-  {id:"vip-engagement",category:"portrait",title:"Private celebration",location:"Engagement"},
 ];
 function localImageWidths(image){
   const widths = [480,768,1200,1800,2400].filter(width=>width<=image.width);
