@@ -222,26 +222,53 @@
     .hero-actions .btn{flex:1 1 145px; justify-content:center; padding:13px 18px;}
   }
 
-  /* Second section: normal document flow, no offsets. From 1000px up the photograph holds the
-     right half of the band edge to edge while the copy sits in the left half on the page's own
-     1240px alignment; the photograph is clipped inside its own layer, never over the text. */
-  .intro-cinematic{position:relative; min-height:clamp(560px,48vw,720px); padding:0; padding-left:max(0px, calc((100% - 1240px) / 2)); background:#141310;}
-  .intro-cinematic__media{position:absolute; top:0; bottom:0; left:50%; right:0; overflow:hidden;}
-  .intro-cinematic__media img{object-position:50% 50%;}
-  .intro-cinematic__content{position:relative; z-index:1; width:50%; min-height:inherit; margin:0; max-width:none; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; padding-top:88px; padding-bottom:88px; padding-right:clamp(56px,7vw,120px); color:#fff;}
-  .intro-cinematic__content .eyebrow{color:#e8a26f; margin-bottom:18px;}
-  .intro-cinematic__content h2{font-size:clamp(34px,4.5vw,62px); line-height:1.02; letter-spacing:-.025em; max-width:10ch; margin-bottom:26px;}
-  .intro-cinematic__copy{max-width:42ch; color:rgba(255,255,255,.78); font-size:15px; line-height:1.7; margin-bottom:28px;}
-  .intro-cinematic__content .link-arrow{color:#fff; border-color:#e8a26f;}
-  @media(max-width:999px){
-    .intro-cinematic{min-height:0; display:flex; flex-direction:column; padding-left:0;}
-    .intro-cinematic__media{position:relative; top:auto; bottom:auto; left:auto; right:auto; height:auto; aspect-ratio:3/2;}
-    .intro-cinematic__media img{height:100%; object-fit:cover;}
-    .intro-cinematic__content{width:100%; min-height:0; max-width:none; padding-top:44px; padding-bottom:48px; padding-right:32px; color:var(--ink); background:var(--paper);}
-    .intro-cinematic__content .eyebrow{color:var(--orange);}
-    .intro-cinematic__content h2{font-size:clamp(32px,9vw,44px); max-width:11ch;}
-    .intro-cinematic__copy{color:var(--charcoal);}
-    .intro-cinematic__content .link-arrow{color:var(--orange); border-color:var(--orange);}
+  /* Second section — "The studio": one editorial composition. The copy takes 42% of the band, the
+     photograph takes the remaining 58% and bleeds off the right edge. The photograph sets the
+     height of the band, so the dark ground only ever sits behind the copy and the image never
+     reads as a card floating in black. */
+  .intro-cinematic{
+    position:relative;
+    --studio-gutter:clamp(24px,6vw,110px);
+    --studio-pad:clamp(40px,7vh,88px);
+    background-color:var(--black);
+    background-image:radial-gradient(132% 118% at 10% 34%, #1d1b16 0%, #181611 46%, #141310 100%);
+    padding:0 var(--studio-gutter);
+  }
+  .intro-cinematic__inner{
+    display:grid;
+    grid-template-columns:minmax(0,clamp(300px,42%,660px)) minmax(0,1fr);
+    align-items:stretch;
+    column-gap:clamp(40px,5vw,96px);
+  }
+  .intro-cinematic__content{
+    position:relative; z-index:1;
+    display:flex; flex-direction:column; justify-content:center; align-items:flex-start;
+    /* Symmetric air with a 26px optical lift (13px each side) so the copy sits just above the
+       mathematical centre without crowding the band at short viewport heights. */
+    padding:max(0px, calc(var(--studio-pad) - 13px)) 0 calc(var(--studio-pad) + 13px);
+    color:var(--white);
+  }
+  .intro-cinematic__content .eyebrow{color:#e8a26f; font-size:11.5px; letter-spacing:.18em; margin-bottom:22px;}
+  .intro-cinematic__content h2{font-size:clamp(34px,4.2vw,60px); line-height:.99; letter-spacing:-.022em; max-width:11.5ch; margin-bottom:30px;}
+  .intro-cinematic__copy{max-width:min(100%,440px); color:rgba(255,255,255,.72); font-size:15px; line-height:1.72; margin-bottom:34px;}
+  .intro-cinematic__content .link-arrow{color:var(--white); border-color:#e8a26f;}
+  .intro-cinematic__media{min-height:clamp(460px,76vh,820px); margin-right:calc(-1 * var(--studio-gutter)); overflow:hidden; background:#100f0d;}
+  /* The frame's left half is empty black and the couple sits right of centre, so the crop is
+     anchored to the right edge: the subject stays whole and the dark edge melts into the ground.
+     No max-height here: the photo must stretch to the full height of the band, and the min-height
+     ceiling already keeps the frame close enough to 3:2 for the right anchor to stay safe. */
+  .intro-cinematic__media img{object-position:100% 88%;}
+  @media(min-width:1000px) and (max-width:1199px) and (min-aspect-ratio:11/10){.intro-cinematic__media{min-height:clamp(420px,64vh,700px);}}
+  /* Ultrawide: the frame is far wider than 3:2, so let the band grow back toward 75vh */
+  @media(min-width:1800px) and (min-aspect-ratio:11/10){.intro-cinematic__media{min-height:clamp(460px,76vh,1080px);}}
+  /* Below 1000px, and on portrait viewports of any width (a 42/58 split needs a landscape frame),
+     the composition stacks: copy first, then the photograph edge to edge. */
+  @media(max-width:999px),(max-aspect-ratio:11/10){
+    .intro-cinematic{padding:0; background-image:radial-gradient(130% 52% at 50% 0%, #1c1a15 0%, #141310 72%);}
+    .intro-cinematic__inner{grid-template-columns:1fr; row-gap:clamp(40px,6vh,64px);}
+    .intro-cinematic__content{padding:clamp(60px,9vh,100px) clamp(20px,6vw,44px) 0;}
+    .intro-cinematic__content h2{font-size:clamp(30px,8.6vw,44px); max-width:min(100%,17ch);}
+    .intro-cinematic__media{min-height:clamp(300px,52vh,480px); max-height:none; margin-right:0;}
   }
 
   .intro-grid{display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center;}
@@ -537,12 +564,14 @@
   <div class="wrap divider" style="margin-top:56px;"></div>
 
   <section class="intro-cinematic">
-    <div class="intro-cinematic__media ph" data-slot="intro" data-local-image="intro-story" data-local-sizes="(max-width:999px) 100vw, 50vw" data-label="A cinematic wedding portrait"></div>
-    <div class="intro-cinematic__content wrap">
-      <p class="eyebrow">The studio</p>
-      <h2>A studio built around people, stories and moments.</h2>
-      <p class="intro-cinematic__copy">Since 1972, Swaroop Studios has documented life's most meaningful moments. Across generations, the craft has changed, but the attention to people and the moments that matter has stayed the same.</p>
-      <a class="link-arrow" href="#/about">More about Swaroop Studios</a>
+    <div class="intro-cinematic__inner">
+      <div class="intro-cinematic__content wrap">
+        <p class="eyebrow">The studio</p>
+        <h2>A studio built around people, stories and moments.</h2>
+        <p class="intro-cinematic__copy">Since 1972, Swaroop Studios has documented life's most meaningful moments. Across generations, the craft has changed, but the attention to people and the moments that matter has stayed the same.</p>
+        <a class="link-arrow" href="#/about">More about Swaroop Studios</a>
+      </div>
+      <div class="intro-cinematic__media ph" data-slot="intro" data-local-image="intro-story" data-local-sizes="(max-width:999px) 100vw, (max-aspect-ratio:11/10) 100vw, 58vw" data-label="A cinematic wedding portrait"></div>
     </div>
   </section>
 
