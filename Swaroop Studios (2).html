@@ -225,204 +225,37 @@
     .hero-actions .btn{flex:1 1 145px; justify-content:center; padding:13px 18px;}
   }
 
-  /* Second section — a quieter editorial studio chapter. The image becomes a framed plate,
-     while the copy gets its own visual hierarchy instead of sitting directly on the photograph. */
-  .intro-cinematic{
-    position:relative;
-    display:flex;
-    align-items:center;
-    min-height:clamp(620px,76vh,760px);
-    padding:clamp(64px,8vw,108px) 0;
-    overflow:hidden;
-    background:#0b0a08;
-    color:#fff;
-  }
-  .intro-cinematic::before{
-    content:"02";
-    position:absolute;
-    left:-.02em;
-    bottom:-.16em;
-    z-index:0;
-    font-family:var(--serif);
-    font-size:clamp(220px,34vw,520px);
-    line-height:.72;
-    font-weight:300;
-    letter-spacing:-.07em;
-    color:rgba(255,255,255,.035);
-    pointer-events:none;
-  }
-  .intro-cinematic__media{
-    position:absolute;
-    top:clamp(44px,6vw,76px);
-    right:clamp(24px,5vw,72px);
-    bottom:clamp(44px,6vw,76px);
-    left:42%;
-    z-index:0;
-    overflow:hidden;
-    background:#151310;
-  }
-  .intro-cinematic__media::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    border:1px solid rgba(255,255,255,.16);
-    pointer-events:none;
-  }
-  .intro-cinematic__media picture{
-    position:absolute;
-    inset:0;
-    display:block;
-    width:100%;
-    height:100%;
-  }
-  .intro-cinematic__media img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    object-position:58% 50%;
-    filter:saturate(.9);
-  }
-  .intro-cinematic__inner{
-    position:relative;
-    z-index:2;
-    width:100%;
-  }
-  .intro-cinematic__text{
-    width:min(500px,42%);
-    min-width:0;
-    padding-right:clamp(28px,5vw,72px);
-  }
-  .intro-cinematic__kicker{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    color:#e8a26f;
-    font-size:10.5px;
-    letter-spacing:.2em;
-    text-transform:uppercase;
-    margin-bottom:30px;
-  }
-  .intro-cinematic__kicker::before{
-    content:"";
-    width:34px;
-    height:1px;
-    background:#e8a26f;
-  }
-  .intro-cinematic__text h2{
-    color:#fff;
-    font-size:clamp(34px,3.7vw,52px);
-    line-height:1.02;
-    letter-spacing:-.025em;
-    max-width:9ch;
-    margin-bottom:24px;
-  }
-  .intro-cinematic__copy{
-    max-width:40ch;
-    color:rgba(255,255,255,.7);
-    font-size:14.5px;
-    line-height:1.75;
-    margin-bottom:34px;
-  }
-  .intro-cinematic__meta{
-    display:flex;
-    gap:28px;
-    margin-bottom:34px;
-    padding-top:18px;
-    border-top:1px solid rgba(255,255,255,.16);
-  }
-  .intro-cinematic__meta span{
-    display:block;
-    font-size:9.5px;
-    line-height:1.4;
-    letter-spacing:.13em;
-    text-transform:uppercase;
-    color:#8f8a7e;
-  }
-  .intro-cinematic__meta strong{
-    display:block;
-    margin-top:5px;
-    color:#fff;
-    font-family:var(--serif);
-    font-size:16px;
-    font-weight:450;
-    letter-spacing:0;
-    text-transform:none;
-  }
-  .intro-cinematic__text .link-arrow{
-    margin-top:0;
-    color:#fff;
-    border-bottom-color:rgba(232,162,111,.7);
-  }
-  .intro-cinematic__caption{
-    position:absolute;
-    right:18px;
-    bottom:18px;
-    z-index:3;
-    padding:7px 10px;
-    background:rgba(9,8,6,.58);
-    color:rgba(255,255,255,.82);
-    font-size:9px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    backdrop-filter:blur(7px);
-    -webkit-backdrop-filter:blur(7px);
-  }
-  @media(max-width:860px){
-    .intro-cinematic{
-      min-height:0;
-      padding:0;
-      display:block;
-    }
-    .intro-cinematic::before{
-      left:auto;
-      right:-.03em;
-      bottom:36%;
-      font-size:clamp(180px,48vw,300px);
-    }
-    .intro-cinematic__media{
-      position:relative;
-      top:auto;
-      right:auto;
-      bottom:auto;
-      left:auto;
-      width:100%;
-      height:auto;
-      aspect-ratio:4/3;
-    }
-    .intro-cinematic__inner{
-      padding:54px 0 62px;
-    }
-    .intro-cinematic__text{
-      width:100%;
-      padding-right:0;
-    }
-    .intro-cinematic__text h2{
-      font-size:clamp(38px,9vw,52px);
-      max-width:10ch;
-    }
-  }
+  /* Second section — "The studio": a full-bleed cinematic band. The photograph is the whole
+     section, edge to edge and top to bottom; the copy is the only thing held inside the site's own
+     .wrap, on the dark left third of the negative where the bride never is. Nothing is boxed:
+     no card, no border, no radius, no gutter, no gap above or below. */
+  .intro-cinematic{position:relative; display:flex; align-items:center; padding:0; overflow:hidden; background:#0b0a08; color:#fff; min-height:clamp(560px,70vh,700px);}
+  /* The plate is the section: out of flow it bleeds to both viewport edges and fills the band, so the
+     crop below is the only thing that decides what is seen. */
+  .intro-cinematic__media{position:absolute; inset:0; z-index:0; overflow:hidden; background:#0b0a08;}
+  .intro-cinematic__media picture{position:absolute; inset:0; display:block; width:100%; height:100%;}
+  /* object-fit crops this low-key 3:2 file from the top and bottom into a cinematic band, and on
+     desktop its full width stays visible: the couple holds the right side, the copy the left. */
+  .intro-cinematic__media img{width:100%; height:100%; object-fit:cover; object-position:50% 50%;}
+  /* A directional scrim rather than a flat filter: deep on the left for the type, open through the
+     middle, light on the right so gold, red and skin tones stay photographic. */
+  .intro-cinematic::after{content:""; position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(90deg, rgba(9,8,6,.82) 0%, rgba(9,8,6,.7) 26%, rgba(9,8,6,.48) 52%, rgba(9,8,6,.22) 78%, rgba(9,8,6,.14) 100%);}
+  .intro-cinematic__inner{position:relative; z-index:2; width:100%;}
+  .intro-cinematic__text{min-width:0;}
+  /* The accent lifted for a dark ground — the same terracotta hue this section used when it ran
+     white-on-dark, and readable where --orange on black is not. */
+  .intro-cinematic__text .eyebrow{color:#e8a26f; font-size:11px; letter-spacing:.2em; margin-bottom:22px;}
+  .intro-cinematic__text h2{color:#fff; font-size:clamp(28px,2.5vw,36px); line-height:1.12; letter-spacing:-.015em; max-width:15ch;}
+  .intro-cinematic__copy{max-width:440px; color:rgba(255,255,255,.82); font-size:15px; line-height:1.74; margin-bottom:28px;}
+  .intro-cinematic__text .link-arrow{margin-top:0; color:#fff; border-bottom-color:rgba(232,162,111,.65);}
+  /* Phone: the scrim turns vertical and the copy sits on the dark foot of the frame, which keeps the
+     upper body of the negative open and slides the crop to the lit side of the file. */
   @media(max-width:640px){
-    .intro-cinematic__media{
-      aspect-ratio:4/5;
-    }
-    .intro-cinematic__media img{
-      object-position:64% 50%;
-    }
-    .intro-cinematic__inner{
-      padding:46px 0 54px;
-    }
-    .intro-cinematic__kicker{
-      margin-bottom:24px;
-    }
-    .intro-cinematic__copy{
-      font-size:14px;
-      line-height:1.7;
-      margin-bottom:28px;
-    }
-    .intro-cinematic__meta{
-      gap:22px;
-      margin-bottom:30px;
-    }
+    .intro-cinematic{align-items:flex-end; min-height:clamp(560px,78svh,680px);}
+    .intro-cinematic__inner{padding-bottom:clamp(36px,6vh,56px);}
+    .intro-cinematic__text h2{font-size:clamp(30px,8.4vw,34px); max-width:14ch;}
+    .intro-cinematic__media img{object-position:73% 50%;}
+    .intro-cinematic::after{background:linear-gradient(180deg, rgba(9,8,6,.1) 0%, rgba(9,8,6,.34) 18%, rgba(9,8,6,.72) 36%, rgba(9,8,6,.9) 100%);}
   }
 
   .intro-grid{display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center;}
@@ -703,23 +536,18 @@
   </div>
 </header>
   <div id="mobileNav">
-    <button class="close-nav" onclick="document.getElementById('mobileNav').classList.remove('open')">  <section class="intro-cinematic">
-    <div class="intro-cinematic__media ph" data-slot="intro" data-local-image="intro-story" data-local-sizes="(max-width:860px) 100vw, 58vw" data-label="A cinematic wedding portrait">
-      <span class="intro-cinematic__caption">The studio · 1972</span>
-    </div>
-    <div class="wrap intro-cinematic__inner">
-      <div class="intro-cinematic__text">
-        <p class="intro-cinematic__kicker">The studio</p>
-        <h2>Built around stories.</h2>
-        <p class="intro-cinematic__copy">Since 1972, Swaroop Studios has documented life's most meaningful moments. Across generations, the craft has changed, but the attention to people and the moments that matter has stayed the same.</p>
-        <div class="intro-cinematic__meta">
-          <span>Established<strong>1972</strong></span>
-          <span>Approach<strong>People first</strong></span>
-        </div>
-        <a class="link-arrow" href="#/about">More about Swaroop Studios</a>
-      </div>
-    </div>
-  </section>ile="hero-mobile" data-local-sizes="100vw" data-local-priority="true" data-label="Hero photograph"></div>
+    <button class="close-nav" onclick="document.getElementById('mobileNav').classList.remove('open')">CLOSE ✕</button>
+    <a href="#/home" onclick="document.getElementById('mobileNav').classList.remove('open')">Home</a>
+    <a href="#/about" onclick="document.getElementById('mobileNav').classList.remove('open')">About</a>
+    <a href="#/services" onclick="document.getElementById('mobileNav').classList.remove('open')">Services</a>
+    <a href="#/gallery" onclick="document.getElementById('mobileNav').classList.remove('open')">Gallery</a>
+    <a href="#/contact" onclick="document.getElementById('mobileNav').classList.remove('open')">Contact</a>
+  </div>
+
+<!-- HOME -->
+<main class="page" id="page-home">
+  <section class="hero-full">
+    <div class="ph" data-slot="hero" data-local-image="dsc05478" data-local-image-mobile="hero-mobile" data-local-sizes="100vw" data-local-priority="true" data-label="Hero photograph"></div>
     <div class="hero-overlay">
       <div class="wrap">
         <h1>Stories worth<br>remembering.</h1>
