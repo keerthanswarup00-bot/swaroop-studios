@@ -31,10 +31,12 @@
     --white:#FAF9F6; --black:#141310; --charcoal:#2B2A26; --grey:#8C887F;
     --orange:#AE4E2C; --orange-dim: rgba(174,78,44,0.12);
     --serif:'Fraunces', serif; --sans:'Inter', sans-serif;
+    /* Height of the band reserved for the fixed navigation; the hero is measured against it. */
+    --hero-top:76px;
     padding-top: env(safe-area-inset-top,0px); padding-bottom: env(safe-area-inset-bottom,0px);
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth; scroll-padding-top:96px;}
+  html{scroll-behavior:smooth; scroll-padding-top:calc(var(--hero-top) + 20px);}
   body{background:var(--white); color:var(--black); font-family:var(--sans); font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased; overflow-x:hidden;}
   img,svg{max-width:100%; display:block;}
   a{color:inherit; text-decoration:none;}
@@ -86,6 +88,7 @@
   .menu-btn{display:none; min-height:40px; padding:0 2px; background:none; border:none; font-family:var(--sans); font-size:11.5px; letter-spacing:.05em; cursor:pointer;}
   @media(max-width:860px){ nav.main{display:none;} .menu-btn{display:block;} }
   @media(max-width:640px){
+    :root{--hero-top:60px;}
     header.nav-top{top:env(safe-area-inset-top,0px);}
     header.nav-compact{top:calc(10px + env(safe-area-inset-top,0px)); width:calc(100% - 32px);}
     header .bar{min-height:64px; padding:14px 20px;}
@@ -176,10 +179,9 @@
   .page{display:none;}
   .page.active{display:block;}
   /* Reserve a small top band for the fixed navigation so the hero begins cleanly below it. */
-  .page#page-home{padding-top:76px;}
+  .page#page-home{padding-top:var(--hero-top);}
   .page:not(#page-home){padding-top:40px;}
   @media(max-width:640px){
-    .page#page-home{padding-top:60px;}
     .page:not(#page-home){padding-top:40px;}
   }
   .page:focus{outline:none;}
@@ -193,12 +195,14 @@
   @media(max-width:640px){section{padding:52px 0;}}
   .divider{border-top:1px solid rgba(20,19,16,.1);}
 
-  /* Preserve the hero photograph's full 3:2 frame on desktop instead of cropping it to the viewport; phones use the portrait hero at its own 1664/2214 ratio. */
-  .hero-full{position:relative; width:100%; aspect-ratio:3 / 2; height:auto; min-height:0; padding:0; overflow:hidden;}
+  /* The hero keeps its full-bleed width and its 3:2 frame, but never grows past the first
+     viewport below the navigation band: the surplus is cropped from the bottom of the
+     photograph (object-position: top) so the couple and the headline always stay in view. */
+  .hero-full{position:relative; width:100%; aspect-ratio:3 / 2; height:auto; min-height:0; max-height:calc(100vh - var(--hero-top)); max-height:calc(100svh - var(--hero-top)); padding:0; overflow:hidden;}
   .hero-full .ph{height:100%; width:100%; --hero-image:none; background:#d6d2c8;}
   .hero-full .ph.has-image::before{display:none;}
   .hero-full .ph picture{z-index:1; display:block; width:100%; height:100%;}
-  .hero-full .ph img{display:block; width:100%; height:100%; object-fit:cover; object-position:center;}
+  .hero-full .ph img{display:block; width:100%; height:100%; object-fit:cover; object-position:50% 0%;}
   .hero-overlay{position:absolute; inset:0; z-index:2; display:flex; align-items:flex-end; background:linear-gradient(180deg, rgba(20,19,16,0) 45%, rgba(20,19,16,.62) 100%);}
   .hero-overlay .wrap{width:100%; padding-bottom:64px;}
   .hero-overlay h1{color:#fff; font-size:clamp(36px,6.4vw,76px); line-height:1.0; max-width:840px;}
@@ -218,11 +222,14 @@
     .hero-actions .btn{flex:1 1 145px; justify-content:center; padding:13px 18px;}
   }
 
-  .intro-cinematic{position:relative; min-height:clamp(560px,48vw,720px); overflow:hidden; background:#141310;}
-  .intro-cinematic__media{position:absolute; inset:0;}
+  /* Second section: normal document flow, no offsets. The cinematic band keeps its own
+     min-height and the photograph bleeds past the bottom edge inside the media layer only,
+     so nothing can clip the copy. */
+  .intro-cinematic{position:relative; min-height:clamp(560px,48vw,720px); padding:0; background:#141310;}
+  .intro-cinematic__media{position:absolute; inset:0; overflow:hidden;}
   .intro-cinematic__media img{display:block; width:100%; height:125%; object-fit:cover; object-position:center top;}
   .intro-cinematic::after{content:""; position:absolute; inset:0; background:linear-gradient(90deg,rgba(12,11,9,.9) 0%,rgba(12,11,9,.68) 34%,rgba(12,11,9,.12) 68%,rgba(12,11,9,.04) 100%);}
-  .intro-cinematic__content{position:relative; z-index:1; min-height:inherit; display:flex; flex-direction:column; justify-content:center; padding-top:72px; padding-bottom:140px; color:#fff; transform:translateY(-56px);}
+  .intro-cinematic__content{position:relative; z-index:1; min-height:inherit; display:flex; flex-direction:column; justify-content:center; padding-top:88px; padding-bottom:88px; color:#fff;}
   .intro-cinematic__content .eyebrow{color:#e8a26f; margin-bottom:18px;}
   .intro-cinematic__content h2{font-size:clamp(34px,4.5vw,62px); line-height:1.02; letter-spacing:-.025em; max-width:10ch; margin-bottom:26px;}
   .intro-cinematic__copy{max-width:42ch; color:rgba(255,255,255,.78); font-size:15px; line-height:1.7; margin-bottom:28px;}
@@ -232,7 +239,7 @@
     .intro-cinematic__media{position:relative; inset:auto; height:auto; aspect-ratio:3/2;}
     .intro-cinematic__media img{height:100%; object-fit:cover;}
     .intro-cinematic::after{display:none;}
-    .intro-cinematic__content{min-height:0; padding-top:44px; padding-bottom:48px; color:var(--ink); background:var(--paper); transform:none;}
+    .intro-cinematic__content{min-height:0; padding-top:44px; padding-bottom:48px; color:var(--ink); background:var(--paper);}
     .intro-cinematic__content .eyebrow{color:var(--orange);}
     .intro-cinematic__content h2{font-size:clamp(32px,9vw,44px); max-width:11ch;}
     .intro-cinematic__copy{color:var(--charcoal);}
