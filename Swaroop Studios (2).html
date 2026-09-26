@@ -225,59 +225,54 @@
     .hero-actions .btn{flex:1 1 145px; justify-content:center; padding:13px 18px;}
   }
 
-  /* Second section — "The studio": an editorial spread on warm paper. The eyebrow and headline sit
-     in the page margin, the supporting copy in a second column, and the photograph becomes a
-     full-height plate that bleeds off the right edge. The plate's left edge lands on the page
-     gutter, so the copy, the image and the white strip above share one alignment.
-     Nothing here is boxed: no ground of its own, no border, no shadow, no radius. */
-  .intro-cinematic{
-    position:relative;
-    background:var(--paper-warm);
-    /* padding resets the global section padding: the plate bleeds to all three edges, and the left
-       pad mirrors .wrap (max-width 1240 + 32px gutters) so the copy starts on the page grid. */
-    padding:0 0 0 max(32px, calc((100% - 1240px) / 2 + 32px));
-  }
+  /* Second section — "The studio": a two-column editorial spread that lives entirely inside the
+     site's own .wrap (max-width 1240 + 32px gutters). The paper ground spans the full viewport, but
+     the composition does not: the headline starts on the page grid and the photograph ends on it,
+     with the same gutter on both sides — the same frame the 1972 chapter below already uses.
+     Nothing is boxed: no card, no border, no shadow, no radius, and the image bleeds to no edge. */
+  .intro-cinematic{position:relative; background:var(--paper-warm); padding:0;}
   .intro-cinematic__inner{
     display:grid;
-    grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;
-    column-gap:clamp(36px,5vw,96px);
+    /* Text and photograph share the container. The photograph takes the larger share and fills the
+       band, so it stays tall — which is what this negative needs — while the gap between the two
+       columns stays a deliberate ~8% of the container rather than a void. */
+    grid-template-columns:minmax(0,1fr) minmax(0,0.92fr);
+    column-gap:clamp(44px,6.4vw,92px);
     align-items:center;
-    min-height:clamp(520px,76vh,820px);
+    min-height:clamp(500px,70vh,780px);
   }
-  .intro-cinematic__head{min-width:0;}
-  .intro-cinematic__head .eyebrow{color:var(--orange); font-size:11px; letter-spacing:.2em; margin-bottom:22px;}
-  .intro-cinematic__head h2{font-size:clamp(30px,3.1vw,44px); line-height:1.08; letter-spacing:-.015em; max-width:12.5ch; color:var(--black);}
-  .intro-cinematic__body{min-width:0; display:flex; flex-direction:column; align-items:flex-start;}
-  .intro-cinematic__copy{max-width:400px; color:rgba(43,42,38,.78); font-size:15px; line-height:1.74; margin-bottom:28px;}
-  .intro-cinematic__body .link-arrow{margin-top:0;}
+  .intro-cinematic__text{min-width:0;}
+  .intro-cinematic__text .eyebrow{color:var(--orange); font-size:11px; letter-spacing:.2em; margin-bottom:22px;}
+  .intro-cinematic__text h2{font-size:clamp(30px,3.1vw,44px); line-height:1.08; letter-spacing:-.015em; max-width:15ch; color:var(--black);}
+  .intro-cinematic__copy{max-width:500px; color:rgba(43,42,38,.78); font-size:15px; line-height:1.74; margin-bottom:28px;}
+  .intro-cinematic__text .link-arrow{margin-top:0;}
   /* The plate is sized by the band, so it always reads as part of the page rather than a tile. */
-  .intro-cinematic__media{align-self:stretch; aspect-ratio:0.641; overflow:hidden; background:#17150f;}
+  .intro-cinematic__media{align-self:stretch; overflow:hidden; background:#17150f;}
   /* Hard crop of the negative, verified against the pixels of the file rather than guessed. The frame
      is 3:2 and very low key: its left 45% and top 24% are empty black, and the lit couple stands in
-     a vertical band at source x 51%–83%. So the <picture> window is pulled up 31.6% to drop the black
-     sky (source y 24%–100%) and object-position 75.5% keeps the couple centred (source x 51%–83.5%).
-     Sampled result: 65% of the plate is lit, 17% is black, and no edge is a black bar — the negative
-     is cropped to its subject instead of floating inside a dark rectangle. */
-  .intro-cinematic__media picture{top:-31.58%; height:131.58%; bottom:auto;}
-  .intro-cinematic__media img{object-position:75.5% 50%;}
-  /* Below 1100px, and on portrait viewports of any width, the spread becomes a vertical page:
-     copy first, then the photograph running off the right edge (phones: edge to edge). */
+     a vertical band at source x 51%–83%. The <picture> window is pulled up 35% to drop the black sky
+     (source y 26%–100%), and object-position keeps the couple centred. Because the window's width
+     follows the plate's proportions, the crop holds from a wide desktop band down to a phone. */
+  .intro-cinematic__media picture{top:-35.14%; height:135.14%; bottom:auto;}
+  .intro-cinematic__media img{object-position:82% 50%;}
+  /* Short, wide viewports give the band less height, so the plate ends up squarer. Sliding the crop
+     further right is what keeps the empty black out of the frame there. */
+  @media(min-width:1100px) and (max-height:820px){
+    .intro-cinematic__media img{object-position:88% 50%;}
+  }
+  /* Below 1100px, and on portrait viewports of any width, the spread becomes a vertical page: the
+     copy first, then the photograph, both held inside the same container padding. */
   @media(max-width:1099px),(max-aspect-ratio:11/10){
-    .intro-cinematic{padding:clamp(48px,6.5vh,92px) 0 clamp(40px,5.5vh,76px) 0;}
-    .intro-cinematic__inner{grid-template-columns:1fr; row-gap:clamp(30px,4vh,48px); align-items:start; min-height:0;}
-    .intro-cinematic__head,.intro-cinematic__body{padding:0 32px;}
-    .intro-cinematic__head h2{font-size:clamp(30px,4.6vw,42px); max-width:14ch;}
-    /* Capping the height lets the plate widen instead: the browser simply reveals more of the
-       negative's dark sides, so the crop never breaks and the page never runs away. */
-    .intro-cinematic__media{align-self:auto; width:min(100%,460px); max-height:min(70vh,700px); aspect-ratio:0.641; margin-left:auto;}
+    .intro-cinematic{padding:clamp(48px,6.5vh,92px) 0 clamp(40px,5.5vh,76px);}
+    .intro-cinematic__inner{grid-template-columns:1fr; row-gap:clamp(32px,4.5vh,56px); align-items:start; min-height:0;}
+    .intro-cinematic__text h2{font-size:clamp(30px,4.6vw,42px); max-width:16ch;}
+    /* Sized against the viewport height so the plate keeps a portrait ratio at every size it
+       stacks to: a squarer frame would drag the negative's empty black back into the picture. */
+    .intro-cinematic__media{align-self:auto; width:min(100%,46vh,520px); aspect-ratio:0.7; margin-inline:auto;}
+    .intro-cinematic__media img{object-position:80.5% 50%;}
   }
   @media(max-width:640px){
-    .intro-cinematic__head h2{font-size:clamp(30px,8.4vw,40px); max-width:13ch;}
-    .intro-cinematic__head,.intro-cinematic__body{padding:0 20px;}
-    .intro-cinematic__media{width:100%; max-height:62vh;}
-    /* A full-bleed phone plate is wider than the desktop crop, so it slides right a touch to keep
-       the couple centred rather than drifting toward the negative's empty left. */
-    .intro-cinematic__media img{object-position:79% 50%;}
+    .intro-cinematic__text h2{font-size:clamp(30px,8.4vw,40px); max-width:14ch;}
   }
 
   .intro-grid{display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center;}
@@ -587,16 +582,14 @@
   <div class="wrap divider" style="margin-top:56px;"></div>
 
   <section class="intro-cinematic">
-    <div class="intro-cinematic__inner">
-      <div class="intro-cinematic__head">
+    <div class="wrap intro-cinematic__inner">
+      <div class="intro-cinematic__text">
         <p class="eyebrow">The studio</p>
         <h2>A studio built around people, stories and moments.</h2>
-      </div>
-      <div class="intro-cinematic__body">
         <p class="intro-cinematic__copy">Since 1972, Swaroop Studios has documented life's most meaningful moments. Across generations, the craft has changed, but the attention to people and the moments that matter has stayed the same.</p>
         <a class="link-arrow" href="#/about">More about Swaroop Studios</a>
       </div>
-      <div class="intro-cinematic__media ph" data-slot="intro" data-local-image="intro-story" data-local-sizes="(max-width:640px) 100vw, (max-width:1099px) min(100vw, 460px), (max-aspect-ratio:11/10) min(100vw, 460px), 30vw" data-label="A cinematic wedding portrait"></div>
+      <div class="intro-cinematic__media ph" data-slot="intro" data-local-image="intro-story" data-local-sizes="(max-width:640px) calc(100vw - 40px), (max-width:1099px) min(calc(100vw - 64px), 560px), 520px" data-label="A cinematic wedding portrait"></div>
     </div>
   </section>
 
