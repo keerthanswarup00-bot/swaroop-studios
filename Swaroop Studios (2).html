@@ -100,15 +100,6 @@
   #mobileNav .close-nav{position:absolute; top:18px; right:20px; background:none; border:none; color:var(--black); font-size:13px; letter-spacing:.05em; cursor:pointer;}
 
   @media(max-width:640px){
-    header.nav-top,header.nav-compact{top:calc(8px + env(safe-area-inset-top,0px)); left:12px; right:12px; width:auto; transform:none; background:rgba(255,255,255,.6); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border:1px solid rgba(20,19,16,.12); border-radius:999px; box-shadow:0 10px 30px rgba(20,19,16,.08);}
-    header.nav-top.home-overlay,header.nav-compact.home-overlay{background:rgba(255,255,255,.6); border-color:rgba(20,19,16,.12); box-shadow:0 10px 30px rgba(20,19,16,.08);}
-    header.nav-top .brand,header.nav-top nav.main a,header.nav-top .menu-btn,header.nav-top.home-overlay .brand,header.nav-top.home-overlay nav.main a,header.nav-top.home-overlay .menu-btn,header.nav-compact .brand,header.nav-compact nav.main a,header.nav-compact .menu-btn,header.nav-compact.home-overlay .brand,header.nav-compact.home-overlay nav.main a,header.nav-compact.home-overlay .menu-btn{color:var(--black); text-shadow:none;}
-    header.nav-top .brand .since,header.nav-top.home-overlay .brand .since,header.nav-compact .brand .since,header.nav-compact.home-overlay .brand .since{color:var(--grey);}
-    header.nav-top .bar,header.nav-compact .bar{min-height:44px; padding:0 12px;}
-    header.nav-top .brand,header.nav-compact .brand{flex-shrink:0;}
-    header.nav-top .brand .name,header.nav-compact .brand .name{font-size:13px; white-space:nowrap;}
-    header.nav-top .brand .since,header.nav-compact .brand .since{font-size:7px; margin-top:1px;}
-    header.nav-top .menu-btn,header.nav-compact .menu-btn{margin-left:auto; min-width:44px; min-height:44px; padding:0 2px; font-size:10px; flex-shrink:0;}
     #mobileNav{height:100dvh; min-height:100vh; justify-content:center; gap:0; padding:calc(76px + env(safe-area-inset-top,0px)) 24px calc(32px + env(safe-area-inset-bottom,0px));}
     #mobileNav a{padding:13px 0; font-size:24px; line-height:1.15;}
     #mobileNav .close-nav{top:calc(14px + env(safe-area-inset-top,0px)); right:20px; color:var(--black);}
@@ -471,6 +462,26 @@
   .crop-fields{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; justify-content:center;}
   .crop-fields input,.crop-fields select{padding:9px 12px; font-size:13px; font-family:var(--sans); border:1px solid #555; background:#111; color:#fff;}
   .crop-hint{color:#bbb; font-size:12px; margin-top:10px;}
+
+  @media(max-width:640px){
+    body header.nav-top{top:env(safe-area-inset-top,0px); left:0; right:0; width:100%; transform:translate3d(0,0,0); background:rgba(250,249,246,.92); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border:0; border-bottom:1px solid rgba(20,19,16,.1); border-radius:0; box-shadow:none;}
+    body header.nav-top.home-overlay{background:rgba(20,19,16,.28); border-bottom-color:rgba(255,255,255,.2);}
+    body header.nav-top .brand,body header.nav-top nav.main a,body header.nav-top .menu-btn{color:var(--black); text-shadow:none;}
+    body header.nav-top.home-overlay .brand,body header.nav-top.home-overlay nav.main a,body header.nav-top.home-overlay .menu-btn{color:#fff; text-shadow:0 1px 12px rgba(20,19,16,.65);}
+    body header.nav-top .brand .since{color:var(--grey);}
+    body header.nav-top.home-overlay .brand .since{color:rgba(255,255,255,.8);}
+    body header.nav-top .bar{min-height:64px; padding:14px 20px;}
+    body header.nav-top .brand .name{font-size:14px;}
+    body header.nav-top .brand .since{font-size:7.5px; margin-top:2px;}
+    body header.nav-top .menu-btn{font-size:11px;}
+    body header.nav-compact{top:calc(10px + env(safe-area-inset-top,0px)); left:50%; right:auto; width:calc(100% - 32px); transform:translate3d(-50%,0,0); background:rgba(255,255,255,.72); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); border:1px solid rgba(20,19,16,.12); border-radius:999px; box-shadow:0 10px 30px rgba(20,19,16,.08);}
+    body header.nav-compact.home-overlay{background:rgba(255,255,255,.72); border-color:rgba(20,19,16,.12); box-shadow:0 10px 30px rgba(20,19,16,.08);}
+    body header.nav-compact .brand,body header.nav-compact nav.main a,body header.nav-compact .menu-btn{color:var(--black); text-shadow:none;}
+    body header.nav-compact .brand .since{color:var(--grey);}
+    body header.nav-compact .bar{min-height:56px; padding:10px 16px;}
+    body header.nav-top.nav-hidden{opacity:0; pointer-events:none; transform:translate3d(0,-100%,0);}
+    body header.nav-compact.nav-hidden{opacity:0; pointer-events:none; transform:translate3d(-50%,calc(-100% - 24px),0);}
+  }
 </style>
 </head>
 <body>
