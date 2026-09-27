@@ -668,7 +668,7 @@
     </div>
   </section>
   <section class="hero-sub" data-video-section>
-    <video class="hero-sub__video" autoplay muted loop playsinline preload="metadata" width="1920" height="1080" poster="/assets/posters/intro-band.jpg" data-desktop-src="/assets/videos/intro-band-1080p.mp4" data-mobile-src="/assets/videos/intro-band-720p.mp4" data-video-label="wedding film" aria-label="Silent wedding film" tabindex="-1" disablepictureinpicture disableremoteplayback></video>
+    <video class="hero-sub__video" autoplay muted loop playsinline webkit-playsinline preload="metadata" width="1920" height="1080" poster="/assets/posters/intro-band.jpg" data-desktop-src="/assets/videos/intro-band-1080p.mp4" data-mobile-src="/assets/videos/intro-band-720p.mp4" data-video-label="wedding film" aria-label="Silent wedding film" tabindex="-1" disablepictureinpicture disableremoteplayback></video>
     <div class="wrap hero-sub__inner">
       <p class="lede">From intimate portraits to grand celebrations — weddings, corporate events and everything between — Swaroop Studios has documented people and stories since 1972.</p>
       <div class="hero-actions">
@@ -1292,9 +1292,12 @@ function updateEditorialVideoButton(video){
 function loadEditorialVideo(video, force){
   if(video.dataset.sourceLoaded) return true;
   if(!force && prefersReducedMotion()) return false;
-  const source = document.createElement("source");
-  source.type = "video/mp4";
-  source.src = window.matchMedia("(max-width:860px)").matches ? video.dataset.mobileSrc : video.dataset.desktopSrc;
+
+  // Safari/iOS is more reliable when the media element receives a direct src
+  // instead of a <source> node being injected after the section enters view.
+  const isMobile = window.matchMedia("(max-width:860px)").matches;
+  const sourceUrl = isMobile ? video.dataset.mobileSrc : video.dataset.desktopSrc;
+
   video.muted = true;
   video.defaultMuted = true;
   video.autoplay = true;
@@ -1302,11 +1305,11 @@ function loadEditorialVideo(video, force){
   video.setAttribute("muted","");
   video.setAttribute("autoplay","");
   video.setAttribute("playsinline","");
-  // Source loading is explicitly triggered by the visibility logic.
-  // Keep the browser from aggressively buffering this background film.
+  video.setAttribute("webkit-playsinline","");
   video.preload = "metadata";
-  video.appendChild(source);
+  video.src = sourceUrl;
   video.dataset.sourceLoaded = "true";
+  video.dataset.activeSource = isMobile ? "mobile" : "desktop";
   video.load();
   return true;
 }
@@ -1441,24 +1444,54 @@ function initIntroBandVideo(){
   const video = document.querySelector(".hero-sub__video");
   if(!video) return;
 
-  // Keep the poster as the first paint. The intro film is intentionally
-  // loaded only when the section is approaching the viewport.
+  // Keep the poster as the first paint. The film is still lazy-loaded,
+  // but Safari receives a normal video.src instead of a late <source> node.
   video.muted = true;
   video.defaultMuted = true;
   video.autoplay = true;
   video.playsInline = true;
+  video.setAttribute("muted","");
+  video.setAttribute("autoplay","");
+  video.setAttribute("playsinline","");
+  video.setAttribute("webkit-playsinline","");
   video.preload = "metadata";
 
   const section = video.closest(".hero-sub");
   if(!section) return;
 
+  let started = false;
+
   const start = () => {
     if(document.hidden || prefersReducedMotion() || shouldConserveVideoData()) return;
     loadEditorialVideo(video, true);
-    const playWhenReady = () => playEditorialVideo(video);
-    if(video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) playWhenReady();
-    else video.addEventListener("canplay", playWhenReady, {once:true});
+    started = true;
+    playEditorialVideo(video);
   };
+
+  video.addEventListener("loadedmetadata", () => {
+    if(started) playEditorialVideo(video);
+  });
+
+  video.addEventListener("canplay", () => {
+    if(started) playEditorialVideo(video);
+  });
+
+  video.addEventListener("error", () => {
+    // Recover once if an iOS Safari build rejects the lighter mobile encode.
+    // The desktop MP4 is the known-good fallback already used on larger screens.
+    if(video.dataset.activeSource === "mobile" && !video.dataset.mobileFallback){
+      video.dataset.mobileFallback = "true";
+      video.dataset.sourceLoaded = "";
+      video.removeAttribute("src");
+      video.load();
+      video.src = video.dataset.desktopSrc;
+      video.dataset.sourceLoaded = "true";
+      video.dataset.activeSource = "desktop-fallback";
+      video.preload = "metadata";
+      video.load();
+      playEditorialVideo(video);
+    }
+  });
 
   if("IntersectionObserver" in window){
     const observer = new IntersectionObserver(entries => {
@@ -1473,6 +1506,15 @@ function initIntroBandVideo(){
   } else {
     start();
   }
+
+  // If autoplay is rejected on a particular iOS state, use the user's first
+  // touch as a silent recovery without changing the visible UI.
+  const retryFromGesture = () => {
+    if(video.paused && video.dataset.sourceLoaded && !video.dataset.userPaused){
+      playEditorialVideo(video, true);
+    }
+  };
+  window.addEventListener("touchstart", retryFromGesture, {passive:true, once:true});
 
   document.addEventListener("visibilitychange", () => {
     if(!document.hidden && video.dataset.sourceLoaded && !video.dataset.userPaused){
