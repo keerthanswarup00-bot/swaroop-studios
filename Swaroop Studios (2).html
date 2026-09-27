@@ -1358,40 +1358,77 @@ function syncEditorialVideos(){
 function initEditorialVideos(){
   if(editorialVideosInitialized) return;
   editorialVideosInitialized = true;
-  if("IntersectionObserver" in window){
-    editorialVideoObserver = new IntersectionObserver(entries=>{
-      entries.forEach(entry=>{
-        const video=entry.target;
-        if(entry.isIntersecting){
-          loadEditorialVideo(video, true);
-          retryEditorialVideo(video);
-        } else {
-          video.pause();
-          updateEditorialVideoButton(video);
-        }
-      });
-    },{rootMargin:"480px 0px",threshold:0.01});
-  }
+
   document.querySelectorAll("[data-video-section]").forEach(section=>{
     const video = section.querySelector(".motion-video");
     const toggle = section.querySelector("[data-video-toggle]");
     if(!video || !toggle) return;
-    video.muted=true;
-    video.defaultMuted=true;
-    video.autoplay=true;
-    video.playsInline=true;
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.autoplay = true;
+    video.playsInline = true;
     video.setAttribute("muted","");
     video.setAttribute("autoplay","");
     video.setAttribute("playsinline","");
-    if(editorialVideoObserver) editorialVideoObserver.observe(video);
+
     toggle.addEventListener("click", ()=> toggleEditorialVideo(video));
     video.addEventListener("play", ()=> updateEditorialVideoButton(video));
     video.addEventListener("pause", ()=> updateEditorialVideoButton(video));
-    video.addEventListener("loadeddata", ()=> retryEditorialVideo(video));
-    video.addEventListener("canplay", ()=> retryEditorialVideo(video));
-    video.addEventListener("stalled", ()=> retryEditorialVideo(video));
+
+    // Once the source has buffered enough to start, immediately honour the
+    // section's visibility state. This avoids the race between load() and play().
+    ["loadeddata","canplay","canplaythrough"].forEach(eventName=>{
+      video.addEventListener(eventName, ()=>{
+        const rect = section.getBoundingClientRect();
+        const inView = rect.bottom > 0 && rect.top < window.innerHeight;
+        if(inView) playEditorialVideo(video);
+      });
+    });
+
+    video.addEventListener("stalled", ()=> {
+      if(!video.paused) return;
+      loadEditorialVideo(video, true);
+      playEditorialVideo(video);
+    });
+
     updateEditorialVideoButton(video);
   });
+
+  if("IntersectionObserver" in window){
+    editorialVideoObserver = new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        const section = entry.target;
+        const video = section.querySelector(".motion-video");
+        if(!video || section.hidden) return;
+
+        if(entry.isIntersecting){
+          // Load slightly before arrival, then autoplay as soon as the browser
+          // has enough media buffered. The actual play trigger is the section
+          // entering the viewport, not page load.
+          loadEditorialVideo(video, true);
+          playEditorialVideo(video);
+        } else if(entry.boundingClientRect.top < 0){
+          video.pause();
+          updateEditorialVideoButton(video);
+        }
+      });
+    },{
+      rootMargin:"240px 0px",
+      threshold:[0,0.2,0.45]
+    });
+
+    document.querySelectorAll("[data-video-section]").forEach(section=>{
+      editorialVideoObserver.observe(section);
+    });
+  } else {
+    // Fallback for older browsers.
+    document.querySelectorAll("[data-video-section]").forEach(section=>{
+      const video=section.querySelector(".motion-video");
+      if(video) loadEditorialVideo(video, true);
+    });
+  }
+
   document.addEventListener("visibilitychange", syncEditorialVideos);
   window.addEventListener("pageshow", syncEditorialVideos);
   syncEditorialVideos();
