@@ -226,7 +226,15 @@
     .hero-sub__video{display:none;}
   }
   @media(max-width:640px){
-    .hero-full{aspect-ratio:1664 / 2214; min-height:0;}
+    /* The opening story is the entire first mobile viewport. Keep the header
+       over the image and let the next section begin only after the screen-height hero. */
+    .hero-full{
+      width:100%;
+      height:100svh;
+      min-height:100svh;
+      max-height:none;
+      aspect-ratio:auto;
+    }
     .hero-full .ph.has-image::before{display:none;}
     .hero-full .ph{overflow:hidden;}
     .hero-full .ph img{position:static; width:100%; height:100%; object-fit:cover; object-position:center; transform:none;}
