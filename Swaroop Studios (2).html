@@ -361,13 +361,22 @@
   .vip-content{min-width:0;}
   .vip-statement h2{font-size:clamp(26px,3.2vw,38px); margin-bottom:18px; max-width:14ch;}
   .vip-statement p{color:#bab5aa; max-width:40ch; font-size:15px;}
+  .vip-cta{margin-top:26px; padding:11px 18px; font-size:12px; letter-spacing:.02em;}
+  .vip-cta-note{display:block; margin-top:9px; color:#8f8a80; font-size:10.5px; letter-spacing:.03em;}
   .vip-list{list-style:none; display:flex; flex-direction:column; margin-top:42px;}
   .vip-list li{display:grid; grid-template-columns:minmax(140px,.8fr) minmax(0,1.2fr); gap:24px; align-items:start; border-top:1px solid rgba(255,255,255,.16); padding:22px 0;}
   .vip-list li:last-child{border-bottom:1px solid rgba(255,255,255,.16);}
   .vip-list h4{font-family:var(--sans); font-weight:600; font-size:15px; color:#fff;}
   .vip-list p{font-size:13.5px; color:#a9a49a; max-width:42ch;}
   @media(max-width:860px){.vip-grid{grid-template-columns:1fr; gap:48px;} .vip-visual{width:100%; max-width:620px;}}
-  @media(max-width:640px){.vip-grid{gap:40px;} .vip-visual{padding:0 0 16px 16px;} .vip-list{margin-top:34px;} .vip-list li{grid-template-columns:1fr; gap:6px; padding:20px 0;}}
+  @media(max-width:640px){
+    .vip-grid{gap:40px;}
+    .vip-visual{padding:0 0 16px 16px;}
+    .vip-list{margin-top:34px;}
+    .vip-list li{grid-template-columns:1fr; gap:6px; padding:20px 0;}
+    .vip-cta{margin-top:22px; padding:10px 15px; font-size:11px;}
+    .vip-cta-note{font-size:10px;}
+  }
 
   /* Third section — the 1972 chapter. Same paper family, different voice: the year is a chapter
      marker set solid in the margin beside the statement, the archive photograph sits opposite it
@@ -869,6 +878,10 @@
         <div class="vip-statement">
           <h2>Private &amp; VIP engagements.</h2>
           <p>Some assignments call for more than a photographer — they call for discretion. We work with high-profile individuals, public figures and organisations who need their events handled quietly, securely and on their terms.</p>
+          <a class="btn btn-solid vip-cta" data-contact-link="whatsapp" data-vip-message="Hi Swaroop, I’d like to request a private consultation regarding my event." href="#" target="_blank" rel="noopener noreferrer">
+            Request a Private Consultation <span aria-hidden="true">→</span>
+          </a>
+          <span class="vip-cta-note">For select celebrations &amp; bespoke experiences.</span>
         </div>
         <ul class="vip-list">
           <li><h4>Confidentiality</h4><p>NDAs signed on request. Images are never shared or published without written approval.</p></li>
@@ -1104,7 +1117,13 @@ function applyContact(){
     el.href = isPlaceholder(CONTACT.phone) ? "#/contact" : "tel:"+CONTACT.phone.replace(/[^\d+]/g,"");
   });
   document.querySelectorAll('[data-contact-link="whatsapp"]').forEach(el=>{
-    el.href = isPlaceholder(CONTACT.whatsapp) ? "#/contact" : "https://wa.me/"+CONTACT.whatsapp.replace(/[^\d]/g,"");
+    if (isPlaceholder(CONTACT.whatsapp)) {
+      el.href = "#/contact";
+      return;
+    }
+    const base = "https://wa.me/" + CONTACT.whatsapp.replace(/[^\d]/g,"");
+    const message = el.getAttribute("data-vip-message");
+    el.href = message ? base + "?text=" + encodeURIComponent(message) : base;
   });
   document.querySelectorAll('#page-contact [data-contact-link="phone"]').forEach(el=> el.textContent = CONTACT.phone);
   document.querySelectorAll('#page-contact [data-contact-link="email"]').forEach(el=> el.textContent = CONTACT.email);
