@@ -199,6 +199,15 @@
       overflow-wrap:normal;
       word-break:normal;
     }
+
+    /* Keep mobile page subtitles aligned with the title's inset.
+       Gallery and Home remain untouched. */
+    .page:not(#page-home):not(#page-gallery) .page-hero p.lede{
+      width:100%;
+      max-width:520px;
+      padding-inline:12px;
+      box-sizing:border-box;
+    }
   }
 
   .page:focus{outline:none;}
