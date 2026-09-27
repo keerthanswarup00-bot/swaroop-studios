@@ -1302,7 +1302,9 @@ function loadEditorialVideo(video, force){
   video.setAttribute("muted","");
   video.setAttribute("autoplay","");
   video.setAttribute("playsinline","");
-  video.preload = "auto";
+  // Source loading is explicitly triggered by the visibility logic.
+  // Keep the browser from aggressively buffering this background film.
+  video.preload = "metadata";
   video.appendChild(source);
   video.dataset.sourceLoaded = "true";
   video.load();
@@ -1437,7 +1439,48 @@ function initEditorialVideos(){
    borrows the same source switching and data-saving rules without joining the observer/toggle set. */
 function initIntroBandVideo(){
   const video = document.querySelector(".hero-sub__video");
-  if(video) loadEditorialVideo(video);
+  if(!video) return;
+
+  // Keep the poster as the first paint. The intro film is intentionally
+  // loaded only when the section is approaching the viewport.
+  video.muted = true;
+  video.defaultMuted = true;
+  video.autoplay = true;
+  video.playsInline = true;
+  video.preload = "metadata";
+
+  const section = video.closest(".hero-sub");
+  if(!section) return;
+
+  const start = () => {
+    if(document.hidden || prefersReducedMotion() || shouldConserveVideoData()) return;
+    loadEditorialVideo(video, true);
+    const playWhenReady = () => playEditorialVideo(video);
+    if(video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) playWhenReady();
+    else video.addEventListener("canplay", playWhenReady, {once:true});
+  };
+
+  if("IntersectionObserver" in window){
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          start();
+          observer.disconnect();
+        }
+      });
+    }, {rootMargin:"400px 0px", threshold:0});
+    observer.observe(section);
+  } else {
+    start();
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if(!document.hidden && video.dataset.sourceLoaded && !video.dataset.userPaused){
+      playEditorialVideo(video);
+    } else if(document.hidden){
+      video.pause();
+    }
+  });
 }
 
 /* ---------- CAPABILITIES ---------- */
