@@ -187,6 +187,20 @@
   @media(max-width:640px){
     .page:not(#page-home){padding-top:40px;}
   }
+
+  /* Keep internal page titles inside the mobile content padding.
+     Gallery already has this treatment, so leave Gallery and the full-bleed Home hero unchanged. */
+  @media(max-width:640px){
+    .page:not(#page-home):not(#page-gallery) .page-hero h1{
+      width:100%;
+      max-width:320px;
+      padding-inline:12px;
+      box-sizing:border-box;
+      overflow-wrap:normal;
+      word-break:normal;
+    }
+  }
+
   .page:focus{outline:none;}
   .skip-link{position:absolute; top:-48px; left:12px; background:var(--black); color:#fff; padding:12px 18px; font-size:13px; z-index:200; transition:top .2s ease;}
   .skip-link:focus{top:12px;}
