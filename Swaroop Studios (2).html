@@ -1290,29 +1290,45 @@ function updateEditorialVideoButton(video){
   button.setAttribute("aria-label", action+" "+(video.dataset.videoLabel || "video"));
 }
 function loadEditorialVideo(video, force){
-  if(video.dataset.sourceLoaded) return;
-  if(!force && (prefersReducedMotion() || shouldConserveVideoData())) return;
+  if(video.dataset.sourceLoaded) return true;
+  if(!force && prefersReducedMotion()) return false;
   const source = document.createElement("source");
   source.type = "video/mp4";
   source.src = window.matchMedia("(max-width:860px)").matches ? video.dataset.mobileSrc : video.dataset.desktopSrc;
   video.muted = true;
   video.defaultMuted = true;
-  video.preload = "metadata";
+  video.autoplay = true;
+  video.playsInline = true;
+  video.setAttribute("muted","");
+  video.setAttribute("autoplay","");
+  video.setAttribute("playsinline","");
+  video.preload = "auto";
   video.appendChild(source);
   video.dataset.sourceLoaded = "true";
   video.load();
+  return true;
 }
 function playEditorialVideo(video, userInitiated){
   if(!video.dataset.sourceLoaded) return;
-  if(!userInitiated && (video.dataset.userPaused==="true" || document.hidden || prefersReducedMotion() || shouldConserveVideoData() || video.dataset.autoplayBlocked==="true")) return;
+  if(!userInitiated && (video.dataset.userPaused==="true" || document.hidden || prefersReducedMotion())) return;
   const section = video.closest("[data-video-section]");
   if(!userInitiated && (!section || section.hidden || !editorialSectionIsActive(section))) return;
+  video.muted = true;
+  video.defaultMuted = true;
+  video.setAttribute("muted","");
+  video.setAttribute("playsinline","");
   delete video.dataset.autoplayBlocked;
   const playRequest = video.play();
   if(playRequest) playRequest.catch(()=>{
     if(!userInitiated) video.dataset.autoplayBlocked = "true";
     updateEditorialVideoButton(video);
   });
+}
+function retryEditorialVideo(video){
+  const section = video.closest("[data-video-section]");
+  if(!section || section.hidden || !editorialSectionIsActive(section) || document.hidden || video.dataset.userPaused==="true" || prefersReducedMotion()) return;
+  loadEditorialVideo(video);
+  playEditorialVideo(video);
 }
 function toggleEditorialVideo(video){
   if(!video.paused){
@@ -1329,10 +1345,10 @@ function syncEditorialVideos(){
   document.querySelectorAll("[data-video-section]").forEach(section=>{
     const video = section.querySelector(".motion-video");
     if(!video) return;
-    const canPlay = !section.hidden && editorialSectionIsActive(section) && !document.hidden && !prefersReducedMotion() && !shouldConserveVideoData() && video.dataset.userPaused!=="true";
+    const canPlay = !section.hidden && editorialSectionIsActive(section) && !document.hidden && !prefersReducedMotion() && video.dataset.userPaused!=="true";
     if(canPlay){
-      if(!video.dataset.sourceLoaded && !editorialVideoObserver) loadEditorialVideo(video);
-      playEditorialVideo(video);
+      loadEditorialVideo(video);
+      retryEditorialVideo(video);
     } else if(!video.paused){
       video.pause();
     }
@@ -1345,30 +1361,41 @@ function initEditorialVideos(){
   if("IntersectionObserver" in window){
     editorialVideoObserver = new IntersectionObserver(entries=>{
       entries.forEach(entry=>{
+        const video=entry.target;
         if(entry.isIntersecting){
-          loadEditorialVideo(entry.target);
-          syncEditorialVideos();
+          loadEditorialVideo(video, true);
+          retryEditorialVideo(video);
         } else {
-          entry.target.pause();
-          updateEditorialVideoButton(entry.target);
+          video.pause();
+          updateEditorialVideoButton(video);
         }
       });
-    },{rootMargin:"360px 0px",threshold:0.01});
+    },{rootMargin:"480px 0px",threshold:0.01});
   }
   document.querySelectorAll("[data-video-section]").forEach(section=>{
     const video = section.querySelector(".motion-video");
     const toggle = section.querySelector("[data-video-toggle]");
     if(!video || !toggle) return;
+    video.muted=true;
+    video.defaultMuted=true;
+    video.autoplay=true;
+    video.playsInline=true;
+    video.setAttribute("muted","");
+    video.setAttribute("autoplay","");
+    video.setAttribute("playsinline","");
     if(editorialVideoObserver) editorialVideoObserver.observe(video);
     toggle.addEventListener("click", ()=> toggleEditorialVideo(video));
     video.addEventListener("play", ()=> updateEditorialVideoButton(video));
     video.addEventListener("pause", ()=> updateEditorialVideoButton(video));
+    video.addEventListener("loadeddata", ()=> retryEditorialVideo(video));
+    video.addEventListener("canplay", ()=> retryEditorialVideo(video));
+    video.addEventListener("stalled", ()=> retryEditorialVideo(video));
     updateEditorialVideoButton(video);
   });
   document.addEventListener("visibilitychange", syncEditorialVideos);
+  window.addEventListener("pageshow", syncEditorialVideos);
   syncEditorialVideos();
 }
-
 /* The homepage intro band is a silent, looping background rather than a film with a control, so it
    borrows the same source switching and data-saving rules without joining the observer/toggle set. */
 function initIntroBandVideo(){
