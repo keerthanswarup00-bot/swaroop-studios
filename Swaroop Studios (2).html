@@ -1575,6 +1575,15 @@ function recoverLocalGalleryImage(img){
     img.src = fallback;
     return;
   }
+  if(img.dataset.galleryRetry!=="true"){
+    img.dataset.galleryRetry="true";
+    window.setTimeout(()=>{
+      if(!img.isConnected) return;
+      const src = fallback || img.currentSrc || img.src;
+      if(src) img.src = src + (src.includes("?") ? "&" : "?") + "galleryRetry=1";
+    },250);
+    return;
+  }
   handleGalleryImageError(img);
 }
 function handleGalleryImageError(img){
@@ -1614,6 +1623,25 @@ function localImageMarkup(image, options){
   const mainSource = useAvif ? `<source type="image/avif" srcset="${localAvifSrcset(image)}" sizes="${sizes}">` : "";
   return `<picture class="local-photo local-photo-${image.id}" data-image-fallback="${fallbackSrc}">${mobileSource}${mainSource}<img src="${fallbackSrc}" alt="${image.alt}" width="${image.width}" height="${image.height}" loading="${loading}" decoding="async"${priority} onerror="${fallbackHandler}"></picture>`;
 }
+function galleryDocKey(doc){
+  if(!doc) return "";
+  const category = String(doc.category||"").toLowerCase();
+  const identity = doc.imageId || doc.src || doc.assetId || doc.id || "";
+  return category+"|"+String(identity);
+}
+function mergeGalleryDocs(...lists){
+  const merged = [];
+  const seen = new Set();
+  lists.flat().forEach(doc=>{
+    if(!doc) return;
+    const key = galleryDocKey(doc);
+    if(!key || seen.has(key)) return;
+    seen.add(key);
+    merged.push(doc);
+  });
+  return merged;
+}
+
 function localGalleryImageId(doc){
   const id = doc.imageId || (!doc.assetId ? doc.id : "");
   return id && LOCAL_IMAGES[id] ? id : "";
@@ -1769,7 +1797,7 @@ async function loadGallery(){
         galleryCategories = remote.categories;
       }
       const remoteImages = Array.isArray(remote.images) ? remote.images : [];
-      window.__galleryDocs = [...remoteImages, ...LOCAL_GALLERY];
+      window.__galleryDocs = mergeGalleryDocs(remoteImages, LOCAL_GALLERY);
       renderGalleryFilters();
       renderAdminGalleryCategoryOptions();
       renderHomePreview();
@@ -1784,8 +1812,8 @@ async function loadGallery(){
     await loadGalleryCategories();
     try{
       const q = await dbCap.collection("gallery").orderBy("createdAt","desc").limit(60).get();
-      window.__galleryDocs = q.docs.map(d=>({id:d.id, ...d.data()}));
-    }catch(e){ window.__galleryDocs = LOCAL_GALLERY; }
+      window.__galleryDocs = mergeGalleryDocs(q.docs.map(d=>({id:d.id, ...d.data()})), LOCAL_GALLERY);
+    }catch(e){ window.__galleryDocs = LOCAL_GALLERY.slice(); }
   }else{
     window.__galleryDocs = LOCAL_GALLERY;
   }
