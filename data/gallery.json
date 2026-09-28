@@ -1,9 +1,214 @@
 {
   "categories": [
-    {"id":"wedding","label":"Weddings"},
-    {"id":"event","label":"Events"},
-    {"id":"corporate","label":"Corporate"},
-    {"id":"portrait","label":"Portraits"}
+    {
+      "id": "wedding",
+      "label": "Weddings"
+    },
+    {
+      "id": "event",
+      "label": "Events"
+    },
+    {
+      "id": "corporate",
+      "label": "Corporate"
+    },
+    {
+      "id": "portrait",
+      "label": "Portraits"
+    }
   ],
-  "images": []
+  "images": [
+    {
+      "id": "06",
+      "category": "wedding",
+      "title": "A story in three moments",
+      "location": "Wedding"
+    },
+    {
+      "id": "07",
+      "category": "wedding",
+      "title": "Connection",
+      "location": "Wedding"
+    },
+    {
+      "id": "09",
+      "category": "wedding",
+      "title": "The wedding story",
+      "location": "Wedding"
+    },
+    {
+      "id": "1",
+      "category": "wedding",
+      "title": "Soundarya and Shreyas",
+      "location": "Wedding"
+    },
+    {
+      "id": "12",
+      "category": "wedding",
+      "title": "A story worth keeping",
+      "location": "Wedding"
+    },
+    {
+      "id": "14",
+      "category": "wedding",
+      "title": "True love is the joy of life",
+      "location": "Wedding"
+    },
+    {
+      "id": "3",
+      "category": "portrait",
+      "title": "A quiet portrait",
+      "location": "Portraiture"
+    },
+    {
+      "id": "4",
+      "category": "portrait",
+      "title": "Editorial portrait",
+      "location": "Portraiture"
+    },
+    {
+      "id": "5",
+      "category": "wedding",
+      "title": "The details",
+      "location": "Wedding"
+    },
+    {
+      "id": "6",
+      "category": "portrait",
+      "title": "In the light",
+      "location": "Portraiture"
+    },
+    {
+      "id": "7",
+      "category": "portrait",
+      "title": "The bride",
+      "location": "Portraiture"
+    },
+    {
+      "id": "8",
+      "category": "wedding",
+      "title": "At the venue",
+      "location": "Wedding"
+    },
+    {
+      "id": "9",
+      "category": "wedding",
+      "title": "Together",
+      "location": "Wedding"
+    },
+    {
+      "id": "dsc02444",
+      "category": "wedding",
+      "title": "Ceremony detail",
+      "location": "Wedding"
+    },
+    {
+      "id": "dsc02541",
+      "category": "unassigned",
+      "title": "A room full of stories",
+      "location": "Celebration"
+    },
+    {
+      "id": "dsc02664",
+      "category": "wedding",
+      "title": "The couple",
+      "location": "Wedding"
+    },
+    {
+      "id": "dsc02737",
+      "category": "wedding",
+      "title": "A shared moment",
+      "location": "Wedding"
+    },
+    {
+      "id": "dsc02835",
+      "category": "wedding",
+      "title": "Between the vows",
+      "location": "Wedding"
+    },
+    {
+      "id": "2",
+      "category": "unassigned",
+      "title": "The London Jeweller",
+      "location": "Brand commission"
+    },
+    {
+      "id": "dsc05457",
+      "category": "wedding",
+      "title": "An evening celebration",
+      "location": "Wedding"
+    },
+    {
+      "id": "dsc06400",
+      "category": "wedding",
+      "title": "At the venue",
+      "location": "Wedding"
+    },
+    {
+      "id": "dsc06927a",
+      "category": "portrait",
+      "title": "Portrait study",
+      "location": "Portraiture"
+    },
+    {
+      "id": "111",
+      "category": "wedding",
+      "title": "Wedding party",
+      "location": "Wedding"
+    },
+    {
+      "id": "dsc05478",
+      "category": "wedding",
+      "title": "The ceremony",
+      "location": "Wedding"
+    },
+    {
+      "id": "dsc03239",
+      "category": "wedding",
+      "title": "The details",
+      "location": "Wedding"
+    },
+    {
+      "id": "dsc05436",
+      "category": "wedding",
+      "title": "The couple in bloom",
+      "location": "Wedding"
+    },
+    {
+      "id": "dsc06877a",
+      "category": "portrait",
+      "title": "The bride outdoors",
+      "location": "Portraiture"
+    },
+    {
+      "id": "dsc06933a",
+      "category": "portrait",
+      "title": "A close portrait",
+      "location": "Portraiture"
+    },
+    {
+      "id": "dsc06432",
+      "category": "wedding",
+      "title": "A cinematic portrait",
+      "location": "Wedding"
+    },
+    {
+      "id": "dsc04330a",
+      "category": "portrait",
+      "title": "Ceremonial portrait",
+      "location": "Portraiture"
+    },
+    {
+      "id": "dsc08729a",
+      "category": "portrait",
+      "title": "Bride in ceremonial attire",
+      "location": "Portraiture"
+    },
+    {
+      "id": "sdv09208a",
+      "category": "portrait",
+      "title": "Guest among wedding flowers",
+      "location": "Portraiture"
+    }
+  ]
 }
