@@ -1552,6 +1552,9 @@ const LOCAL_GALLERY = [
   {id:"dsc06877a",category:"portrait",title:"The bride outdoors",location:"Portraiture"},
   {id:"dsc06933a",category:"portrait",title:"A close portrait",location:"Portraiture"},
   {id:"dsc06432",category:"wedding",title:"A cinematic portrait",location:"Wedding"},
+  {id:"dsc04330a",category:"portrait",title:"Ceremonial portrait",location:"Portraiture"},
+  {id:"dsc08729a",category:"portrait",title:"Bride in ceremonial attire",location:"Portraiture"},
+  {id:"sdv09208a",category:"portrait",title:"Guest among wedding flowers",location:"Portraiture"},
 ];
 const MOBILE_SOURCE_MEDIA = "(max-width:640px)";
 function localImageWidths(image){
@@ -1562,6 +1565,41 @@ function localImageWidths(image){
 function localAvifSrcset(image){
   return localImageWidths(image).map(width=>`/assets/images/${image.id || ""}-${width}.avif ${width}w`).join(", ");
 }
+function recoverLocalGalleryImage(img){
+  if(!img || img.dataset.recoveryAttempted==="true") return;
+  img.dataset.recoveryAttempted="true";
+  const picture = img.closest("picture");
+  const fallback = picture && picture.dataset.imageFallback;
+  if(fallback && img.src !== new URL(fallback,location.origin).href){
+    if(picture) picture.querySelectorAll("source").forEach(source=>source.remove());
+    img.src = fallback;
+    return;
+  }
+  handleGalleryImageError(img);
+}
+function handleGalleryImageError(img){
+  if(!img) return;
+  const item = img.closest(".item");
+  if(item){
+    const setName = item.dataset.lb;
+    const docId = item.dataset.docId;
+    const set = setName==="home" ? window.__lbHome : window.__lbGallery;
+    if(Array.isArray(set) && docId){
+      const filtered = set.filter(doc=>String(doc.id)!==String(docId));
+      if(setName==="home") window.__lbHome = filtered;
+      else window.__lbGallery = filtered;
+    }
+    item.remove();
+    const container = setName==="home" ? document.getElementById("homeGalPreview") : document.getElementById("fullGalGrid");
+    if(container){
+      container.querySelectorAll("[data-lb]").forEach((node,index)=>{ node.dataset.i=String(index); });
+    }
+    return;
+  }
+  const picture = img.closest("picture");
+  if(picture) picture.classList.add("media-failed");
+  img.remove();
+}
 function localImageMarkup(image, options){
   const settings = options || {};
   const sizes = settings.sizes || "100vw";
@@ -1569,10 +1607,12 @@ function localImageMarkup(image, options){
   const loading = settings.priority ? "eager" : "lazy";
   const priority = settings.priority ? ` fetchpriority="high"` : "";
   const mobile = settings.mobile;
-  const mobileSource = mobile ? `<source media="${MOBILE_SOURCE_MEDIA}" type="image/avif" srcset="${localAvifSrcset(mobile)}" sizes="${mobile.sizes || sizes}">` : "";
+  const useAvif = settings.useAvif !== false;
+  const mobileSource = useAvif && mobile ? `<source media="${MOBILE_SOURCE_MEDIA}" type="image/avif" srcset="${localAvifSrcset(mobile)}" sizes="${mobile.sizes || sizes}">` : "";
   const fallbackSrc = `/assets/images/${image.id}-${fallbackWidth}.jpg`;
-  const fallbackHandler = `this.onerror=null;this.closest('picture').querySelectorAll('source').forEach(function(source){source.remove();});this.src='${fallbackSrc}';`;
-  return `<picture class="local-photo local-photo-${image.id}" data-image-fallback="${fallbackSrc}">${mobileSource}<source type="image/avif" srcset="${localAvifSrcset(image)}" sizes="${sizes}"><img src="${fallbackSrc}" alt="${image.alt}" width="${image.width}" height="${image.height}" loading="${loading}" decoding="async"${priority} onerror="${fallbackHandler}"></picture>`;
+  const fallbackHandler = `recoverLocalGalleryImage(this)`;
+  const mainSource = useAvif ? `<source type="image/avif" srcset="${localAvifSrcset(image)}" sizes="${sizes}">` : "";
+  return `<picture class="local-photo local-photo-${image.id}" data-image-fallback="${fallbackSrc}">${mobileSource}${mainSource}<img src="${fallbackSrc}" alt="${image.alt}" width="${image.width}" height="${image.height}" loading="${loading}" decoding="async"${priority} onerror="${fallbackHandler}"></picture>`;
 }
 function localGalleryImageId(doc){
   const id = doc.imageId || (!doc.assetId ? doc.id : "");
@@ -1588,10 +1628,10 @@ function galleryItemImage(doc, sizes){
   const id = localGalleryImageId(doc);
   if(id){
     const image = {...LOCAL_IMAGES[id],id};
-    return localImageMarkup(image,{sizes});
+    return localImageMarkup(image,{sizes,useAvif:false});
   }
-  if(doc.src) return '<img src="'+doc.src+'" alt="'+(doc.title||doc.category||"Swaroop Studios photograph")+'" loading="lazy" decoding="async">';
-  return doc.assetId ? '<img src="/_blob/'+doc.assetId+'" alt="'+(doc.title||doc.category||"Swaroop Studios photograph")+'" loading="lazy" decoding="async">' : "";
+  if(doc.src) return '<img src="'+doc.src+'" alt="'+(doc.title||doc.category||"Swaroop Studios photograph")+'" loading="lazy" decoding="async" onerror="handleGalleryImageError(this)">';
+  return doc.assetId ? '<img src="/_blob/'+doc.assetId+'" alt="'+(doc.title||doc.category||"Swaroop Studios photograph")+'" loading="lazy" decoding="async" onerror="handleGalleryImageError(this)">' : "";
 }
 function renderLocalImages(){
   document.querySelectorAll("[data-local-image]").forEach(el=>{
@@ -1763,7 +1803,7 @@ function renderHomePreview(){
   const docs = (window.__galleryDocs||LOCAL_GALLERY).slice(0,6);
   if(docs.length===0) return;
   window.__lbHome = docs;
-  el.innerHTML = docs.map((d,i)=>'<div class="item" data-lb="home" data-i="'+i+'"><div class="ph" style="height:100%">'+galleryItemImage(d,"(max-width:760px) 50vw, 25vw")+'</div></div>').join("");
+  el.innerHTML = docs.map((d,i)=>'<div class="item" data-lb="home" data-i="'+i+'" data-doc-id="'+String(d.id||"").replace(/"/g,"&quot;")+'"><div class="ph" style="height:100%">'+galleryItemImage(d,"(max-width:760px) 50vw, 25vw")+'</div></div>').join("");
   wireLightboxClicks(el);
   revealNew(el);
 }
@@ -1788,7 +1828,7 @@ function renderFullGallery(cat){
   else docs = docs.filter(d=>d.category===cat);
   if(docs.length===0){ el.innerHTML = '<div class="gal-empty">No photographs in this category yet.</div>'; return; }
   window.__lbGallery = docs;
-  el.innerHTML = docs.map((d,i)=>'<div class="item" data-lb="gallery" data-i="'+i+'"><div class="ph">'+galleryItemImage(d,"(max-width:760px) 50vw, 25vw")+'</div></div>').join("");
+  el.innerHTML = docs.map((d,i)=>'<div class="item" data-lb="gallery" data-i="'+i+'" data-doc-id="'+String(d.id||"").replace(/"/g,"&quot;")+'"><div class="ph">'+galleryItemImage(d,"(max-width:760px) 50vw, 25vw")+'</div></div>').join("");
   wireLightboxClicks(el);
   revealNew(el);
 }
