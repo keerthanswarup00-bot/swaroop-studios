@@ -8,6 +8,26 @@
     {
       "source": "/admin",
       "destination": "/Swaroop%20Studios%20%282%29.html"
+    },
+    {
+      "source": "/admin/",
+      "destination": "/Swaroop%20Studios%20%282%29.html"
+    },
+    {
+      "source": "/about",
+      "destination": "/Swaroop%20Studios%20%282%29.html"
+    },
+    {
+      "source": "/services",
+      "destination": "/Swaroop%20Studios%20%282%29.html"
+    },
+    {
+      "source": "/gallery",
+      "destination": "/Swaroop%20Studios%20%282%29.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/Swaroop%20Studios%20%282%29.html"
     }
   ],
   "headers": [
@@ -17,6 +37,32 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=604800, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=86400"
+        },
+        {
+          "key": "Content-Type",
+          "value": "application/xml; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/(robots.txt|llms.txt|llms-full.txt)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, stale-while-revalidate=86400"
+        },
+        {
+          "key": "Content-Type",
+          "value": "text/plain; charset=utf-8"
         }
       ]
     }

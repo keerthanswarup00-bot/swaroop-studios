@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Private / internal areas — never index, never expose client work.
+Disallow: /admin
+Disallow: /admin/
+Disallow: /api/
+
+# Public media must stay crawlable (rendering + image indexing).
+Allow: /assets/
+
+Sitemap: https://swaroop-studios.vercel.app/sitemap.xml

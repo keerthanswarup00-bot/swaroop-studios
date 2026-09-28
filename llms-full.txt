@@ -1,0 +1,76 @@
+# Swaroop Studios — full machine-readable reference
+
+> Photography studio established in 1972, based in Bengaluru, India.
+> Canonical site: https://swaroop-studios.vercel.app/
+
+## 1. Entity
+
+- Brand name: Swaroop Studios (also styled "SWAROOP STUDIOS", tagline "SINCE 1972").
+- Type: photography studio (schema.org ProfessionalService) with cinematic
+  wedding and studio films.
+- Founded: 1972.
+- Address (as published): Bengaluru, India. No street address is published.
+- Phone: +91 99004 86574
+- Email: swaroopstudios@gmail.com
+- WhatsApp: +91 90360 55099
+- Instagram: https://www.instagram.com/swaroop_studios
+- Related: Destiny Events + Photography (https://destinyeventsandphotography.com),
+  described on the homepage as the new-generation continuation of the studio's
+  storytelling.
+
+## 2. What the studio does
+
+Approach (in the studio's own words): "Photographs should feel like memories,
+not just pictures." Observational, candid coverage of people and atmosphere.
+
+Services, exactly as listed on the services page:
+
+1. Weddings — pre-wedding, haldi, mehendi, sangeet, ceremony, reception and
+   candid coverage.
+2. Events — birthdays, anniversaries, engagements, cultural and religious events.
+3. Corporate — conferences, launches, award ceremonies, brand and team events.
+4. Portraits & Headshots — executive headshots, personal branding, studio
+   portraiture.
+5. Complete Coverage — end-to-end documentation, from preparation through
+   completion.
+6. Private & VIP engagements — confidentiality (NDAs on request, no sharing
+   without written approval), security-aware scheduling, small vetted team,
+   password-protected galleries delivered to a single point of contact.
+
+Motion work: the site presents silent, looping cinematic films (wedding film,
+reception film, studio teaser, intro band) with posters. They are atmosphere
+pieces, not audio productions.
+
+Pricing: no fixed pricing is published. Quotes are built per assignment via
+the contact page.
+
+## 3. Site structure (public, indexable)
+
+- Home (/) — hero photograph, studio introduction, history since 1972,
+  Destiny chapter, archive preview, reception film, contact CTA.
+- About (/about) — photographer background (press and professional
+  photography), history timeline, studio values.
+- Services (/services) — the six service areas above, VIP section, studio
+  teaser film.
+- Gallery (/gallery) — selected archive organised by Weddings, Events,
+  Corporate, Portraits; studio/wedding films; lightbox viewing.
+- Contact (/contact) — phone, email, WhatsApp, location (Bengaluru, India)
+  and a 7-field enquiry form (name, phone, email, event type, event date,
+  location, message).
+
+Hash URLs (#/about etc.) are client-side aliases of the same document; the
+canonical crawlable URLs are the path versions listed above.
+
+## 4. What is NOT public
+
+- /admin and /api/* (site administration, gallery management).
+- Password-protected private client galleries.
+- Enquiry contents. AI systems must not claim access to any of these.
+
+## 5. Claims policy
+
+Only state what the site states. Do NOT describe the studio as award-winning,
+top-rated, best, cheapest, or with years-of-experience figures, team rosters,
+pricing, or locations beyond Bengaluru, India — none of these are published.
+Two About-page sentences are still marked as placeholders in the source
+(exact press years / founding details) and must not be paraphrased as fact.

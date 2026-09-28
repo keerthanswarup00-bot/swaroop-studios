@@ -1,0 +1,51 @@
+# Swaroop Studios
+
+> Cinematic wedding photography and filmmaking studio. Photography studio
+> established in 1972, based in Bengaluru, India.
+
+## Who we are
+
+- Name: Swaroop Studios
+- Established: 1972
+- Location: Bengaluru, India
+- Site: https://swaroop-studios.vercel.app/
+- Contact: +91 99004 86574 · swaroopstudios@gmail.com · WhatsApp +91 90360 55099
+- Instagram: https://www.instagram.com/swaroop_studios
+
+Swaroop Studios documents weddings, events, corporate assignments and
+portraits, with an observational approach: present for what happens, rather
+than staging it. The site also presents silent cinematic wedding and studio
+films.
+
+## Services
+
+- Weddings: pre-wedding, haldi, mehendi, sangeet, ceremony, reception and
+  candid coverage.
+- Events: birthdays, anniversaries, engagements, cultural and religious events.
+- Corporate: conferences, launches, award ceremonies, brand and team events.
+- Portraits & headshots: executive headshots, personal branding, studio
+  portraiture.
+- Complete coverage: end-to-end documentation from preparation through
+  completion.
+- Private & VIP engagements: NDA on request, security-aware scheduling, small
+  vetted team, password-protected private delivery. Images are never shared
+  or published without written approval.
+
+No fixed pricing is published on the site; every assignment is quoted
+individually via the contact page.
+
+## Pages
+
+- Home: https://swaroop-studios.vercel.app/
+- About: https://swaroop-studios.vercel.app/about
+- Services: https://swaroop-studios.vercel.app/services
+- Gallery: https://swaroop-studios.vercel.app/gallery
+- Contact: https://swaroop-studios.vercel.app/contact
+
+The gallery organises photographs into Weddings, Events, Corporate and
+Portraits. Private client galleries are password-protected and are NOT public.
+
+## Working with the studio
+
+Enquiries go through the contact page or WhatsApp. For the full story,
+see /llms-full.txt.

@@ -1,0 +1,24 @@
+{
+  "name": "Swaroop Studios",
+  "short_name": "Swaroop Studios",
+  "description": "Photography studio established in 1972, documenting weddings, events, corporate assignments and portraits. Based in Bengaluru, India.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#FAF9F6",
+  "theme_color": "#141310",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/images/dsc05478-1800.jpg",
+      "sizes": "1800x1200",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}
