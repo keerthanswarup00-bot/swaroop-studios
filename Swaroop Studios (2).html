@@ -1289,8 +1289,31 @@ function updateEditorialVideoButton(video){
   button.textContent = action+" film";
   button.setAttribute("aria-label", action+" "+(video.dataset.videoLabel || "video"));
 }
+function recoverEditorialVideo(video){
+  if(video.dataset.recovering === "true") return;
+  const active = video.dataset.activeSource || "";
+  const canFallbackToDesktop = active === "mobile" && video.dataset.desktopSrc && video.dataset.desktopSrc !== video.currentSrc;
+  video.dataset.recovering = "true";
+  video.dataset.sourceLoaded = "";
+  video.removeAttribute("src");
+  video.load();
+
+  if(canFallbackToDesktop){
+    video.src = video.dataset.desktopSrc;
+    video.dataset.sourceLoaded = "true";
+    video.dataset.activeSource = "desktop-fallback";
+    video.preload = "metadata";
+    video.load();
+    playEditorialVideo(video);
+  } else {
+    video.dataset.sourceLoaded = "";
+    video.dataset.activeSource = "";
+    updateEditorialVideoButton(video);
+  }
+  window.setTimeout(()=>{ delete video.dataset.recovering; },1500);
+}
 function loadEditorialVideo(video, force){
-  if(video.dataset.sourceLoaded) return true;
+  if(video.dataset.sourceLoaded && !force) return true;
   if(!force && prefersReducedMotion()) return false;
 
   // Safari/iOS is more reliable when the media element receives a direct src
@@ -1307,6 +1330,12 @@ function loadEditorialVideo(video, force){
   video.setAttribute("playsinline","");
   video.setAttribute("webkit-playsinline","");
   video.preload = "metadata";
+
+  if(!video.dataset.recoveryBound){
+    video.addEventListener("error", ()=> recoverEditorialVideo(video));
+    video.dataset.recoveryBound = "true";
+  }
+
   video.src = sourceUrl;
   video.dataset.sourceLoaded = "true";
   video.dataset.activeSource = isMobile ? "mobile" : "desktop";
@@ -1393,9 +1422,8 @@ function initEditorialVideos(){
     });
 
     video.addEventListener("stalled", ()=> {
-      if(!video.paused) return;
-      loadEditorialVideo(video, true);
-      playEditorialVideo(video);
+      if(video.dataset.recovering === "true") return;
+      recoverEditorialVideo(video);
     });
 
     updateEditorialVideoButton(video);
@@ -1542,7 +1570,9 @@ function localImageMarkup(image, options){
   const priority = settings.priority ? ` fetchpriority="high"` : "";
   const mobile = settings.mobile;
   const mobileSource = mobile ? `<source media="${MOBILE_SOURCE_MEDIA}" type="image/avif" srcset="${localAvifSrcset(mobile)}" sizes="${mobile.sizes || sizes}">` : "";
-  return `<picture class="local-photo local-photo-${image.id}">${mobileSource}<source type="image/avif" srcset="${localAvifSrcset(image)}" sizes="${sizes}"><img src="/assets/images/${image.id}-${fallbackWidth}.jpg" alt="${image.alt}" width="${image.width}" height="${image.height}" loading="${loading}" decoding="async"${priority}></picture>`;
+  const fallbackSrc = `/assets/images/${image.id}-${fallbackWidth}.jpg`;
+  const fallbackHandler = `this.onerror=null;this.closest('picture').querySelectorAll('source').forEach(function(source){source.remove();});this.src='${fallbackSrc}';`;
+  return `<picture class="local-photo local-photo-${image.id}" data-image-fallback="${fallbackSrc}">${mobileSource}<source type="image/avif" srcset="${localAvifSrcset(image)}" sizes="${sizes}"><img src="${fallbackSrc}" alt="${image.alt}" width="${image.width}" height="${image.height}" loading="${loading}" decoding="async"${priority} onerror="${fallbackHandler}"></picture>`;
 }
 function localGalleryImageId(doc){
   const id = doc.imageId || (!doc.assetId ? doc.id : "");
