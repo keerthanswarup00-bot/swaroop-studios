@@ -783,7 +783,7 @@
   </div>
   <section style="padding-top:0;">
     <div class="wrap about-grid">
-      <div class="ph" data-slot="photographer" data-local-image="dsc06933a" data-local-sizes="(max-width:860px) 100vw, 42vw" data-label="Portrait study"></div>
+      <div class="ph" data-slot="photographer" data-local-image="about-portrait" data-local-sizes="(max-width:860px) 100vw, 42vw" data-label="Portrait study"></div>
       <div>
         <blockquote>"Photographs should feel like memories, not just pictures."</blockquote>
         <p>Photography has never simply been about taking a picture. For Swaroop, it has always been about being present when something happens — noticing the expression, the gesture, the people and the atmosphere that might otherwise disappear.</p>
@@ -1506,6 +1506,7 @@ const LOCAL_IMAGES = {
   dsc05478: {width:7008,height:4672,alt:"Wedding couple during the ceremony"},
   "hero-mobile": {width:1664,height:2214,alt:"Wedding couple during the ceremony"},
   "intro-story": {width:4160,height:2774,alt:"A cinematic wedding portrait"},
+  "about-portrait": {width:1086,height:1448,alt:"Portrait study"},
   dsc06400: {width:4672,height:7008,alt:"Wedding couple beneath an architectural arch"},
   dsc06432: {width:6643,height:4429,alt:"Wedding couple in a cinematic floral portrait"},
   dsc06877a: {width:3965,height:5947,alt:"Bride photographed outdoors beside a structure"},
@@ -1520,7 +1521,25 @@ const LOCAL_IMAGES = {
   img_8913a: {width:3976,height:6093,alt:"Couple in formal wedding attire"},
   sdv08607a: {width:4600,height:5663,alt:"Two guests photographed at a wedding celebration"},
   sdv08628a: {width:4672,height:7008,alt:"Wedding couple posed beside floral décor"},
-  sdv09208a: {width:3177,height:4416,alt:"Guest posed amid wedding flowers and décor"}
+  sdv09208a: {width:3177,height:4416,alt:"Guest posed amid wedding flowers and décor"},
+  "portrait-01": {width:2774,height:4160,alt:"Studio portrait in a vertical frame"},
+  "portrait-02": {width:2774,height:4160,alt:"Studio portrait in a vertical frame"},
+  "portrait-03": {width:2774,height:4160,alt:"Studio portrait in a vertical frame"},
+  "portrait-04": {width:2774,height:4160,alt:"Studio portrait in a vertical frame"},
+  "portrait-05": {width:2774,height:4160,alt:"Studio portrait in a vertical frame"},
+  "portrait-06": {width:2774,height:4160,alt:"Studio portrait in a vertical frame"},
+  "portrait-07": {width:4160,height:2774,alt:"Studio portrait in a horizontal frame"},
+  "portrait-08": {width:2774,height:4160,alt:"Studio portrait in a vertical frame"},
+  "portrait-09": {width:2774,height:4160,alt:"Studio portrait in a vertical frame"},
+  "portrait-10": {width:2774,height:4160,alt:"Studio portrait in a vertical frame"},
+  "portrait-11": {width:4160,height:2774,alt:"Studio portrait in a horizontal frame"},
+  "portrait-12": {width:2774,height:4160,alt:"Studio portrait in a vertical frame"},
+  "portrait-13": {width:2774,height:4160,alt:"Studio portrait in a vertical frame"},
+  "portrait-14": {width:4160,height:2774,alt:"Studio portrait in a horizontal frame"},
+  "portrait-15": {width:4160,height:2774,alt:"Studio portrait in a horizontal frame"},
+  "portrait-16": {width:4160,height:2774,alt:"Studio portrait in a horizontal frame"},
+  "portrait-17": {width:2774,height:4160,alt:"Studio portrait in a vertical frame"},
+  "portrait-18": {width:2774,height:4160,alt:"Studio portrait in a vertical frame"}
 };
 const LOCAL_GALLERY = [
   {id:"06",category:"wedding",title:"A story in three moments",location:"Wedding"},
@@ -1555,6 +1574,24 @@ const LOCAL_GALLERY = [
   {id:"dsc04330a",category:"portrait",title:"Ceremonial portrait",location:"Portraiture"},
   {id:"dsc08729a",category:"portrait",title:"Bride in ceremonial attire",location:"Portraiture"},
   {id:"sdv09208a",category:"portrait",title:"Guest among wedding flowers",location:"Portraiture"},
+  {id:"portrait-01",category:"portrait",title:"A quiet portrait",location:"Portraiture"},
+  {id:"portrait-02",category:"portrait",title:"In the light",location:"Portraiture"},
+  {id:"portrait-03",category:"portrait",title:"Portrait study",location:"Portraiture"},
+  {id:"portrait-04",category:"portrait",title:"A calm frame",location:"Portraiture"},
+  {id:"portrait-05",category:"portrait",title:"Between moments",location:"Portraiture"},
+  {id:"portrait-06",category:"portrait",title:"Soft tones",location:"Portraiture"},
+  {id:"portrait-07",category:"portrait",title:"A wider view",location:"Portraiture"},
+  {id:"portrait-08",category:"portrait",title:"Stillness",location:"Portraiture"},
+  {id:"portrait-09",category:"portrait",title:"Held in frame",location:"Portraiture"},
+  {id:"portrait-10",category:"portrait",title:"Studio portrait",location:"Portraiture"},
+  {id:"portrait-11",category:"portrait",title:"A study in light",location:"Portraiture"},
+  {id:"portrait-12",category:"portrait",title:"Quiet confidence",location:"Portraiture"},
+  {id:"portrait-13",category:"portrait",title:"A moment of ease",location:"Portraiture"},
+  {id:"portrait-14",category:"portrait",title:"Framed in light",location:"Portraiture"},
+  {id:"portrait-15",category:"portrait",title:"A wider frame",location:"Portraiture"},
+  {id:"portrait-16",category:"portrait",title:"Editorial portrait",location:"Portraiture"},
+  {id:"portrait-17",category:"portrait",title:"A gentle portrait",location:"Portraiture"},
+  {id:"portrait-18",category:"portrait",title:"Close to the light",location:"Portraiture"},
 ];
 const MOBILE_SOURCE_MEDIA = "(max-width:640px)";
 function localImageWidths(image){
