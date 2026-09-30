@@ -319,6 +319,79 @@
   .link-arrow{display:inline-block; margin-top:26px; font-size:13.5px; font-weight:600; letter-spacing:.03em; border-bottom:1px solid var(--orange); color:var(--orange); padding-bottom:2px; cursor:pointer;}
   @media(max-width:860px){.intro-grid{grid-template-columns:1fr; gap:32px;}}
 
+  /* ---------- ABOUT — "1972 to today." ARCHIVE SLIDESHOW ----------
+     The original .ph placeholder stays exactly where it was (same slot, same 4:5 box, same admin
+     replace hook), but it now crossfades through the archive on a 4s loop. Every slide sits in the
+     same grid cell, so swapping frames never reflows the page. Only the opacity of one composited
+     layer changes per tick — no layout, no repaint of the surrounding text. */
+  .intro-slideshow{display:block; aspect-ratio:4/5; contain:paint;}
+  .intro-slideshow .slide-stack{position:absolute; inset:0; display:grid;}
+  .intro-slideshow .slide-stack > *{grid-area:1 / 1;}
+  .intro-slideshow .slide{
+    position:relative; overflow:hidden;
+    opacity:0; visibility:hidden;
+    /* The 0s visibility step is delayed by the fade so a leaving frame stays painted for its
+       full fade-out, then drops out of the layer tree without a flash. */
+    transition:opacity .9s cubic-bezier(.4,0,.2,1), visibility 0s linear .9s;
+  }
+  .intro-slideshow .slide.is-active{opacity:1; visibility:visible; transition-delay:0s;}
+  .intro-slideshow .slide picture{position:absolute; inset:0; width:100%; height:100%;}
+  .intro-slideshow .slide img{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; object-position:50% 50%;
+  }
+  /* Dot strip doubles as the countdown: the active rule fills over exactly one interval, driven by
+     the same --slide-interval custom property the timer reads, so bar and image never drift. */
+  .intro-slideshow .slide-dots{
+    position:absolute; z-index:3; left:0; right:0; bottom:10px;
+    display:flex; justify-content:center; align-items:center; gap:4px; margin:0;
+  }
+  .intro-slideshow .slide-dots button{
+    position:relative; flex:0 0 auto; width:26px; height:22px; margin:0; padding:0;
+    border:0; background:none; cursor:pointer; -webkit-tap-highlight-color:transparent;
+  }
+  /* The rule is centred in the button rather than pinned to a fixed offset, so the tap target can
+     grow on touch devices without moving the visible mark. */
+  .intro-slideshow .slide-dots button::before{
+    content:''; position:absolute; left:4px; right:4px; top:50%; margin-top:-1px; height:2px;
+    background:rgba(255,255,255,.34); border-radius:2px;
+  }
+  .intro-slideshow .slide-dots button::after{
+    content:''; position:absolute; left:4px; right:4px; top:50%; margin-top:-1px; height:2px;
+    background:#fff; border-radius:2px; transform:scaleX(0); transform-origin:left center;
+  }
+  .intro-slideshow .slide-dots button.is-active::after{
+    animation:slide-progress var(--slide-interval,4000ms) linear forwards paused;
+  }
+  .intro-slideshow.is-running .slide-dots button.is-active::after{animation-play-state:running;}
+  .intro-slideshow .slide-dots button:hover::before{background:rgba(255,255,255,.6);}
+  .intro-slideshow .slide-dots button:disabled{cursor:default;}
+  .intro-slideshow .slide-dots button:disabled::before{background:rgba(255,255,255,.2);}
+  .intro-slideshow .slide-dots button:focus-visible{outline:2px solid #fff; outline-offset:2px; border-radius:3px;}
+  @keyframes slide-progress{from{transform:scaleX(0);}to{transform:scaleX(1);}}
+  /* Bottom scrim keeps the dots legible over a pale frame. The hatch pattern the placeholder used
+     is already suppressed by .has-image, so this reuses the ::before slot without extra markup. */
+  .ph.intro-slideshow.has-image::before{
+    content:''; display:block; position:absolute; z-index:2; left:0; right:0; bottom:0; height:64px;
+    background:linear-gradient(180deg,rgba(10,10,9,0) 0%,rgba(10,10,9,.46) 100%);
+    pointer-events:none;
+  }
+  /* Phone: a slightly shorter fade reads smoother on a small panel, and the strip clears the
+     home-indicator gutter. */
+  @media(max-width:640px){
+    .intro-slideshow .slide{transition-duration:.75s, 0s; transition-delay:0s, .75s;}
+    .intro-slideshow .slide.is-active{transition-delay:0s,0s;}
+    .intro-slideshow .slide-dots{bottom:6px;}
+    .intro-slideshow .slide-dots button{width:34px; height:32px;}
+    .intro-slideshow .slide-dots button::before,
+    .intro-slideshow .slide-dots button::after{left:5px; right:5px;}
+  }
+  /* Reduced motion: the frames still change, they just swap instantly instead of fading. */
+  @media(prefers-reduced-motion:reduce){
+    .intro-slideshow .slide{transition:none;}
+    .intro-slideshow .slide-dots button.is-active::after{animation:none; transform:scaleX(1);}
+  }
+
   .svc-head{max-width:760px; margin-bottom:48px;}
   /* Services uses the full content width with a balanced editorial rhythm. */
   .svc-grid{display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); gap:14px;}
@@ -831,7 +904,7 @@
         <p><strong>The Studio</strong> — Photography expanded into portraits, weddings, events, corporate assignments and family photography.</p>
         <p><strong>Today</strong> — The studio combines decades of experience with modern photography.</p>
       </div>
-      <div class="ph" data-slot="about-story" data-local-image="dsc03239" data-local-sizes="(max-width:860px) 100vw, 58vw" data-local-priority="true" data-label="Details and atmosphere"></div>
+      <div class="ph intro-slideshow" data-slot="about-story" data-slideshow="about-story-01,about-story-02,about-story-03,about-story-04,about-story-05" data-local-image="about-story-01" data-local-sizes="(max-width:860px) 92vw, (max-width:1240px) 44vw, 40vw" data-local-priority="true" data-slide-interval="4000" data-label="Details and atmosphere"></div>
     </div>
   </section>
   <section class="cta" id="about-contact">
@@ -1319,7 +1392,7 @@ function render_route(){
   if(anchor){ setTimeout(()=>{ const el=document.getElementById(anchor); if(el) el.scrollIntoView({behavior:"smooth"}); },50); }
 }
 window.addEventListener("hashchange", render_route);
-window.addEventListener("DOMContentLoaded", ()=>{ initServiceCards(); initEditorialVideos(); render_route(); applyContact(); buildLdJson(); renderLocalImages(); loadSiteImages(); loadGallery(); loadFilm(); initReveal(); initNavbarScroll(); });
+window.addEventListener("DOMContentLoaded", ()=>{ initServiceCards(); initEditorialVideos(); render_route(); applyContact(); buildLdJson(); renderLocalImages(); initSlideshows(); loadSiteImages(); loadGallery(); loadFilm(); initReveal(); initNavbarScroll(); });
 
 /* ---------- ONE ORCHESTRATED REVEAL: hero load only ---------- */
 function initReveal(){
@@ -1569,6 +1642,11 @@ const LOCAL_IMAGES = {
   "hero-mobile": {width:1664,height:2214,alt:"Wedding couple during the ceremony"},
   "intro-story": {width:4160,height:2774,alt:"A cinematic wedding portrait"},
   "about-portrait": {width:1086,height:1448,alt:"Portrait study"},
+  "about-story-01": {width:1122,height:1402,alt:"Studio archive photograph from the Swaroop Studios collection"},
+  "about-story-02": {width:1122,height:1402,alt:"Studio archive photograph from the Swaroop Studios collection"},
+  "about-story-03": {width:1122,height:1402,alt:"Studio archive photograph from the Swaroop Studios collection"},
+  "about-story-04": {width:1122,height:1402,alt:"Studio archive photograph from the Swaroop Studios collection"},
+  "about-story-05": {width:1122,height:1402,alt:"Studio archive photograph from the Swaroop Studios collection"},
   dsc06400: {width:4672,height:7008,alt:"Wedding couple beneath an architectural arch"},
   dsc06432: {width:6643,height:4429,alt:"Wedding couple in a cinematic floral portrait"},
   dsc06877a: {width:3965,height:5947,alt:"Bride photographed outdoors beside a structure"},
@@ -1783,6 +1861,194 @@ function renderLocalImages(){
   });
 }
 
+/* ---------- ARCHIVE SLIDESHOW ("1972 to today.") ----------
+   Runs inside the existing About placeholder. A plain recursive setTimeout drives the loop rather
+   than setInterval, so a tick can never queue up behind a slow fade, and the loop wraps forever
+   without a pause. Only frame one is eager; the rest are appended during idle time so the About
+   page never competes with the hero for bandwidth. Autoplay yields to reduced-motion, data-saver,
+   an off-screen container (which also covers the hash router hiding the page), a backgrounded tab
+   and a held pointer — the dots stay usable in every one of those cases. */
+const SLIDE_INTERVAL_FLOOR = 1500;
+
+function slideImageIds(el){
+  const listed = (el.dataset.slideshow||"").split(",").map(s=>s.trim()).filter(Boolean);
+  const ids = listed.filter(id=>LOCAL_IMAGES[id]);
+  /* The slot's own image is only appended when the slideshow set missed it entirely. Pointing
+     data-local-image at the first frame (rather than a sixth image) keeps the no-JS fallback and
+     the admin slot showing the same picture the slideshow opens on. */
+  const slotId = el.dataset.localImage;
+  if(!ids.length && slotId && LOCAL_IMAGES[slotId]) ids.push(slotId);
+  return ids;
+}
+function slideAlt(image, position, total){
+  const base = image.alt || "Swaroop Studios archive photograph";
+  return base+" — photograph "+(position+1)+" of "+total;
+}
+function slideFrameMarkup(image, sizes, priority, position, total, active){
+  /* Only the active frame is exposed to assistive tech — the others carry aria-hidden — so the
+     alternative text can name the frame's place in the sequence without being read five times.
+     Frame one ships already marked active so it paints on the first frame instead of fading up. */
+  const tagged = {...image, alt: slideAlt(image,position,total)};
+  return '<div class="slide'+(active?' is-active':'')+'" aria-hidden="'+(active?"false":"true")+'">'
+    + localImageMarkup(tagged,{sizes,priority}) + '</div>';
+}
+function idleTask(fn){
+  if(typeof window.requestIdleCallback === "function") return window.requestIdleCallback(fn,{timeout:600});
+  return window.setTimeout(fn,80);
+}
+
+function initSlideshows(){
+  document.querySelectorAll("[data-slideshow]").forEach(el=>{
+    if(el.dataset.slideshowReady === "true") return;
+    const ids = slideImageIds(el);
+    if(ids.length < 2) return;                 /* one frame is not a slideshow — leave the .ph alone */
+    el.dataset.slideshowReady = "true";
+
+    const sizes = el.dataset.localSizes || "100vw";
+    const interval = Math.max(SLIDE_INTERVAL_FLOOR, parseInt(el.dataset.slideInterval,10) || 4000);
+    el.classList.add("has-image");
+    el.style.setProperty("--slide-interval", interval+"ms");
+
+    const stack = document.createElement("div");
+    stack.className = "slide-stack";
+    stack.innerHTML = slideFrameMarkup({...LOCAL_IMAGES[ids[0]],id:ids[0]},sizes,el.dataset.localPriority==="true",0,ids.length,true);
+
+    const dots = document.createElement("div");
+    dots.className = "slide-dots";
+    dots.setAttribute("role","group");
+    dots.setAttribute("aria-label","Choose an archive photograph");
+    const buttons = ids.map((_,i)=>{
+      const button = document.createElement("button");
+      button.type = "button";
+      button.setAttribute("aria-label","Show photograph "+(i+1)+" of "+ids.length);
+      /* Dots for frames that have not been appended yet stay disabled rather than lying about
+         what a click will do; hydrateOne() enables each one as its frame lands. */
+      if(i > 0) button.disabled = true;
+      dots.appendChild(button);
+      return button;
+    });
+
+    el.append(stack,dots);
+
+    const slides = [stack.children[0]];
+    let index = 0;
+    let loaded = 1;                            /* slides appended so far */
+    let timer = 0;
+    let inView = false;
+    let tabHidden = false;
+    let heldPointer = false;
+    let wasRunning = false;
+    let stopped = false;
+
+    function autoplayBlocked(){
+      return prefersReducedMotion() || shouldConserveVideoData();
+    }
+    /* One recursive timeout = the loop. Cleared and rebuilt on every state change, so pausing is
+       immediate and resuming always restarts a full interval rather than firing a stale one. */
+    function running(){
+      return loaded > 0 && inView && !tabHidden && !heldPointer && !autoplayBlocked();
+    }
+    function restartProgress(){
+      const button = buttons[index];
+      if(!button) return;
+      button.classList.remove("is-active");
+      void button.offsetWidth;                 /* force reflow so the fill animation replays from 0 */
+      button.classList.add("is-active");
+      button.setAttribute("aria-current","true");
+    }
+    function show(next){
+      next = ((next % loaded) + loaded) % loaded;
+      if(next === index){ restartProgress(); return; }
+      slides[index].classList.remove("is-active");
+      slides[index].setAttribute("aria-hidden","true");
+      buttons[index].classList.remove("is-active");
+      buttons[index].removeAttribute("aria-current");
+      index = next;
+      slides[index].classList.add("is-active");
+      slides[index].setAttribute("aria-hidden","false");
+      restartProgress();
+    }
+    /* Decode the incoming frame as soon as the countdown starts rather than at the fade, so the
+       crossfade never reveals an unpainted layer. */
+    function prime(){
+      const next = slides[(index+1) % loaded];
+      const img = next && next.querySelector("img");
+      if(img && !img.complete && typeof img.decode === "function") img.decode().catch(()=>{});
+    }
+    function sync(){
+      if(stopped) return;
+      const shouldRun = running();
+      window.clearTimeout(timer);
+      timer = 0;
+      el.classList.toggle("is-running",shouldRun);
+      if(shouldRun){
+        if(!wasRunning) restartProgress();
+        prime();
+        timer = window.setTimeout(()=>{ show(index+1); sync(); }, interval);
+      }
+      wasRunning = shouldRun;
+    }
+    function hydrateOne(){
+      if(loaded >= ids.length) return false;
+      const id = ids[loaded];
+      const image = LOCAL_IMAGES[id];
+      if(!image){ loaded++; return false; }
+      /* slideFrameMarkup already emits the .slide wrapper, so append its markup rather than
+         wrapping it in a second element — a nested .slide collapses the percentage height the
+         frame relies on and leaves the image zero-height. */
+      stack.insertAdjacentHTML("beforeend", slideFrameMarkup({...image,id},sizes,false,loaded,ids.length,false));
+      slides.push(stack.lastElementChild);
+      loaded++;
+      buttons[loaded-1].removeAttribute("disabled");
+      return true;
+    }
+    /* Staged across idle callbacks so the four follow-up frames never compete with the LCP hero
+     for bandwidth, one append per idle window keeps the main thread free for scrolling. */
+    function hydrate(){
+      hydrateOne();
+      if(loaded < ids.length) idleTask(hydrate);
+    }
+    /* Any sign of intent (a tap, a hover, keyboard focus on the strip) front-runs the remaining
+     frames so a dot is never a dead end. */
+    function hydrateAll(){ while(hydrateOne()){} }
+
+    restartProgress();
+    if("IntersectionObserver" in window){
+      const observer = new IntersectionObserver(entries=>{
+        inView = entries.some(entry=>entry.isIntersecting);
+        sync();
+      },{threshold:0.2});
+      observer.observe(el);
+      /* An admin upload replaces the slot's contents, so hand the observer and the timer back at
+         that point rather than leaving a 4s timeout waking up against a detached stack forever. */
+      el.slideshowTeardown = ()=>{ stopped = true; window.clearTimeout(timer); timer = 0; observer.disconnect(); };
+    } else {
+      inView = true;
+      el.slideshowTeardown = ()=>{ stopped = true; window.clearTimeout(timer); timer = 0; };
+    }
+
+    document.addEventListener("visibilitychange", ()=>{ tabHidden = document.hidden; sync(); });
+    el.addEventListener("pointerdown", ()=>{ heldPointer = true; hydrateAll(); sync(); }, {passive:true});
+    const release = ()=>{ if(!heldPointer) return; heldPointer = false; sync(); };
+    el.addEventListener("pointerleave", release, {passive:true});
+    el.addEventListener("pointerup", release, {passive:true});
+    el.addEventListener("pointercancel", release, {passive:true});
+    dots.addEventListener("pointerenter", hydrateAll, {passive:true});
+    dots.addEventListener("focusin", hydrateAll);
+    dots.addEventListener("click", event=>{
+      const button = event.target.closest("button");
+      if(!button || button.disabled) return;
+      const next = buttons.indexOf(button);
+      if(next < 0 || next >= loaded) return;
+      show(next);
+      sync();
+    });
+
+    idleTask(hydrate);
+    sync();
+  });
+}
+
 const SLOTS = [
   {key:"hero", label:"Home — Hero"},
   {key:"intro", label:"Home — Our Story"},
@@ -1891,6 +2157,16 @@ function paintSlot(key, assetId, priority){
   document.querySelectorAll('[data-slot="'+key+'"]').forEach(el=>{
     const src = "/_blob/"+assetId;
     el.classList.add("has-image");
+    /* An admin upload wins over a slideshow: tear the loop down and clear the slideshow classes so
+       the scrim and the dot strip go with it and the slot renders as the single photograph it
+       now is. */
+    if(el.dataset.slideshowReady==="true"){
+      el.dataset.slideshowReady="false";
+      if(typeof el.slideshowTeardown === "function") el.slideshowTeardown();
+      el.slideshowTeardown = null;
+      el.classList.remove("intro-slideshow","is-running");
+      el.style.removeProperty("--slide-interval");
+    }
     if(key==="hero") el.style.setProperty("--hero-image",`url("${src}")`);
     el.innerHTML = '<img src="'+src+'" alt=""'+(priority?' loading="eager" fetchpriority="high"':' loading="lazy" decoding="async"')+'>';
   });
