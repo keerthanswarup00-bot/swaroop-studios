@@ -9,4 +9,4 @@ Disallow: /api/
 # Public media must stay crawlable (rendering + image indexing).
 Allow: /assets/
 
-Sitemap: https://swaroop-studios.vercel.app/sitemap.xml
+Sitemap: https://www.swaroopstudios.com/sitemap.xml
