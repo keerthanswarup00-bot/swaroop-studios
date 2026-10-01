@@ -10,7 +10,7 @@
 - Client-side hash routing (`#/home`, `#/about`, `#/services`, `#/gallery`, `#/contact`); `/admin` detected via `location.pathname`.
 - Images: pre-generated AVIF + JPEG committed to `assets/images/`; videos: 8 MP4s in `assets/videos/` with posters in `assets/posters/`.
 - Admin/gallery API: `api/gallery.js` (serverless, GitHub-backed); seed data in `data/gallery.json`.
-- Production origin: `https://swaroop-studios.vercel.app` (no custom domain found in repo, env, Vercel config, or content). Canonicals use this origin via the `SITE_ORIGIN` constant in-page.
+- Production origin: `https://www.swaroopstudios.com` (no custom domain found in repo, env, Vercel config, or content). Canonicals use this origin via the `SITE_ORIGIN` constant in-page.
 
 ## 2. Existing SEO implementation (before this work)
 

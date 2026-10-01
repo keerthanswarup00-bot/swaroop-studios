@@ -1,7 +1,7 @@
 # Swaroop Studios — full machine-readable reference
 
 > Photography studio established in 1972, based in Bengaluru, India.
-> Canonical site: https://swaroop-studios.vercel.app/
+> Canonical site: https://www.swaroopstudios.com/
 
 ## 1. Entity
 
