@@ -43,7 +43,7 @@ crawlable links; per-route titles/descriptions/canonicals via `ROUTE_SEO`.
 Swaroop Studios · established 1972 · Bengaluru, India ·
 +91 99004 86574 · swaroopstudios@gmail.com · WhatsApp +91 90360 55099 ·
 https://www.instagram.com/swaroop_studios ·
-https://swaroop-studios.vercel.app/ (+ `/about`, `/services`, `/gallery`, `/contact`).
+https://www.swaroopstudios.com/ (+ `/about`, `/services`, `/gallery`, `/contact`).
 
 ## 7. What AI systems can safely infer
 
