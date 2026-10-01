@@ -1511,8 +1511,8 @@ let editorialVideosInitialized=false;
 let activeEditorialVideo=null;
 let editorialPlaybackSuppressed=false;
 const NETWORK_EMPTY=3;
-const PLAY_AT=0.5;
-const PAUSE_BELOW=0.15;
+const PLAY_AT=0.15;
+const PAUSE_BELOW=0.05;
 function prefersReducedMotion(){ return window.matchMedia("(prefers-reduced-motion: reduce)").matches; }
 function shouldConserveVideoData(){
   const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
@@ -1616,8 +1616,7 @@ function playVideo(video){
   delete video.dataset.autoplayBlocked;
   delete video.dataset.playRetried;
 
-  const request = video.play();
-  if(request && typeof request.catch === "function") request.catch(error=> recoverAutoplay(video, error));
+  queueEditorialVideoPlay(video);
   updateEditorialVideoButton(video);
 }
 function pauseVideo(video){
@@ -1626,6 +1625,28 @@ function pauseVideo(video){
   video.pause();
   if(activeEditorialVideo === video) activeEditorialVideo = null;
   updateEditorialVideoButton(video);
+}
+function queueEditorialVideoPlay(video){
+  if(!video || video.dataset.wantsPlay !== "true" || document.hidden) return;
+  const attempt=()=>{
+    if(video.dataset.wantsPlay !== "true" || document.hidden) return;
+    const section=video.closest("[data-video-section]");
+    if(!editorialSectionIsInView(section) || video.dataset.userPaused === "true") return;
+    markAutoplaySafe(video);
+    const request=video.play();
+    if(request && typeof request.catch === "function"){
+      request.catch(error=>{
+        if(error && error.name === "AbortError") return;
+        recoverAutoplay(video,error);
+      });
+    }
+  };
+  attempt();
+  [50,180,500].forEach(delay=>{
+    window.setTimeout(()=>{
+      if(video.dataset.wantsPlay === "true" && video.paused) attempt();
+    },delay);
+  });
 }
 function toggleEditorialVideo(video){
   if(!video.paused){
@@ -1698,8 +1719,10 @@ function initEditorialVideos(){
     /* canplay is a retry trigger, never a gate. It only ever restarts a video the observer
        already decided should be running, so it can never start playback on a section that
        has not reached the visibility threshold. */
-    video.addEventListener("canplay", ()=>{
-      if(video.dataset.wantsPlay === "true" && video.paused) playVideo(video);
+    ["loadedmetadata","loadeddata","canplay","canplaythrough"].forEach(eventName=>{
+      video.addEventListener(eventName, ()=>{
+        if(video.dataset.wantsPlay === "true" && video.paused) queueEditorialVideoPlay(video);
+      });
     });
   });
 
@@ -1722,10 +1745,16 @@ function initEditorialVideos(){
       entries.forEach(entry=>{
         const video = entry.target.querySelector(".motion-video");
         if(!video) return;
-        if(entry.intersectionRatio >= PLAY_AT) playVideo(video);
-        else if(entry.intersectionRatio <= PAUSE_BELOW) pauseVideo(video);
+        if(entry.isIntersecting && entry.intersectionRatio >= PLAY_AT){
+          playVideo(video);
+          window.setTimeout(()=>{
+            if(editorialSectionIsInView(entry.target) && video.paused && video.dataset.wantsPlay === "true") playVideo(video);
+          },120);
+        }else if(!entry.isIntersecting || entry.intersectionRatio <= PAUSE_BELOW){
+          pauseVideo(video);
+        }
       });
-    },{root:null, rootMargin:"0px", threshold:[0, PAUSE_BELOW, PLAY_AT]});
+    },{root:null, rootMargin:"0px", threshold:[0, PAUSE_BELOW, PLAY_AT, 0.5]});
 
     sections.forEach(section=>{
       editorialPrefetchObserver.observe(section);
