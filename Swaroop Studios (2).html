@@ -1496,15 +1496,27 @@ function initReveal(){
 }
 function revealNew(){ /* no-op: per-card scroll reveal intentionally removed — see design notes */ }
 
-let editorialVideoObserver=null;
-let editorialVideoPrefetchObserver=null;
+/* ---------- EDITORIAL VIDEO: TWO-STAGE INTERSECTIONOBSERVER ----------
+   Stage A (prefetch, rootMargin 75%) assigns the source and starts buffering while the
+   section is still off screen. Stage B (threshold 0.5) plays and pauses. The stages never
+   share a callback, and a source is assigned exactly once per element, so scrolling in
+   never re-runs load() and never throws away a buffer the browser already filled.
+
+   The previous controller loaded and played in the same observer callback, forced
+   preload="metadata", re-ran load() on every intersect, and rebuilt the element on
+   "stalled" — so the poster stayed on screen while the source downloaded from byte 0. */
+let editorialPrefetchObserver=null;
+let editorialPlaybackObserver=null;
 let editorialVideosInitialized=false;
-
-const VIDEO_ACTIVE_RATIO = 0.5;
-const VIDEO_PREFETCH_MARGIN = "60% 0px";
-
-function prefersReducedMotion(){
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let activeEditorialVideo=null;
+let editorialPlaybackSuppressed=false;
+const NETWORK_EMPTY=3;
+const PLAY_AT=0.5;
+const PAUSE_BELOW=0.15;
+function prefersReducedMotion(){ return window.matchMedia("(prefers-reduced-motion: reduce)").matches; }
+function shouldConserveVideoData(){
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  return !!(connection && (connection.saveData || connection.effectiveType==="slow-2g" || connection.effectiveType==="2g"));
 }
 function editorialSectionIsActive(section){
   const page = section && section.closest(".page");
@@ -1516,7 +1528,17 @@ function editorialSectionIsInView(section){
   const viewportH = window.innerHeight || document.documentElement.clientHeight;
   return rect.top < viewportH && rect.bottom > 0;
 }
-function setEditorialVideoAttributes(video){
+function updateEditorialVideoButton(video){
+  const section = video.closest("[data-video-section]");
+  const button = section && section.querySelector("[data-video-toggle]");
+  if(!button) return;
+  const action = video.paused ? "Play" : "Pause";
+  button.textContent = action+" film";
+  button.setAttribute("aria-label", action+" "+(video.dataset.videoLabel || "video"));
+}
+/* Safari and iOS only grant autoplay when mutedness and inline playback are established on
+   both the IDL properties and the attributes, so both are set before every play() call. */
+function markAutoplaySafe(video){
   video.muted = true;
   video.defaultMuted = true;
   video.autoplay = true;
@@ -1526,121 +1548,109 @@ function setEditorialVideoAttributes(video){
   video.setAttribute("playsinline","");
   video.setAttribute("webkit-playsinline","");
 }
-function updateEditorialVideoButton(video){
-  const section = video && video.closest("[data-video-section]");
-  const button = section && section.querySelector("[data-video-toggle]");
-  if(!button) return;
-  const action = video.paused ? "Play" : "Pause";
-  button.textContent = action+" film";
-  button.setAttribute("aria-label", action+" "+(video.dataset.videoLabel || "video"));
+/* The markup ships autoplay so the film still plays with JavaScript disabled, but that same
+   attribute makes the browser start playing the instant a source is attached — WebKit did
+   exactly that at a section ratio of -0.45, well below the fold. Preparation therefore takes
+   ownership of the element and holds autoplay off until the observer asks for playback. */
+function holdAutoplayForPrefetch(video){
+  video.autoplay = false;
+  video.removeAttribute("autoplay");
 }
-function recoverEditorialVideo(video){
-  if(video.dataset.recovering==="true") return;
-  video.dataset.recovering="true";
-
-  const desktop = video.dataset.desktopSrc || "";
-  const mobile = video.dataset.mobileSrc || "";
-  const current = video.dataset.activeSource || "";
-  const fallback = current==="mobile" ? desktop : "";
-  if(!fallback){
-    video.dataset.sourceLoaded="";
-    video.dataset.activeSource="";
-    video.removeAttribute("src");
-    video.load();
-    updateEditorialVideoButton(video);
-    window.setTimeout(()=>{ delete video.dataset.recovering; },1200);
-    return;
-  }
-
-  setEditorialVideoAttributes(video);
-  video.dataset.sourceLoaded="";
-  video.removeAttribute("src");
-  video.load();
-  video.src=fallback;
-  video.dataset.sourceLoaded="true";
-  video.dataset.activeSource="desktop-fallback";
-  video.preload="auto";
-  video.load();
-
-  const section=video.closest("[data-video-section]");
-  if(section && editorialSectionIsInView(section)){
-    void video.play().catch(()=>{});
-  }
-  window.setTimeout(()=>{ delete video.dataset.recovering; },1500);
+function editorialSourceFor(video){
+  const isMobile = window.matchMedia("(max-width:860px)").matches;
+  const mobile = video.dataset.mobileSrc;
+  const desktop = video.dataset.desktopSrc;
+  if(isMobile || shouldConserveVideoData()) return mobile || desktop || "";
+  return desktop || mobile || "";
 }
-function resolveEditorialVideoSource(video){
-  const isMobile=window.matchMedia("(max-width:860px)").matches;
-  return {
-    url:isMobile ? video.dataset.mobileSrc : video.dataset.desktopSrc,
-    mode:isMobile ? "mobile" : "desktop"
-  };
-}
-function loadEditorialVideo(video, active){
-  if(prefersReducedMotion()) return false;
-  if(video.dataset.sourceLoaded==="true"){
-    if(active) video.preload="auto";
-    return true;
-  }
+/* PREFETCH STAGE. Idempotent: assigns the source once, then lets the browser buffer. */
+function prepareVideo(video){
+  if(!video || video.dataset.prepared === "true") return true;
+  const sourceUrl = editorialSourceFor(video);
+  if(!sourceUrl) return false;
 
-  const resolved=resolveEditorialVideoSource(video);
-  if(!resolved.url) return false;
-
-  setEditorialVideoAttributes(video);
-  video.preload=active ? "auto" : "metadata";
-  video.src=resolved.url;
-  video.dataset.sourceLoaded="true";
-  video.dataset.activeSource=resolved.mode;
+  holdAutoplayForPrefetch(video);
+  video.preload = "auto";
+  video.src = sourceUrl;
+  video.dataset.prepared = "true";
+  video.dataset.activeSource = sourceUrl;
   video.load();
-
-  if(!video.dataset.recoveryBound){
-    video.addEventListener("error",()=>recoverEditorialVideo(video));
-    video.dataset.recoveryBound="true";
-  }
   return true;
 }
-function playEditorialVideo(video){
-  const section=video.closest("[data-video-section]");
-  if(!section || !editorialSectionIsInView(section) || document.hidden || prefersReducedMotion()) return;
-  if(video.dataset.userPaused==="true") return;
-
-  setEditorialVideoAttributes(video);
-  video.preload="auto";
-
-  // Match Destiny's player: request playback as soon as the section is active.
-  // The browser/media element handles the actual readiness timing.
-  const request=video.play();
-  if(request && typeof request.catch==="function"){
-    request.catch(()=>{
-      video.dataset.autoplayBlocked="true";
-      updateEditorialVideoButton(video);
-    });
+/* Bounded Safari recovery. One reload when nothing was ever fetched, one replay, then stop.
+   No timers and no loop: a rejected muted autoplay will not resolve on its own. */
+function recoverAutoplay(video, error){
+  if(!error) return;
+  /* A pause() issued while play() was still pending rejects that promise with AbortError.
+     Retrying here would undo the pause and restart a hidden, off screen or user-paused
+     video — the retry must only ever run for a genuine autoplay refusal. */
+  if(error && error.name === "AbortError") return;
+  if(video.dataset.wantsPlay !== "true") return;
+  if(document.hidden) return;
+  if(window.__EDITORIAL_VIDEO_DEBUG && typeof console !== "undefined" && console.debug){
+    console.debug("[editorial-video] play() rejected", {src: video.currentSrc || video.src, error, readyState: video.readyState, networkState: video.networkState});
   }
+  if(video.dataset.playRetried === "true"){
+    video.dataset.autoplayBlocked = "true";
+    updateEditorialVideoButton(video);
+    return;
+  }
+  video.dataset.playRetried = "true";
+  if(video.networkState === NETWORK_EMPTY) video.load();
+  const retry = video.play();
+  if(retry && typeof retry.catch === "function") retry.catch(()=>{
+    video.dataset.autoplayBlocked = "true";
+    updateEditorialVideoButton(video);
+  });
 }
-function pauseEditorialVideo(video, reset){
-  if(!video) return;
-  video.pause();
-  if(reset){
-    try{ video.currentTime=0; }catch(_){}
-  }
+/* ACTIVE STAGE. Calls play() the moment the section crosses 50% visibility. */
+function playVideo(video){
+  if(!video || editorialPlaybackSuppressed || document.hidden) return;
+  if(video.dataset.userPaused === "true" || prefersReducedMotion()) return;
+  if(activeEditorialVideo && activeEditorialVideo !== video) pauseVideo(activeEditorialVideo);
+  if(!prepareVideo(video)) return;
+
+  activeEditorialVideo = video;
+  video.dataset.wantsPlay = "true";
+  markAutoplaySafe(video);
+  delete video.dataset.autoplayBlocked;
+  delete video.dataset.playRetried;
+
+  const request = video.play();
+  if(request && typeof request.catch === "function") request.catch(error=> recoverAutoplay(video, error));
   updateEditorialVideoButton(video);
 }
-function activateEditorialVideo(section){
-  const video=section && section.querySelector(".motion-video");
-  if(!video || section.hidden || !editorialSectionIsActive(section)) return;
-
-  if(!loadEditorialVideo(video,true)) return;
-  if(video.dataset.userPaused!=="true") playEditorialVideo(video);
+function pauseVideo(video){
+  if(!video) return;
+  video.dataset.wantsPlay = "false";
+  video.pause();
+  if(activeEditorialVideo === video) activeEditorialVideo = null;
+  updateEditorialVideoButton(video);
 }
+function toggleEditorialVideo(video){
+  if(!video.paused){
+    video.dataset.userPaused = "true";
+    pauseVideo(video);
+    return;
+  }
+  delete video.dataset.userPaused;
+  delete video.dataset.autoplayBlocked;
+  delete video.dataset.playRetried;
+  editorialPlaybackSuppressed = false;
+  prepareVideo(video);
+  playVideo(video);
+}
+/* Resync entry point, also used by the gallery category filter and the video modal. */
 function syncEditorialVideos(){
+  if(!editorialVideosInitialized) return;
   document.querySelectorAll("[data-video-section]").forEach(section=>{
     const video=section.querySelector(".motion-video");
     if(!video) return;
-    if(editorialSectionIsInView(section) && !document.hidden && !prefersReducedMotion()){
-      activateEditorialVideo(section);
-    }else if(!editorialSectionIsInView(section) && !video.paused && video.dataset.userPaused!=="true"){
-      pauseEditorialVideo(video,true);
-    }else{
-      updateEditorialVideoButton(video);
+    if(editorialSectionIsInView(section) && !document.hidden && !prefersReducedMotion() && !editorialPlaybackSuppressed && video.dataset.userPaused !== "true"){
+      prepareVideo(video);
+      playVideo(video);
+    } else if(!video.paused){
+      pauseVideo(video);
     }
   });
 }
@@ -1648,98 +1658,124 @@ function initEditorialVideos(){
   if(editorialVideosInitialized) return;
   editorialVideosInitialized=true;
 
-  const sections=[...document.querySelectorAll("[data-video-section]")];
+  const sections = Array.prototype.slice.call(document.querySelectorAll("[data-video-section]"));
+  const mobileQuery = window.matchMedia("(max-width:860px)");
 
   sections.forEach(section=>{
-    const video=section.querySelector(".motion-video");
-    const toggle=section.querySelector("[data-video-toggle]");
+    const video = section.querySelector(".motion-video");
+    const toggle = section.querySelector("[data-video-toggle]");
     if(!video) return;
 
-    setEditorialVideoAttributes(video);
-    video.preload="none";
-
-    if(toggle && toggle.dataset.videoReady!=="true"){
-      toggle.dataset.videoReady="true";
-      toggle.addEventListener("click",()=>{
-        if(video.paused){
-          delete video.dataset.userPaused;
-          delete video.dataset.autoplayBlocked;
-          activateEditorialVideo(section);
-        }else{
-          video.dataset.userPaused="true";
-          pauseEditorialVideo(video,false);
-        }
-      });
-    }
-
-    video.addEventListener("play",()=>updateEditorialVideoButton(video));
-    video.addEventListener("pause",()=>updateEditorialVideoButton(video));
-
-    // If a prefetch has already attached the source, these events allow
-    // immediate playback the moment the section becomes active.
-    ["loadedmetadata","canplay"].forEach(eventName=>{
-      video.addEventListener(eventName,()=>{
-        if(editorialSectionIsInView(section) && video.dataset.userPaused!=="true"){
-          playEditorialVideo(video);
-        }
-      });
+    markAutoplaySafe(video);
+    if(toggle) toggle.addEventListener("click", ()=> toggleEditorialVideo(video));
+    ["play","pause","playing"].forEach(eventName=>{
+      video.addEventListener(eventName, ()=> updateEditorialVideoButton(video));
     });
 
-    updateEditorialVideoButton(video);
+    /* A hard failure gets exactly one rebuild. There is deliberately no "stalled" handler:
+       stalled fires during ordinary buffering, and rebuilding there was what kept the
+       poster on screen. */
+    video.addEventListener("error", ()=>{
+      if(video.dataset.errorRebuilt === "true"){
+        /* Terminal failure. WebKit can leave the element reporting paused:false with
+           readyState 0 and currentTime 0 — a "playing" state that never renders a frame and
+           never resolves, which would keep the button on "Pause film" forever. Stop it and
+           hand playback back to the user so the poster holds and a manual retry is possible. */
+        pauseVideo(video);
+        video.dataset.autoplayBlocked = "true";
+        delete video.dataset.playRetried;
+        video.dataset.prepared = "";
+        if(window.__EDITORIAL_VIDEO_DEBUG && typeof console !== "undefined" && console.warn){
+          console.warn("[editorial-video] source failed", video.currentSrc || video.src, video.error && video.error.code);
+        }
+        return;
+      }
+      video.dataset.errorRebuilt = "true";
+      video.dataset.prepared = "";
+      prepareVideo(video);
+    });
+
+    /* canplay is a retry trigger, never a gate. It only ever restarts a video the observer
+       already decided should be running, so it can never start playback on a section that
+       has not reached the visibility threshold. */
+    video.addEventListener("canplay", ()=>{
+      if(video.dataset.wantsPlay === "true" && video.paused) playVideo(video);
+    });
   });
 
   if("IntersectionObserver" in window){
-    // Destiny-style prefetch: begin fetching well before the section becomes active.
-    editorialVideoPrefetchObserver=new IntersectionObserver(entries=>{
+    editorialPrefetchObserver = new IntersectionObserver(entries=>{
       entries.forEach(entry=>{
         if(!entry.isIntersecting) return;
-        const section=entry.target;
-        const video=section.querySelector(".motion-video");
-        if(!video || section.hidden || !editorialSectionIsActive(section)) return;
-        loadEditorialVideo(video,false);
+        const video = entry.target.querySelector(".motion-video");
+        if(!video) return;
+        prepareVideo(video);
+        editorialPrefetchObserver.unobserve(entry.target);
       });
-    },{rootMargin:VIDEO_PREFETCH_MARGIN,threshold:0});
+    },{root:null, rootMargin:"75% 0px", threshold:0});
 
-    // Destiny-style activation: >=50% visible owns playback.
-    editorialVideoObserver=new IntersectionObserver(entries=>{
+    /* Play at 50% visibility, but only release the pause once the section is nearly
+       gone. The two bounds differ on purpose: a section taller than the viewport
+       (the second film block is 1108px in a 900px window) would otherwise flap
+       play/pause as its ratio wobbles around a single threshold. */
+    editorialPlaybackObserver = new IntersectionObserver(entries=>{
       entries.forEach(entry=>{
-        const section=entry.target;
-        const video=section.querySelector(".motion-video");
-        if(!video || section.hidden || !editorialSectionIsActive(section)) return;
-
-        const active=entry.isIntersecting && entry.intersectionRatio>=VIDEO_ACTIVE_RATIO;
-        if(active){
-          activateEditorialVideo(section);
-        }else if(!entry.isIntersecting){
-          if(video.dataset.userPaused!=="true") pauseEditorialVideo(video,true);
-        }
+        const video = entry.target.querySelector(".motion-video");
+        if(!video) return;
+        if(entry.intersectionRatio >= PLAY_AT) playVideo(video);
+        else if(entry.intersectionRatio <= PAUSE_BELOW) pauseVideo(video);
       });
-    },{rootMargin:"0px",threshold:[0,VIDEO_ACTIVE_RATIO,1]});
+    },{root:null, rootMargin:"0px", threshold:[0, PAUSE_BELOW, PLAY_AT]});
 
     sections.forEach(section=>{
-      editorialVideoPrefetchObserver.observe(section);
-      editorialVideoObserver.observe(section);
+      editorialPrefetchObserver.observe(section);
+      editorialPlaybackObserver.observe(section);
     });
   }else{
-    // Legacy fallback: treat the visible route as active.
-    sections.forEach(section=>loadEditorialVideo(section.querySelector(".motion-video"),true));
+    /* No IntersectionObserver: prepare whatever is on screen and play it. Without the
+       observers there is no visibility signal, so the visible route is the only guess
+       available — and it is still bounded to the active page. */
+    sections.forEach(section=>{
+      if(!editorialSectionIsActive(section) || section.hidden) return;
+      const video = section.querySelector(".motion-video");
+      if(prepareVideo(video)) playVideo(video);
+    });
   }
 
-  let retryQueued=false;
-  const retryVisible=()=>{
-    if(retryQueued) return;
-    retryQueued=true;
-    requestAnimationFrame(()=>{
-      retryQueued=false;
-      syncEditorialVideos();
+  /* An orientation change only re-sources a video that never started fetching, so a
+     buffered desktop file is never discarded mid-playback. */
+  const onBreakpointChange = ()=>{
+    sections.forEach(section=>{
+      const video = section.querySelector(".motion-video");
+      if(!video || video.readyState !== 0 || !video.paused) return;
+      video.dataset.prepared = "";
+      prepareVideo(video);
     });
   };
-  window.addEventListener("scroll",retryVisible,{passive:true});
-  window.addEventListener("resize",retryVisible,{passive:true});
-  document.addEventListener("visibilitychange",syncEditorialVideos);
-  window.addEventListener("pageshow",syncEditorialVideos);
-  window.addEventListener("focus",syncEditorialVideos);
+  if(typeof mobileQuery.addEventListener === "function") mobileQuery.addEventListener("change", onBreakpointChange);
+  else if(typeof mobileQuery.addListener === "function") mobileQuery.addListener(onBreakpointChange);
 
+  /* The intro band sits directly under the full-height image hero, so on most viewports it
+     begins just below the fold. Play it at init only when it is genuinely already on screen
+     — otherwise the prefetch observer is already covering it and a forced play() here would
+     flash a frame and immediately re-pause. */
+  const heroSection = document.querySelector(".hero-sub[data-video-section]");
+  const hero = heroSection && heroSection.querySelector(".motion-video");
+  if(hero){
+    prepareVideo(hero);
+    const box = heroSection.getBoundingClientRect();
+    if(box.height > 0 && Math.min(box.bottom, window.innerHeight) >= box.height * PLAY_AT) playVideo(hero);
+  }
+
+  document.addEventListener("visibilitychange", ()=>{
+    if(document.hidden){
+      if(activeEditorialVideo) pauseVideo(activeEditorialVideo);
+      return;
+    }
+    syncEditorialVideos();
+  });
+  /* Resync when returning from the bfcache, where no visibilitychange is delivered. */
+  window.addEventListener("pageshow", ()=> syncEditorialVideos());
   syncEditorialVideos();
 }
 /* ---------- CAPABILITIES ---------- */
