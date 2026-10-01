@@ -1511,7 +1511,7 @@ let editorialVideosInitialized=false;
 let activeEditorialVideo=null;
 let editorialPlaybackSuppressed=false;
 const NETWORK_EMPTY=3;
-const PLAY_AT=0.5;
+const PLAY_AT=0.15;
 const PAUSE_BELOW=0.15;
 function prefersReducedMotion(){ return window.matchMedia("(prefers-reduced-motion: reduce)").matches; }
 function shouldConserveVideoData(){
@@ -1552,6 +1552,10 @@ function markAutoplaySafe(video){
   video.setAttribute("webkit-playsinline","");
   video.autoplay = true;
   video.setAttribute("autoplay","");
+  // Native Safari controls stay off during autoplay. They are enabled only after an
+  // explicit tap, so the timeline / skip / pause UI never sits over the cinematic film.
+  video.controls = false;
+  video.removeAttribute("controls");
 }
 function editorialSourceFor(video){
   const isMobile = window.matchMedia("(max-width:860px)").matches;
@@ -1689,6 +1693,17 @@ function initEditorialVideos(){
     if(!video) return;
 
     markAutoplaySafe(video);
+    // Native controls are an intentional interaction, not part of the autoplay state.
+    // A tap reveals Safari's normal pause/timeline/skip controls; autoplay itself remains
+    // completely clean.
+    const revealNativeControls = ()=>{
+      if(video.controls) return;
+      video.controls = true;
+      video.setAttribute("controls","");
+      video.dataset.nativeControlsRevealed = "true";
+    };
+    video.addEventListener("click", revealNativeControls);
+    video.addEventListener("touchend", revealNativeControls, {passive:true});
     if(toggle) toggle.addEventListener("click", ()=> toggleEditorialVideo(video));
     /* The element keeps its autoplay grant, so the browser starts it on its own the moment
        the source is ready — which happens asynchronously, possibly after the prefetch guard
@@ -1800,7 +1815,9 @@ function initEditorialVideos(){
        genuinely already on screen; otherwise stop it and let the observers own it. */
     holdOffscreenPlayback(hero);
     const box = heroSection.getBoundingClientRect();
-    if(box.height > 0 && Math.min(box.bottom, window.innerHeight) >= box.height * PLAY_AT) playVideo(hero);
+    if(box.height > 0 && box.top < window.innerHeight && box.bottom > 0 && Math.min(box.bottom, window.innerHeight) >= box.height * PLAY_AT) {
+      playVideo(hero);
+    }
   }
 
   document.addEventListener("visibilitychange", ()=>{
