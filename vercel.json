@@ -66,5 +66,18 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "swaroop-studios.vercel.app"
+        }
+      ],
+      "destination": "https://www.swaroopstudios.com/:path*",
+      "permanent": true
+    }
   ]
 }
