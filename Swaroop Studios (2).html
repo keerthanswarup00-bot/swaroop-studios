@@ -2476,7 +2476,7 @@ document.addEventListener("keydown", e=>{
     if(e.key==="ArrowLeft") lbStep(-1);
     if(e.key==="ArrowRight") lbStep(1);
   }
-  if(e.key==="Escape") document.getElementById("videoModal").classList.remove("open");
+  if(e.key==="Escape" && document.getElementById("videoModal").classList.contains("open")) closeVideoModal();
 });
 let lbTouchX=null;
 document.getElementById("lightbox").addEventListener("touchstart", e=> lbTouchX=e.touches[0].clientX);
@@ -2504,16 +2504,27 @@ async function loadFilm(){
 }
 function openVideo(assetId){
   const v = document.getElementById("vmVideo");
-  document.querySelectorAll(".motion-video").forEach(video=> video.pause());
+  /* Hold the editorial films for as long as the modal is up. Pausing them alone is not
+     enough: the playback observer re-asserts play() on its next intersection callback,
+     which would run two videos at once behind the modal. */
+  editorialPlaybackSuppressed = true;
+  document.querySelectorAll(".motion-video").forEach(video=> pauseVideo(video));
   v.src = "/_blob/"+assetId;
   document.getElementById("videoModal").classList.add("open");
 }
-document.getElementById("vmClose").addEventListener("click", ()=>{
+/* Single exit point for the modal so the close button and Escape cannot diverge.
+   Both must stop the modal video, drop its source and release the editorial films —
+   closing the dialog by class alone leaves audio playing and the films held off. */
+function closeVideoModal(){
   const v = document.getElementById("vmVideo");
-  v.pause(); v.removeAttribute("src"); v.load();
+  v.pause();
+  v.removeAttribute("src");
+  v.load();
   document.getElementById("videoModal").classList.remove("open");
+  editorialPlaybackSuppressed = false;
   syncEditorialVideos();
-});
+}
+document.getElementById("vmClose").addEventListener("click", closeVideoModal);
 document.getElementById("galFilters").addEventListener("click",e=>{
   const b = e.target.closest(".filter"); if(!b) return;
   document.querySelectorAll(".filter").forEach(f=>{ f.classList.remove("active"); f.setAttribute("aria-pressed","false"); });
