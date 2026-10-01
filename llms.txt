@@ -8,7 +8,7 @@
 - Name: Swaroop Studios
 - Established: 1972
 - Location: Bengaluru, India
-- Site: https://swaroop-studios.vercel.app/
+- Site: https://www.swaroopstudios.com/
 - Contact: +91 99004 86574 · swaroopstudios@gmail.com · WhatsApp +91 90360 55099
 - Instagram: https://www.instagram.com/swaroop_studios
 
@@ -36,11 +36,11 @@ individually via the contact page.
 
 ## Pages
 
-- Home: https://swaroop-studios.vercel.app/
-- About: https://swaroop-studios.vercel.app/about
-- Services: https://swaroop-studios.vercel.app/services
-- Gallery: https://swaroop-studios.vercel.app/gallery
-- Contact: https://swaroop-studios.vercel.app/contact
+- Home: https://www.swaroopstudios.com/
+- About: https://www.swaroopstudios.com/about
+- Services: https://www.swaroopstudios.com/services
+- Gallery: https://www.swaroopstudios.com/gallery
+- Contact: https://www.swaroopstudios.com/contact
 
 The gallery organises photographs into Weddings, Events, Corporate and
 Portraits. Private client galleries are password-protected and are NOT public.
