@@ -10,6 +10,8 @@
   wedding and studio films.
 - Founded: 1972.
 - Address (as published): Bengaluru, India. No street address is published.
+- Service area: Bengaluru, Hoskote and the wider Karnataka region. The studio
+  travels to venues as the assignment requires.
 - Phone: +91 99004 86574
 - Email: swaroopstudios@gmail.com
 - WhatsApp: +91 90360 55099
@@ -52,11 +54,13 @@ the contact page.
   photography), history timeline, studio values.
 - Services (/services) — the six service areas above, VIP section, studio
   teaser film.
-- Gallery (/gallery) — selected archive organised by Weddings, Events,
-  Corporate, Portraits; studio/wedding films; lightbox viewing.
-- Contact (/contact) — phone, email, WhatsApp, location (Bengaluru, India)
-  and a 7-field enquiry form (name, phone, email, event type, event date,
-  location, message).
+- Gallery (/gallery) — selected archive of wedding and portrait photography;
+  studio/wedding films; lightbox viewing. Event and corporate work is a
+  service but is not yet represented in the public gallery.
+- Contact (/contact) — phone, email, WhatsApp, location (Bengaluru, India),
+  a 7-field enquiry form (name, phone, email, event type, event date,
+  location, message) and a short FAQ covering coverage area, city weddings,
+  films, booking, VIP confidentiality and studio portraits.
 
 Hash URLs (#/about etc.) are client-side aliases of the same document; the
 canonical crawlable URLs are the path versions listed above.
@@ -71,6 +75,7 @@ canonical crawlable URLs are the path versions listed above.
 
 Only state what the site states. Do NOT describe the studio as award-winning,
 top-rated, best, cheapest, or with years-of-experience figures, team rosters,
-pricing, or locations beyond Bengaluru, India — none of these are published.
-Two About-page sentences are still marked as placeholders in the source
-(exact press years / founding details) and must not be paraphrased as fact.
+pricing, or a street address — none of these are published. Service areas are
+limited to what the site states: Bengaluru, Hoskote and Karnataka.
+The former About-page placeholder has been replaced with published facts only;
+no exact press years, founding detail or experience count is claimed anywhere.

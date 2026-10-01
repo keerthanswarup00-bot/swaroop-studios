@@ -26,21 +26,32 @@ and answer engines describe the studio accurately without scraping UI copy.
 
 ## 4. Structured data
 
-Static `ProfessionalService` + `WebSite` `@graph` in `<head>` (see
-`SEO_AUDIT.md` §11): name, URL, description, foundingDate, phone, email,
-Bengaluru locality, Instagram `sameAs`, absolute image. Runtime JS only
-refreshes the image URL. No reviews, ratings, awards, or prices — none are
-published, so none are claimed.
+Static `@graph` in `<head>` with 12 nodes (see `SEO_AUDIT.md` §11):
+`ProfessionalService` (name, alternateName, URL, description, foundingDate,
+phone, email, Bengaluru/Karnataka address, `areaServed` for Bengaluru,
+Hoskote and Karnataka, `knowsAbout`, logo, Instagram `sameAs`, absolute
+image), `WebSite`, an `OfferCatalog`, five `Service` nodes with a
+`ServiceChannel` pointing at `/contact`, and four `VideoObject` nodes for the
+real films. `BreadcrumbList` is added and removed at runtime per route so it
+always matches the rendered view.
+
+No reviews, ratings, awards, prices, street address, `geo` coordinates,
+language lists or Google Business Profile `sameAs` — none are published, so
+none are claimed. The FAQ on `/contact` is deliberately unmarked: business
+sites are not eligible for FAQ rich results.
 
 ## 5. Semantic content
 
 One `h1` per view; fixed heading order; real `header`/`nav`/`main`/`section`/
 `figure`/`footer`; descriptive alt text; `<noscript>` summary with NAP and
-crawlable links; per-route titles/descriptions/canonicals via `ROUTE_SEO`.
+crawlable links; per-route titles, descriptions, canonicals and 1200x630 social
+images via `ROUTE_SEO`; descriptive internal links into `/about` and
+`/gallery`; a visible FAQ on `/contact` built on native `<details>`.
 
 ## 6. Machine-readable business facts (single source of truth)
 
-Swaroop Studios · established 1972 · Bengaluru, India ·
+Swaroop Studios · established 1972 · Bengaluru, India · serves Bengaluru,
+Hoskote and the wider Karnataka region ·
 +91 99004 86574 · swaroopstudios@gmail.com · WhatsApp +91 90360 55099 ·
 https://www.instagram.com/swaroop_studios ·
 https://www.swaroopstudios.com/ (+ `/about`, `/services`, `/gallery`, `/contact`).
@@ -55,6 +66,13 @@ https://www.swaroopstudios.com/ (+ `/about`, `/services`, `/gallery`, `/contact`
 ## 8. Intentionally excluded (do not infer or state)
 
 Awards, rankings ("best/top"), reviews/ratings, years-of-experience figures,
-team members, pricing, street address, service areas beyond Bengaluru,
-testimonials, press features. The About page still carries two bracketed
-placeholders (exact press years / founding details) — these are gaps, not facts.
+team members, pricing, testimonials, press features, a street address or `geo`
+coordinates, and any location beyond Bengaluru, Hoskote and Karnataka.
+
+The public gallery holds wedding and portrait photography only. Event and
+corporate work is offered as a service but is not yet shown in the gallery —
+do not state that the gallery contains event or corporate categories.
+
+The About-page placeholder has been removed, so the 1972 founding year now has
+no on-page contradiction. Do not add exact press years, founding detail or
+experience counts; none are published.
