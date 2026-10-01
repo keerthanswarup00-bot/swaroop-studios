@@ -876,7 +876,7 @@
       <button class="motion-toggle" type="button" data-video-toggle aria-controls="reception-film-video" aria-label="Play reception film">Play film</button>
     </div>
     <figure class="motion-frame">
-      <video id="reception-film-video" class="motion-video" autoplay muted loop playsinline preload="auto" width="1920" height="1080" poster="/assets/posters/reception-film.jpg" data-desktop-src="/assets/videos/reception-film-1080p.mp4" data-mobile-src="/assets/videos/reception-film-720p.mp4" data-video-label="Reception film" aria-label="Silent reception film" tabindex="-1" disablepictureinpicture disableremoteplayback></video>
+      <video id="reception-film-video" class="motion-video" autoplay muted loop playsinline webkit-playsinline preload="auto" width="1920" height="1080" poster="/assets/posters/reception-film.jpg" data-desktop-src="/assets/videos/reception-film-1080p.mp4" data-mobile-src="/assets/videos/reception-film-720p.mp4" data-video-label="Reception film" aria-label="Silent reception film" tabindex="-1" disablepictureinpicture disableremoteplayback></video>
     </figure>
   </section>
 
@@ -1022,7 +1022,7 @@
       <button class="motion-toggle" type="button" data-video-toggle aria-controls="studio-teaser-video" aria-label="Play studio teaser">Play film</button>
     </div>
     <figure class="motion-frame">
-      <video id="studio-teaser-video" class="motion-video" autoplay muted loop playsinline preload="none" width="1920" height="1080" poster="/assets/posters/studio-teaser.jpg" data-desktop-src="/assets/videos/studio-teaser-1080p.mp4" data-mobile-src="/assets/videos/studio-teaser-720p.mp4" data-video-label="Studio teaser" aria-label="Silent studio teaser" tabindex="-1" disablepictureinpicture disableremoteplayback></video>
+      <video id="studio-teaser-video" class="motion-video" autoplay muted loop playsinline webkit-playsinline preload="none" width="1920" height="1080" poster="/assets/posters/studio-teaser.jpg" data-desktop-src="/assets/videos/studio-teaser-1080p.mp4" data-mobile-src="/assets/videos/studio-teaser-720p.mp4" data-video-label="Studio teaser" aria-label="Silent studio teaser" tabindex="-1" disablepictureinpicture disableremoteplayback></video>
     </figure>
   </section>
 
@@ -1051,7 +1051,7 @@
       </div>
       <figure class="gallery-film" data-video-section data-gallery-video-category="all">
         <div class="motion-frame">
-          <video id="all-gallery-film-video" class="motion-video" autoplay muted loop playsinline preload="none" width="1920" height="1080" poster="/assets/posters/studio-teaser.jpg" data-desktop-src="/assets/videos/studio-teaser-1080p.mp4" data-mobile-src="/assets/videos/studio-teaser-720p.mp4" data-video-label="studio film" aria-label="Silent studio film" tabindex="-1" disablepictureinpicture disableremoteplayback></video>
+          <video id="all-gallery-film-video" class="motion-video" autoplay muted loop playsinline webkit-playsinline preload="none" width="1920" height="1080" poster="/assets/posters/studio-teaser.jpg" data-desktop-src="/assets/videos/studio-teaser-1080p.mp4" data-mobile-src="/assets/videos/studio-teaser-720p.mp4" data-video-label="studio film" aria-label="Silent studio film" tabindex="-1" disablepictureinpicture disableremoteplayback></video>
         </div>
         <figcaption class="gallery-film__caption">
           <div>
@@ -1063,7 +1063,7 @@
       </figure>
       <figure class="gallery-film" data-video-section data-gallery-video-category="wedding" hidden>
         <div class="motion-frame">
-          <video id="wedding-film-video" class="motion-video" autoplay muted loop playsinline preload="none" width="1920" height="1080" poster="/assets/posters/wedding-film.jpg" data-desktop-src="/assets/videos/wedding-film-1080p.mp4" data-mobile-src="/assets/videos/wedding-film-720p.mp4" data-video-label="Wedding film" aria-label="Silent wedding film" tabindex="-1" disablepictureinpicture disableremoteplayback></video>
+          <video id="wedding-film-video" class="motion-video" autoplay muted loop playsinline webkit-playsinline preload="none" width="1920" height="1080" poster="/assets/posters/wedding-film.jpg" data-desktop-src="/assets/videos/wedding-film-1080p.mp4" data-mobile-src="/assets/videos/wedding-film-720p.mp4" data-video-label="Wedding film" aria-label="Silent wedding film" tabindex="-1" disablepictureinpicture disableremoteplayback></video>
         </div>
         <figcaption class="gallery-film__caption">
           <div>
@@ -1511,8 +1511,8 @@ let editorialVideosInitialized=false;
 let activeEditorialVideo=null;
 let editorialPlaybackSuppressed=false;
 const NETWORK_EMPTY=3;
-const PLAY_AT=0.15;
-const PAUSE_BELOW=0.05;
+const PLAY_AT=0.5;
+const PAUSE_BELOW=0.15;
 function prefersReducedMotion(){ return window.matchMedia("(prefers-reduced-motion: reduce)").matches; }
 function shouldConserveVideoData(){
   const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
@@ -1539,22 +1539,19 @@ function updateEditorialVideoButton(video){
 /* Safari and iOS only grant autoplay when mutedness and inline playback are established on
    both the IDL properties and the attributes, so both are set before every play() call. */
 function markAutoplaySafe(video){
+  /* Order matters. muted and playsinline must be fully established — property AND
+     attribute — before autoplay is asserted. iOS Safari latches the autoplay permission at
+     that point and does not re-run the check when later attributes change, so asserting
+     autoplay first leaves a permanently unauthorized element: loaded and renderable, but
+     paused, showing the native play button. */
   video.muted = true;
   video.defaultMuted = true;
-  video.autoplay = true;
-  video.playsInline = true;
   video.setAttribute("muted","");
-  video.setAttribute("autoplay","");
+  video.playsInline = true;
   video.setAttribute("playsinline","");
   video.setAttribute("webkit-playsinline","");
-}
-/* The markup ships autoplay so the film still plays with JavaScript disabled, but that same
-   attribute makes the browser start playing the instant a source is attached — WebKit did
-   exactly that at a section ratio of -0.45, well below the fold. Preparation therefore takes
-   ownership of the element and holds autoplay off until the observer asks for playback. */
-function holdAutoplayForPrefetch(video){
-  video.autoplay = false;
-  video.removeAttribute("autoplay");
+  video.autoplay = true;
+  video.setAttribute("autoplay","");
 }
 function editorialSourceFor(video){
   const isMobile = window.matchMedia("(max-width:860px)").matches;
@@ -1563,19 +1560,44 @@ function editorialSourceFor(video){
   if(isMobile || shouldConserveVideoData()) return mobile || desktop || "";
   return desktop || mobile || "";
 }
-/* PREFETCH STAGE. Idempotent: assigns the source once, then lets the browser buffer. */
+/* PREFETCH STAGE. Idempotent: assigns the source once, then lets the browser buffer.
+
+   autoplay is asserted (never removed) before src is attached, because that is the moment
+   iOS Safari decides whether this element may ever start on its own. Suppressing offscreen
+   playback is done by pausing in the guard below, not by revoking autoplay — revoking it
+   is what left the real iPhone stuck on the native play button.
+
+   No explicit load(): assigning src already begins the resource selection algorithm, and
+   calling load() again resets iOS media state, which can cost the autoplay grant. */
 function prepareVideo(video){
   if(!video || video.dataset.prepared === "true") return true;
   const sourceUrl = editorialSourceFor(video);
   if(!sourceUrl) return false;
 
-  holdAutoplayForPrefetch(video);
+  markAutoplaySafe(video);
   video.preload = "auto";
+  video.setAttribute("preload","auto");
   video.src = sourceUrl;
   video.dataset.prepared = "true";
   video.dataset.activeSource = sourceUrl;
-  video.load();
   return true;
+}
+/* iOS pauses offscreen videos by itself, but desktop WebKit does not, and revoking autoplay
+   to achieve that is what broke the iPhone. So: keep the browser's autoplay grant and undo
+   the playback it starts while the section is out of view. One guard, no polling. */
+function holdOffscreenPlayback(video){
+  if(!video) return;
+  const section = video.closest("[data-video-section]");
+  /* A reduced-motion visitor asked not to be shown moving imagery. The element keeps its
+     autoplay grant, so the browser will still start it on its own — honour the preference
+     by stopping that start rather than by never granting autoplay. */
+  if(prefersReducedMotion() || editorialPlaybackSuppressed || document.hidden){
+    pauseVideo(video);
+    return;
+  }
+  if(!section) return;
+  if(editorialSectionIsInView(section)) return;
+  if(!video.paused) pauseVideo(video);
 }
 /* Bounded Safari recovery. One reload when nothing was ever fetched, one replay, then stop.
    No timers and no loop: a rejected muted autoplay will not resolve on its own. */
@@ -1616,7 +1638,8 @@ function playVideo(video){
   delete video.dataset.autoplayBlocked;
   delete video.dataset.playRetried;
 
-  queueEditorialVideoPlay(video);
+  const request = video.play();
+  if(request && typeof request.catch === "function") request.catch(error=> recoverAutoplay(video, error));
   updateEditorialVideoButton(video);
 }
 function pauseVideo(video){
@@ -1625,28 +1648,6 @@ function pauseVideo(video){
   video.pause();
   if(activeEditorialVideo === video) activeEditorialVideo = null;
   updateEditorialVideoButton(video);
-}
-function queueEditorialVideoPlay(video){
-  if(!video || video.dataset.wantsPlay !== "true" || document.hidden) return;
-  const attempt=()=>{
-    if(video.dataset.wantsPlay !== "true" || document.hidden) return;
-    const section=video.closest("[data-video-section]");
-    if(!editorialSectionIsInView(section) || video.dataset.userPaused === "true") return;
-    markAutoplaySafe(video);
-    const request=video.play();
-    if(request && typeof request.catch === "function"){
-      request.catch(error=>{
-        if(error && error.name === "AbortError") return;
-        recoverAutoplay(video,error);
-      });
-    }
-  };
-  attempt();
-  [50,180,500].forEach(delay=>{
-    window.setTimeout(()=>{
-      if(video.dataset.wantsPlay === "true" && video.paused) attempt();
-    },delay);
-  });
 }
 function toggleEditorialVideo(video){
   if(!video.paused){
@@ -1689,7 +1690,15 @@ function initEditorialVideos(){
 
     markAutoplaySafe(video);
     if(toggle) toggle.addEventListener("click", ()=> toggleEditorialVideo(video));
-    ["play","pause","playing"].forEach(eventName=>{
+    /* The element keeps its autoplay grant, so the browser starts it on its own the moment
+       the source is ready — which happens asynchronously, possibly after the prefetch guard
+       has already run. Every start is therefore re-checked against the visibility rule here,
+       so an offscreen film can never be left playing in the background. */
+    video.addEventListener("play", ()=>{
+      holdOffscreenPlayback(video);
+      updateEditorialVideoButton(video);
+    });
+    ["pause","playing"].forEach(eventName=>{
       video.addEventListener(eventName, ()=> updateEditorialVideoButton(video));
     });
 
@@ -1719,10 +1728,8 @@ function initEditorialVideos(){
     /* canplay is a retry trigger, never a gate. It only ever restarts a video the observer
        already decided should be running, so it can never start playback on a section that
        has not reached the visibility threshold. */
-    ["loadedmetadata","loadeddata","canplay","canplaythrough"].forEach(eventName=>{
-      video.addEventListener(eventName, ()=>{
-        if(video.dataset.wantsPlay === "true" && video.paused) queueEditorialVideoPlay(video);
-      });
+    video.addEventListener("canplay", ()=>{
+      if(video.dataset.wantsPlay === "true" && video.paused) playVideo(video);
     });
   });
 
@@ -1733,6 +1740,9 @@ function initEditorialVideos(){
         const video = entry.target.querySelector(".motion-video");
         if(!video) return;
         prepareVideo(video);
+        /* Attaching a source to an autoplay element starts it immediately, even below the
+           fold. Stop that one start here rather than revoking autoplay. */
+        holdOffscreenPlayback(video);
         editorialPrefetchObserver.unobserve(entry.target);
       });
     },{root:null, rootMargin:"75% 0px", threshold:0});
@@ -1745,16 +1755,10 @@ function initEditorialVideos(){
       entries.forEach(entry=>{
         const video = entry.target.querySelector(".motion-video");
         if(!video) return;
-        if(entry.isIntersecting && entry.intersectionRatio >= PLAY_AT){
-          playVideo(video);
-          window.setTimeout(()=>{
-            if(editorialSectionIsInView(entry.target) && video.paused && video.dataset.wantsPlay === "true") playVideo(video);
-          },120);
-        }else if(!entry.isIntersecting || entry.intersectionRatio <= PAUSE_BELOW){
-          pauseVideo(video);
-        }
+        if(entry.intersectionRatio >= PLAY_AT) playVideo(video);
+        else if(entry.intersectionRatio <= PAUSE_BELOW) pauseVideo(video);
       });
-    },{root:null, rootMargin:"0px", threshold:[0, PAUSE_BELOW, PLAY_AT, 0.5]});
+    },{root:null, rootMargin:"0px", threshold:[0, PAUSE_BELOW, PLAY_AT]});
 
     sections.forEach(section=>{
       editorialPrefetchObserver.observe(section);
@@ -1792,6 +1796,9 @@ function initEditorialVideos(){
   const hero = heroSection && heroSection.querySelector(".motion-video");
   if(hero){
     prepareVideo(hero);
+    /* Attaching the hero source starts autoplay on its own. Only keep it if the band is
+       genuinely already on screen; otherwise stop it and let the observers own it. */
+    holdOffscreenPlayback(hero);
     const box = heroSection.getBoundingClientRect();
     if(box.height > 0 && Math.min(box.bottom, window.innerHeight) >= box.height * PLAY_AT) playVideo(hero);
   }
