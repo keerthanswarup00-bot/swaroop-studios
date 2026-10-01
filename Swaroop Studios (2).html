@@ -1497,63 +1497,37 @@ function initReveal(){
 function revealNew(){ /* no-op: per-card scroll reveal intentionally removed — see design notes */ }
 
 let editorialVideoObserver=null;
+let editorialVideoWarmObserver=null;
 let editorialVideosInitialized=false;
+
+const VIDEO_WARM_MARGIN = "700px 0px";
+const VIDEO_PLAY_THRESHOLD = 0.15;
+
 function prefersReducedMotion(){ return window.matchMedia("(prefers-reduced-motion: reduce)").matches; }
 function shouldConserveVideoData(){
   const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   return !!(connection && (connection.saveData || connection.effectiveType==="slow-2g" || connection.effectiveType==="2g"));
 }
 function editorialSectionIsActive(section){
-  const page = section.closest(".page");
+  const page = section && section.closest(".page");
   return !!(page && page.classList.contains("active"));
 }
 function editorialSectionIsInView(section){
   if(!section || section.hidden || !editorialSectionIsActive(section)) return false;
   const rect = section.getBoundingClientRect();
   const viewportH = window.innerHeight || document.documentElement.clientHeight;
-  // Start playback only once the actual video section reaches the viewport.
   return rect.top < viewportH && rect.bottom > 0;
 }
 function updateEditorialVideoButton(video){
-  const section = video.closest("[data-video-section]");
+  const section = video && video.closest("[data-video-section]");
   const button = section && section.querySelector("[data-video-toggle]");
   if(!button) return;
   const action = video.paused ? "Play" : "Pause";
   button.textContent = action+" film";
   button.setAttribute("aria-label", action+" "+(video.dataset.videoLabel || "video"));
 }
-function recoverEditorialVideo(video){
-  if(video.dataset.recovering === "true") return;
-  const active = video.dataset.activeSource || "";
-  const canFallbackToDesktop = active === "mobile" && video.dataset.desktopSrc && video.dataset.desktopSrc !== video.currentSrc;
-  video.dataset.recovering = "true";
-  video.dataset.sourceLoaded = "";
-  video.removeAttribute("src");
-  video.load();
-
-  if(canFallbackToDesktop){
-    video.src = video.dataset.desktopSrc;
-    video.dataset.sourceLoaded = "true";
-    video.dataset.activeSource = "desktop-fallback";
-    video.preload = "metadata";
-    video.load();
-    playEditorialVideo(video);
-  } else {
-    video.dataset.sourceLoaded = "";
-    video.dataset.activeSource = "";
-    updateEditorialVideoButton(video);
-  }
-  window.setTimeout(()=>{ delete video.dataset.recovering; },1500);
-}
-function loadEditorialVideo(video, force){
-  if(video.dataset.sourceLoaded && !force) return true;
-  if(!force && prefersReducedMotion()) return false;
-
-  const isMobile = window.matchMedia("(max-width:860px)").matches;
-  const sourceUrl = isMobile ? video.dataset.mobileSrc : video.dataset.desktopSrc;
-  if(!sourceUrl) return false;
-
-  // Explicit muted/inline properties are important for Safari/iOS autoplay.
+function setEditorialVideoAttributes(video){
+  // Set the DOM properties before src/load. This is the Safari/iOS-safe autoplay order.
   video.muted = true;
   video.defaultMuted = true;
   video.autoplay = true;
@@ -1562,10 +1536,51 @@ function loadEditorialVideo(video, force){
   video.setAttribute("autoplay","");
   video.setAttribute("playsinline","");
   video.setAttribute("webkit-playsinline","");
-  video.preload = "metadata";
+}
+function recoverEditorialVideo(video){
+  if(video.dataset.recovering === "true") return;
+  const active = video.dataset.activeSource || "";
+  const canFallbackToDesktop =
+    active === "mobile" &&
+    video.dataset.desktopSrc &&
+    video.dataset.desktopSrc !== video.currentSrc;
+
+  video.dataset.recovering = "true";
+  video.dataset.sourceLoaded = "";
+  video.removeAttribute("src");
+  video.load();
+
+  if(canFallbackToDesktop){
+    setEditorialVideoAttributes(video);
+    video.src = video.dataset.desktopSrc;
+    video.dataset.sourceLoaded = "true";
+    video.dataset.activeSource = "desktop-fallback";
+    video.preload = "auto";
+    video.load();
+    queueEditorialVideoPlay(video);
+  } else {
+    video.dataset.activeSource = "";
+    updateEditorialVideoButton(video);
+  }
+
+  window.setTimeout(()=>{ delete video.dataset.recovering; },1800);
+}
+function loadEditorialVideo(video){
+  if(video.dataset.sourceLoaded === "true") return true;
+  if(prefersReducedMotion()) return false;
+
+  const isMobile = window.matchMedia("(max-width:860px)").matches;
+  const sourceUrl = isMobile ? video.dataset.mobileSrc : video.dataset.desktopSrc;
+  if(!sourceUrl) return false;
+
+  setEditorialVideoAttributes(video);
+  video.preload = "auto";
 
   if(!video.dataset.recoveryBound){
     video.addEventListener("error", ()=> recoverEditorialVideo(video));
+    video.addEventListener("stalled", ()=>{
+      if(editorialSectionIsInView(video.closest("[data-video-section]"))) recoverEditorialVideo(video);
+    });
     video.dataset.recoveryBound = "true";
   }
 
@@ -1576,49 +1591,66 @@ function loadEditorialVideo(video, force){
   return true;
 }
 function playEditorialVideo(video, userInitiated){
-  if(!video.dataset.sourceLoaded) return;
-  if(!userInitiated && (video.dataset.userPaused==="true" || document.hidden || prefersReducedMotion())) return;
   const section = video.closest("[data-video-section]");
+  if(!video.dataset.sourceLoaded || !section) return;
+  if(!userInitiated && (video.dataset.userPaused === "true" || document.hidden || prefersReducedMotion())) return;
   if(!userInitiated && !editorialSectionIsInView(section)) return;
 
-  video.muted = true;
-  video.defaultMuted = true;
-  video.autoplay = true;
-  video.playsInline = true;
-  video.setAttribute("muted","");
-  video.setAttribute("playsinline","");
+  setEditorialVideoAttributes(video);
+  if(video.ended){
+    try{ video.currentTime = 0; }catch(_){}
+  }
   delete video.dataset.autoplayBlocked;
 
+  // If the media element is not ready yet, the media readiness listeners will retry.
+  if(video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA){
+    return;
+  }
+
   const playRequest = video.play();
-  if(playRequest) playRequest.catch(()=>{
-    if(!userInitiated) video.dataset.autoplayBlocked = "true";
-    updateEditorialVideoButton(video);
+  if(playRequest && typeof playRequest.catch === "function"){
+    playRequest.catch(()=>{
+      if(!userInitiated) video.dataset.autoplayBlocked = "true";
+      updateEditorialVideoButton(video);
+    });
+  }
+}
+function queueEditorialVideoPlay(video){
+  // Multiple readiness passes are intentional: Safari/iOS can expose metadata first,
+  // then become playable a frame later. The calls are cheap because play() is idempotent.
+  playEditorialVideo(video);
+  [0,50,180,500].forEach(delay=>{
+    window.setTimeout(()=>{
+      const section = video.closest("[data-video-section]");
+      if(editorialSectionIsInView(section) && !video.paused) return;
+      playEditorialVideo(video);
+    },delay);
   });
 }
 function retryEditorialVideo(video){
   const section = video.closest("[data-video-section]");
   if(!editorialSectionIsInView(section) || document.hidden || video.dataset.userPaused==="true" || prefersReducedMotion()) return;
-  loadEditorialVideo(video);
-  playEditorialVideo(video);
+  if(!loadEditorialVideo(video)) return;
+  queueEditorialVideoPlay(video);
 }
 function toggleEditorialVideo(video){
   if(!video.paused){
     video.dataset.userPaused = "true";
     video.pause();
+    updateEditorialVideoButton(video);
     return;
   }
   delete video.dataset.userPaused;
   delete video.dataset.autoplayBlocked;
-  loadEditorialVideo(video, true);
-  playEditorialVideo(video, true);
+  if(loadEditorialVideo(video)) queueEditorialVideoPlay(video);
 }
 function syncEditorialVideos(){
   document.querySelectorAll("[data-video-section]").forEach(section=>{
     const video = section.querySelector(".motion-video");
     if(!video) return;
+
     const inView = editorialSectionIsInView(section);
     if(inView && !document.hidden && !prefersReducedMotion() && video.dataset.userPaused!=="true"){
-      loadEditorialVideo(video);
       retryEditorialVideo(video);
     } else if(!inView && !video.paused){
       video.pause();
@@ -1635,87 +1667,82 @@ function initEditorialVideos(){
     const toggle = section.querySelector("[data-video-toggle]");
     if(!video) return;
 
-    video.muted = true;
-    video.defaultMuted = true;
-    video.autoplay = true;
-    video.playsInline = true;
-    video.setAttribute("muted","");
-    video.setAttribute("autoplay","");
-    video.setAttribute("playsinline","");
-    video.setAttribute("webkit-playsinline","");
+    setEditorialVideoAttributes(video);
 
-    if(toggle) toggle.addEventListener("click", ()=> toggleEditorialVideo(video));
+    if(toggle && toggle.dataset.videoReady!=="true"){
+      toggle.dataset.videoReady="true";
+      toggle.addEventListener("click", ()=> toggleEditorialVideo(video));
+    }
+
     video.addEventListener("play", ()=> updateEditorialVideoButton(video));
     video.addEventListener("pause", ()=> updateEditorialVideoButton(video));
 
-    ["loadeddata","canplay","canplaythrough"].forEach(eventName=>{
+    // Never depend on a single event. This is the key Safari/iOS hardening:
+    // once the section is visible, every useful readiness event gets a chance to play.
+    ["loadedmetadata","loadeddata","canplay","canplaythrough"].forEach(eventName=>{
       video.addEventListener(eventName, ()=>{
-        if(editorialSectionIsInView(section)) playEditorialVideo(video);
+        if(editorialSectionIsInView(section) && video.dataset.userPaused!=="true"){
+          playEditorialVideo(video);
+        }
       });
     });
 
-    video.addEventListener("stalled", ()=> {
-      if(video.dataset.recovering === "true") return;
-      recoverEditorialVideo(video);
-    });
-
-    // Start loading the source immediately. We still wait for the section to
-    // enter the viewport before calling play(), but avoiding a late src assignment
-    // is much more reliable on Safari/iOS.
-    loadEditorialVideo(video, true);
     updateEditorialVideoButton(video);
   });
 
   if("IntersectionObserver" in window){
+    // Warm the next video before it reaches the viewport, but do not start playback early.
+    editorialVideoWarmObserver = new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(!entry.isIntersecting) return;
+        const section=entry.target;
+        const video=section.querySelector(".motion-video");
+        if(!video || section.hidden || !editorialSectionIsActive(section)) return;
+        if(!video.dataset.sourceLoaded && !prefersReducedMotion()) loadEditorialVideo(video);
+      });
+    },{rootMargin:VIDEO_WARM_MARGIN,threshold:0});
+
+    // Playback ownership is viewport-driven: entering = play, leaving = pause.
     editorialVideoObserver = new IntersectionObserver(entries=>{
       entries.forEach(entry=>{
-        const section = entry.target;
-        const video = section.querySelector(".motion-video");
+        const section=entry.target;
+        const video=section.querySelector(".motion-video");
         if(!video || section.hidden || !editorialSectionIsActive(section)) return;
 
-        if(entry.isIntersecting){
-          // Load only when the section is entering the viewport, then retry
-          // playback after the media element has had a chance to buffer.
-          loadEditorialVideo(video, true);
-          playEditorialVideo(video);
-
+        const inView = entry.isIntersecting && entry.intersectionRatio >= VIDEO_PLAY_THRESHOLD;
+        if(inView){
+          retryEditorialVideo(video);
           window.setTimeout(()=>{
             if(editorialSectionIsInView(section) && video.paused) retryEditorialVideo(video);
-          }, 150);
-        } else {
+          },120);
+        }else{
           video.pause();
           updateEditorialVideoButton(video);
         }
       });
-    },{
-      rootMargin:"0px",
-      threshold:0.2
-    });
+    },{threshold:[0,VIDEO_PLAY_THRESHOLD,0.5],rootMargin:"0px"});
 
     document.querySelectorAll("[data-video-section]").forEach(section=>{
+      editorialVideoWarmObserver.observe(section);
       editorialVideoObserver.observe(section);
     });
   }
 
-  let scrollRetryQueued=false;
+  let retryQueued=false;
   const retryVisibleVideos=()=>{
-    if(scrollRetryQueued) return;
-    scrollRetryQueued=true;
+    if(retryQueued) return;
+    retryQueued=true;
     requestAnimationFrame(()=>{
-      scrollRetryQueued=false;
-      document.querySelectorAll("[data-video-section]").forEach(section=>{
-        const video=section.querySelector(".motion-video");
-        if(video && video.paused && editorialSectionIsInView(section)){
-          retryEditorialVideo(video);
-        }
-      });
+      retryQueued=false;
+      syncEditorialVideos();
     });
   };
-  window.addEventListener("scroll", retryVisibleVideos, {passive:true});
-  window.addEventListener("resize", retryVisibleVideos, {passive:true});
-  document.addEventListener("visibilitychange", syncEditorialVideos);
-  window.addEventListener("pageshow", syncEditorialVideos);
-  window.addEventListener("focus", syncEditorialVideos);
+
+  window.addEventListener("scroll",retryVisibleVideos,{passive:true});
+  window.addEventListener("resize",retryVisibleVideos,{passive:true});
+  document.addEventListener("visibilitychange",syncEditorialVideos);
+  window.addEventListener("pageshow",syncEditorialVideos);
+  window.addEventListener("focus",syncEditorialVideos);
   syncEditorialVideos();
 }
 /* ---------- CAPABILITIES ---------- */
@@ -1915,7 +1942,7 @@ function handleGalleryImageError(img){
 function localImageMarkup(image, options){
   const settings = options || {};
   const sizes = settings.sizes || "100vw";
-  const fallbackWidth = Math.min(1800,image.width);
+  const fallbackWidth = Math.min(1200,image.width);
   const loading = settings.priority ? "eager" : "lazy";
   const priority = settings.priority ? ` fetchpriority="high"` : "";
   const mobile = settings.mobile;
@@ -1959,7 +1986,7 @@ function galleryItemImage(doc, sizes){
   const id = localGalleryImageId(doc);
   if(id){
     const image = {...LOCAL_IMAGES[id],id};
-    return localImageMarkup(image,{sizes,useAvif:false});
+    return localImageMarkup(image,{sizes,useAvif:true});
   }
   if(doc.src) return '<img src="'+doc.src+'" alt="'+(doc.title||doc.category||"Swaroop Studios photograph")+'" loading="lazy" decoding="async" onerror="handleGalleryImageError(this)">';
   return doc.assetId ? '<img src="/_blob/'+doc.assetId+'" alt="'+(doc.title||doc.category||"Swaroop Studios photograph")+'" loading="lazy" decoding="async" onerror="handleGalleryImageError(this)">' : "";
