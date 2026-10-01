@@ -1416,6 +1416,13 @@ function editorialSectionIsActive(section){
   const page = section.closest(".page");
   return !!(page && page.classList.contains("active"));
 }
+function editorialSectionIsInView(section){
+  if(!section || section.hidden || !editorialSectionIsActive(section)) return false;
+  const rect = section.getBoundingClientRect();
+  const viewportH = window.innerHeight || document.documentElement.clientHeight;
+  // Start playback only once the actual video section reaches the viewport.
+  return rect.top < viewportH && rect.bottom > 0;
+}
 function updateEditorialVideoButton(video){
   const section = video.closest("[data-video-section]");
   const button = section && section.querySelector("[data-video-toggle]");
@@ -1451,11 +1458,11 @@ function loadEditorialVideo(video, force){
   if(video.dataset.sourceLoaded && !force) return true;
   if(!force && prefersReducedMotion()) return false;
 
-  // Safari/iOS is more reliable when the media element receives a direct src
-  // instead of a <source> node being injected after the section enters view.
   const isMobile = window.matchMedia("(max-width:860px)").matches;
   const sourceUrl = isMobile ? video.dataset.mobileSrc : video.dataset.desktopSrc;
+  if(!sourceUrl) return false;
 
+  // Explicit muted/inline properties are important for Safari/iOS autoplay.
   video.muted = true;
   video.defaultMuted = true;
   video.autoplay = true;
@@ -1481,12 +1488,16 @@ function playEditorialVideo(video, userInitiated){
   if(!video.dataset.sourceLoaded) return;
   if(!userInitiated && (video.dataset.userPaused==="true" || document.hidden || prefersReducedMotion())) return;
   const section = video.closest("[data-video-section]");
-  if(!userInitiated && (!section || section.hidden || !editorialSectionIsActive(section))) return;
+  if(!userInitiated && !editorialSectionIsInView(section)) return;
+
   video.muted = true;
   video.defaultMuted = true;
+  video.autoplay = true;
+  video.playsInline = true;
   video.setAttribute("muted","");
   video.setAttribute("playsinline","");
   delete video.dataset.autoplayBlocked;
+
   const playRequest = video.play();
   if(playRequest) playRequest.catch(()=>{
     if(!userInitiated) video.dataset.autoplayBlocked = "true";
@@ -1495,7 +1506,7 @@ function playEditorialVideo(video, userInitiated){
 }
 function retryEditorialVideo(video){
   const section = video.closest("[data-video-section]");
-  if(!section || section.hidden || !editorialSectionIsActive(section) || document.hidden || video.dataset.userPaused==="true" || prefersReducedMotion()) return;
+  if(!editorialSectionIsInView(section) || document.hidden || video.dataset.userPaused==="true" || prefersReducedMotion()) return;
   loadEditorialVideo(video);
   playEditorialVideo(video);
 }
@@ -1514,11 +1525,11 @@ function syncEditorialVideos(){
   document.querySelectorAll("[data-video-section]").forEach(section=>{
     const video = section.querySelector(".motion-video");
     if(!video) return;
-    const canPlay = !section.hidden && editorialSectionIsActive(section) && !document.hidden && !prefersReducedMotion() && video.dataset.userPaused!=="true";
-    if(canPlay){
+    const inView = editorialSectionIsInView(section);
+    if(inView && !document.hidden && !prefersReducedMotion() && video.dataset.userPaused!=="true"){
       loadEditorialVideo(video);
       retryEditorialVideo(video);
-    } else if(!video.paused){
+    } else if(!inView && !video.paused){
       video.pause();
     }
     updateEditorialVideoButton(video);
@@ -1531,7 +1542,6 @@ function initEditorialVideos(){
   document.querySelectorAll("[data-video-section]").forEach(section=>{
     const video = section.querySelector(".motion-video");
     const toggle = section.querySelector("[data-video-toggle]");
-
     if(!video) return;
 
     video.muted = true;
@@ -1541,18 +1551,15 @@ function initEditorialVideos(){
     video.setAttribute("muted","");
     video.setAttribute("autoplay","");
     video.setAttribute("playsinline","");
+    video.setAttribute("webkit-playsinline","");
 
     if(toggle) toggle.addEventListener("click", ()=> toggleEditorialVideo(video));
     video.addEventListener("play", ()=> updateEditorialVideoButton(video));
     video.addEventListener("pause", ()=> updateEditorialVideoButton(video));
 
-    // Once the source has buffered enough to start, immediately honour the
-    // section's visibility state. This avoids the race between load() and play().
     ["loadeddata","canplay","canplaythrough"].forEach(eventName=>{
       video.addEventListener(eventName, ()=>{
-        const rect = section.getBoundingClientRect();
-        const inView = rect.bottom > 0 && rect.top < window.innerHeight;
-        if(inView) playEditorialVideo(video);
+        if(editorialSectionIsInView(section)) playEditorialVideo(video);
       });
     });
 
@@ -1569,37 +1576,35 @@ function initEditorialVideos(){
       entries.forEach(entry=>{
         const section = entry.target;
         const video = section.querySelector(".motion-video");
-        if(!video || section.hidden) return;
+        if(!video || section.hidden || !editorialSectionIsActive(section)) return;
 
         if(entry.isIntersecting){
-          // Load slightly before arrival, then autoplay as soon as the browser
-          // has enough media buffered. The actual play trigger is the section
-          // entering the viewport, not page load.
+          // Load only when the section is entering the viewport, then retry
+          // playback after the media element has had a chance to buffer.
           loadEditorialVideo(video, true);
           playEditorialVideo(video);
-        } else if(entry.boundingClientRect.top < 0){
+
+          window.setTimeout(()=>{
+            if(editorialSectionIsInView(section) && video.paused) retryEditorialVideo(video);
+          }, 150);
+        } else {
           video.pause();
           updateEditorialVideoButton(video);
         }
       });
     },{
-      rootMargin:"240px 0px",
-      threshold:[0,0.2,0.45]
+      rootMargin:"0px",
+      threshold:0.2
     });
 
     document.querySelectorAll("[data-video-section]").forEach(section=>{
       editorialVideoObserver.observe(section);
     });
-  } else {
-    // Fallback for older browsers.
-    document.querySelectorAll("[data-video-section]").forEach(section=>{
-      const video=section.querySelector(".motion-video");
-      if(video) loadEditorialVideo(video, true);
-    });
   }
 
   document.addEventListener("visibilitychange", syncEditorialVideos);
   window.addEventListener("pageshow", syncEditorialVideos);
+  window.addEventListener("focus", syncEditorialVideos);
   syncEditorialVideos();
 }
 /* ---------- CAPABILITIES ---------- */
