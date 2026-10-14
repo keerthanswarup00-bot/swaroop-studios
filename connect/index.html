@@ -102,8 +102,8 @@
     <section class="video-section" aria-labelledby="film-title">
       <div class="section-head"><h2 id="film-title">A glimpse of our films</h2><span>Watch</span></div>
       <div class="video-frame">
-        <video controls autoplay muted loop playsinline preload="metadata" poster="/assets/posters/intro-band.jpg" aria-label="Swaroop Studios featured film">
-          <source src="/assets/videos/intro-band-720p.mp4" type="video/mp4">
+        <video id="nfc-featured-video" controls autoplay muted loop playsinline webkit-playsinline preload="auto" poster="/assets/posters/intro-band.jpg" aria-label="Swaroop Studios featured wedding film">
+          <source src="/assets/videos/wedding-film-720p.mp4" type="video/mp4">
           Your browser does not support the video element.
         </video>
       </div>
@@ -112,11 +112,11 @@
     <section class="gallery-section" aria-labelledby="gallery-title">
       <div class="section-head"><h2 id="gallery-title">Selected moments</h2><span>Photography</span></div>
       <div class="photo-grid">
-        <a href="/assets/images/dsc05478-1800.jpg" class="photo photo-tall"><img src="/assets/images/dsc05478-1200.avif" alt="Swaroop Studios featured photograph" loading="lazy"></a>
-        <a href="/assets/images/dsc02444-1800.jpg" class="photo"><img src="/assets/images/dsc02444-768.avif" alt="Wedding photography by Swaroop Studios" loading="lazy"></a>
-        <a href="/assets/images/dsc02541-1800.jpg" class="photo"><img src="/assets/images/dsc02541-768.avif" alt="A celebration photographed by Swaroop Studios" loading="lazy"></a>
-        <a href="/assets/images/dsc02664-1800.jpg" class="photo"><img src="/assets/images/dsc02664-768.avif" alt="A candid moment captured by Swaroop Studios" loading="lazy"></a>
-        <a href="/assets/images/dsc02737-1800.jpg" class="photo"><img src="/assets/images/dsc02737-768.avif" alt="Event photography by Swaroop Studios" loading="lazy"></a>
+        <a href="/assets/images/06-1800.avif" class="photo photo-tall"><img src="/assets/images/06-768.avif" alt="A story in three moments — wedding photography" loading="lazy" decoding="async"></a>
+        <a href="/assets/images/07-1800.avif" class="photo"><img src="/assets/images/07-768.avif" alt="Connection — wedding photography" loading="lazy" decoding="async"></a>
+        <a href="/assets/images/09-1800.avif" class="photo"><img src="/assets/images/09-768.avif" alt="The wedding story — Swaroop Studios" loading="lazy" decoding="async"></a>
+        <a href="/assets/images/1-1800.avif" class="photo"><img src="/assets/images/1-768.avif" alt="Soundarya and Shreyas wedding" loading="lazy" decoding="async"></a>
+        <a href="/assets/images/12-1800.avif" class="photo"><img src="/assets/images/12-768.avif" alt="A story worth keeping — wedding photography" loading="lazy" decoding="async"></a>
       </div>
     </section>
     <section class="contact" aria-labelledby="contact-title">
@@ -130,5 +130,25 @@
     </section>
     <footer class="footer"><span>SWAROOP STUDIOS · BENGALURU</span><a href="/">Visit full website ↗</a></footer>
   </main>
+  <script>
+    (() => {
+      const video = document.getElementById('nfc-featured-video');
+      if (!video) return;
+      video.muted = true;
+      video.defaultMuted = true;
+      const tryPlay = () => {
+        if (document.visibilityState !== 'visible') return;
+        const result = video.play();
+        if (result && typeof result.catch === 'function') result.catch(() => {
+          // Mobile Safari may block autoplay; the visible native controls remain available.
+        });
+      };
+      video.addEventListener('canplay', tryPlay, { once: true });
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible' && video.paused) tryPlay();
+      });
+      if (video.readyState >= 2) tryPlay();
+    })();
+  </script>
 </body>
 </html>
