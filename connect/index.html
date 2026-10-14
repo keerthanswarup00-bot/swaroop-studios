@@ -54,7 +54,18 @@
     .contact h2{font-size:25px;margin-bottom:17px}.contact-row{display:flex;gap:12px;align-items:center;padding:12px 0;border-top:1px solid var(--line);font-size:12px;overflow-wrap:anywhere}
     .contact-row svg{width:16px;height:16px;color:var(--accent);flex:none}.contact-row span{color:var(--muted);display:block;font-size:10px;margin-bottom:4px;letter-spacing:.1em;text-transform:uppercase}.contact-row{transition:color .2s ease}.contact-row:hover{color:var(--accent)}
     .footer{display:flex;justify-content:space-between;gap:12px;margin-top:25px;color:var(--muted);font-size:10px;letter-spacing:.06em}.footer a{color:var(--accent)}
-    @keyframes copy-rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+    .video-frame{overflow:hidden;background:var(--stone);aspect-ratio:16/9;border-radius:1px}
+    .video-frame video{display:block;width:100%;height:100%;object-fit:cover;background:#141310}
+    .gallery-section{margin-top:28px}
+    .photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .photo{display:block;overflow:hidden;aspect-ratio:1/1;background:var(--stone)}
+    .photo img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+    .photo-tall{grid-row:span 2;aspect-ratio:auto;min-height:100%}
+    .photo-tall img{height:100%;min-height:100%;object-fit:cover}
+    @media(hover:hover){.photo:hover img{transform:scale(1.035)}}
+    @media(prefers-reduced-motion:reduce){.photo img{transition:none}}
+\n    @keyframes copy-rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
     @keyframes hero-settle{from{opacity:.6;transform:scale(1.025)}to{opacity:.92;transform:scale(1)}}
     @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
     @media(min-width:520px){.page{padding-top:8px}.topline{padding-top:28px}.hero{aspect-ratio:4/4.4}}
@@ -87,12 +98,26 @@
       <div class="section-head"><h2 id="services-title">What we capture</h2><span>Our work</span></div>
       <div class="services"><span class="chip">Weddings</span><span class="chip">Wedding Films</span><span class="chip">Events</span><span class="chip">Corporate</span><span class="chip">Portraits</span><span class="chip">Celebrations</span></div>
     </section>
-    <section aria-labelledby="film-title">
+    <section class="video-section" aria-labelledby="film-title">
       <div class="section-head"><h2 id="film-title">A glimpse of our films</h2><span>Watch</span></div>
-      <a class="film" href="/#video-wedding-film" aria-label="Watch Swaroop Studios wedding film"><img src="/assets/posters/wedding-film.jpg" alt="Wedding film by Swaroop Studios" loading="lazy"><span class="play"><span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span></a>
-      <div class="film-label"><span>Wedding stories, in motion</span><small>Play film ↗</small></div>
-      <a class="film" href="/#video-studio-teaser" aria-label="Watch Swaroop Studios studio film"><img src="/assets/posters/studio-teaser.jpg" alt="Inside Swaroop Studios" loading="lazy"><span class="play"><span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></span></a>
-      <div class="film-label"><span>A little more about us</span><small>Play film ↗</small></div>
+      <div class="video-frame">
+        <video controls autoplay muted loop playsinline preload="metadata" poster="/assets/posters/intro-band.jpg" aria-label="Swaroop Studios featured film">
+          <source src="/assets/videos/intro-band-720p.mp4" type="video/mp4" media="(max-width: 860px)">
+          <source src="/assets/videos/intro-band-1080p.mp4" type="video/mp4">
+          Your browser does not support the video element.
+        </video>
+      </div>
+      <div class="film-label"><span>Stories, beautifully captured</span><small>Featured film</small></div>
+    </section>
+    <section class="gallery-section" aria-labelledby="gallery-title">
+      <div class="section-head"><h2 id="gallery-title">Selected moments</h2><span>Photography</span></div>
+      <div class="photo-grid">
+        <a href="/assets/images/dsc05478-1800.jpg" class="photo photo-tall"><img src="/assets/images/dsc05478-1200.avif" alt="Swaroop Studios featured photograph" loading="lazy"></a>
+        <a href="/assets/images/dsc02444-1800.jpg" class="photo"><img src="/assets/images/dsc02444-768.avif" alt="Wedding photography by Swaroop Studios" loading="lazy"></a>
+        <a href="/assets/images/dsc02541-1800.jpg" class="photo"><img src="/assets/images/dsc02541-768.avif" alt="A celebration photographed by Swaroop Studios" loading="lazy"></a>
+        <a href="/assets/images/dsc02664-1800.jpg" class="photo"><img src="/assets/images/dsc02664-768.avif" alt="A candid moment captured by Swaroop Studios" loading="lazy"></a>
+        <a href="/assets/images/dsc02737-1800.jpg" class="photo"><img src="/assets/images/dsc02737-768.avif" alt="Event photography by Swaroop Studios" loading="lazy"></a>
+      </div>
     </section>
     <section class="contact" aria-labelledby="contact-title">
       <h2 id="contact-title">Let's make something memorable.</h2>
